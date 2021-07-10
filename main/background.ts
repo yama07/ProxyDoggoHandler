@@ -16,13 +16,16 @@ if (isProd) {
   const mainWindow = createWindow('main', {
     width: 1000,
     height: 600,
+    minWidth: 1000,
+    minHeight: 600,
+    titleBarStyle: 'hidden',
   });
 
   if (isProd) {
     await mainWindow.loadURL('app://./home.html');
   } else {
     const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}/home`);
+    await mainWindow.loadURL(`http://localhost:${port}/preferences`);
     mainWindow.webContents.openDevTools();
   }
 })();

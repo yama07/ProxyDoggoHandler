@@ -4,6 +4,7 @@ import {
   BrowserWindowConstructorOptions,
 } from 'electron';
 import Store from 'electron-store';
+import path from 'path';
 
 export default (windowName: string, options: BrowserWindowConstructorOptions): BrowserWindow => {
   const key = 'window-state';
@@ -72,7 +73,9 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
     ...state,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegrationInWorker: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
       ...options.webPreferences,
     },
   };

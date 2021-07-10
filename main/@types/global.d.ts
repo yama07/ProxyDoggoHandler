@@ -6,9 +6,10 @@ declare global {
 }
 
 export interface IProxyChain {
-    init: () => void;
+    init: (params: GeneralPreferenceType) => void;
     listen: () => void,
     close: () => void,
+    updateUpstreamProxyUrl: (params?: ConnectionSettingType) => void,
 }
 
 export interface IStore {

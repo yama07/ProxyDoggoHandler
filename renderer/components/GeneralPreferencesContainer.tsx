@@ -53,9 +53,10 @@ const GeneralPreferencesContainer: React.FC = () => {
     }, []);
 
     const handleChange = React.useCallback(() => {
-        window.store.setGeneralPreference({ port: port, verbose: verbose })
+        const params = { port: port, verbose: verbose };
+        window.store.setGeneralPreference(params)
         const proxyChain = window.proxyChain;
-        proxyChain.init();
+        proxyChain.init(params);
         proxyChain.listen();
     }, [port, verbose]);
 

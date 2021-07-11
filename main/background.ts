@@ -1,6 +1,6 @@
 import { app } from 'electron';
 import serve from 'electron-serve';
-import { createWindow } from './helpers';
+import { createWindow, createTray } from './helpers';
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
 
@@ -28,6 +28,8 @@ if (isProd) {
     await mainWindow.loadURL(`http://localhost:${port}/preferences`);
     mainWindow.webContents.openDevTools();
   }
+
+  createTray();
 })();
 
 app.on('window-all-closed', () => {

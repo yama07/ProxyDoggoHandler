@@ -26,7 +26,7 @@ const AppHeader: React.FC = () => {
         <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
                 <Typography variant="h6" align="center" className={classes.title} >
-                    Proxy Switcher
+                    Proxy Doggo Switcher
                 </Typography>
             </Toolbar>
         </AppBar>

@@ -1,6 +1,6 @@
-appId: com.example.nextron
-productName: My Nextron App
-copyright: Copyright © 2018 Yoshihide Shiono
+appId: jp.yama07.proxy-doggo-switcher
+productName: Proxy Doggo Switcher
+copyright: Copyright © 2021 Naoki Yamamoto
 directories:
   output: dist
   buildResources: resources

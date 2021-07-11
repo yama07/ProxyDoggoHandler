@@ -31,7 +31,7 @@ export const updateTray = () => {
         { type: 'separator' },
         ...proxyMenuItems,
         { type: 'separator' },
-        { label: 'Quit', role: 'quit' },
+        { label: 'Quit Proxy Doggo Switcher', role: 'quit' },
     ]);
     tray.setContextMenu(contextMenu);
 
@@ -42,7 +42,6 @@ export const updateTray = () => {
 export default () => {
     let imgFilePath = getIconPath("001-dog");
     tray = new Tray(imgFilePath);
-    tray.setToolTip(app.name);
 
     updateTray();
 

@@ -47,9 +47,11 @@ const GeneralPreferencesContainer: React.FC = () => {
     const [verbose, setVerbose] = React.useState(false);
 
     React.useEffect(() => {
-        const generalPreference = window.store.getGeneralPreference()
-        setPort(generalPreference["port"])
-        setVerbose(generalPreference["verbose"])
+        const generalPreferencePromise = window.store.getGeneralPreference()
+        generalPreferencePromise.then((generalPreference: GeneralPreferenceType) => {
+            setPort(generalPreference.port);
+            setVerbose(generalPreference.verbose);
+        });
     }, []);
 
     const handleChange = React.useCallback(() => {

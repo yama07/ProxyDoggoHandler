@@ -29,7 +29,7 @@ const createData = (index, icon, name, host, authentication) => {
 };
 
 const ProxiesPreferencesContainer: React.FC = () => {
-    
+
     const [upstreams, setUpstreams] = React.useState([]);
     const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -41,12 +41,15 @@ const ProxiesPreferencesContainer: React.FC = () => {
                 selectedIndex: 0,
                 upstreams: upstreams,
             });
+            window.app.updateTray();
         }
     }, [upstreams])
 
     React.useEffect(() => {
-        const getProxiesPreference = window.store.getProxiesPreference()
-        setUpstreams(getProxiesPreference["upstreams"]);
+        const getProxiesPreferencePromise = window.store.getProxiesPreference()
+        getProxiesPreferencePromise.then((proxiesPreference) => {
+            setUpstreams(proxiesPreference["upstreams"]);
+        });
     }, []);
 
     const openAddDialog = () => { setIsAddDialogOpen(true) };

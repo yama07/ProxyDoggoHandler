@@ -14,7 +14,7 @@ export const getGeneralPreference = () => {
     return store.get("general");
 };
 
-export const setGeneralPreferenceType = (preference: GeneralPreferenceType) => {
+export const setGeneralPreference = (preference: GeneralPreferenceType) => {
     store.set("general", preference);
 };
 

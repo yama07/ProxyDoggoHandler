@@ -1,29 +1,29 @@
 type PreferenceType = {
-  general: GeneralPreferenceType,
-  proxies: ProxiesPreferenceType,
+  general: GeneralPreferenceType;
+  proxies: ProxiesPreferenceType;
 };
 
 type GeneralPreferenceType = {
-  port: number,
-  verbose: boolean,
+  port: number;
+  verbose: boolean;
 };
 
 type ProxiesPreferenceType = {
-  selectedIndex: number,
-  upstreams: [UpstreamType],
+  selectedIndex: number;
+  upstreams: [UpstreamType];
 };
 
 type UpstreamType = {
-  name: string,
-  icon: string,
-  connectionSetting?: ConnectionSettingType,
+  name: string;
+  icon: string;
+  connectionSetting?: ConnectionSettingType;
 };
 
 type ConnectionSettingType = {
-  host: string,
-  port: number,
+  host: string;
+  port: number;
   credentials?: {
-    user: string,
-    password: string,
-  }
+    user: string;
+    password: string;
+  };
 };

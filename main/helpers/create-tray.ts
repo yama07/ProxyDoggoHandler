@@ -1,4 +1,4 @@
-import { app, Tray, Menu, MenuItem } from "electron";
+import { Tray, Menu, MenuItem } from "electron";
 import path from "path";
 import {
   getGeneralPreference,
@@ -53,7 +53,7 @@ export const updateTray = () => {
 };
 
 export default () => {
-  let imgFilePath = getIconPath("001-dog");
+  const imgFilePath = getIconPath("001-dog");
   tray = new Tray(imgFilePath);
 
   updateTray();

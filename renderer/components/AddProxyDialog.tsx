@@ -19,10 +19,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DogBreadsIcon, { DogIconIds } from "./DogBreadsIcon";
 
 const useStyles = makeStyles((theme: Theme) => {
-  const base_margin = 3;
+  const baseMargin = 3;
   return createStyles({
     content: {
-      padding: theme.spacing(base_margin),
+      padding: theme.spacing(baseMargin),
     },
     formControl: {
       display: "flex",

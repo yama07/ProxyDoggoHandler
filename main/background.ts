@@ -49,7 +49,7 @@ app.on("window-all-closed", () => {
   app.quit();
 });
 
-////////////////////////////////////
+// IPC handling //////////////////////////////////
 
 ipcMain.handle("proxyChain.init", (event, params: GeneralPreferenceType) => {
   init(params);

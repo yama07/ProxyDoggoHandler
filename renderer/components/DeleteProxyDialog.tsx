@@ -1,27 +1,9 @@
 import React from "react";
-import {
-  Theme,
-  createStyles,
-  Grid,
-  Checkbox,
-  FormControlLabel,
-  DialogTitle,
-  DialogContentText,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { DialogTitle, DialogContentText } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-
-const useStyles = makeStyles((theme: Theme) => {
-  const base_margin = 3;
-  return createStyles({
-    content: {
-      padding: theme.spacing(base_margin),
-    },
-  });
-});
 
 type Props = {
   isOpen: boolean;
@@ -47,7 +29,6 @@ const DeleteProxyDialog: React.FC<Props> = ({
     onDismiss();
   };
 
-  const classes = useStyles({});
   return (
     <Dialog
       open={open}

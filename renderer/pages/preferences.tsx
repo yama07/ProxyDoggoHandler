@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function () {
+const preferences = function () {
   const classes = useStyles({});
   const [selectedMenuIndex, setSelectedMenuIndex] = React.useState(0);
   const onSideMenuSelect = React.useCallback((index: number) => {
@@ -34,4 +34,6 @@ export default function () {
       </div>
     </React.Fragment>
   );
-}
+};
+
+export default preferences;

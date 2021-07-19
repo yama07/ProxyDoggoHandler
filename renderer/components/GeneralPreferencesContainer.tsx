@@ -10,11 +10,11 @@ import {
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => {
-  const base_margin = 6;
+  const baseMargin = 6;
   return createStyles({
     content: {
       flexGrow: 1,
-      padding: theme.spacing(base_margin),
+      padding: theme.spacing(baseMargin),
       position: "relative",
       height: "100vh",
     },
@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme: Theme) => {
       position: "absolute",
       right: 0,
       left: 0,
-      bottom: theme.spacing(base_margin / 2),
+      bottom: theme.spacing(baseMargin / 2),
     },
     formButtons: {
       float: "right",
-      marginRight: theme.spacing(base_margin),
+      marginRight: theme.spacing(baseMargin),
     },
     divider: {
       marginTop: theme.spacing(2),

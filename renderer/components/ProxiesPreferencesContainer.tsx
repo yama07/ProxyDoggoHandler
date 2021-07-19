@@ -17,11 +17,11 @@ import AddProxyDialog from "./AddProxyDialog";
 import DeleteProxyDialog from "./DeleteProxyDialog";
 
 const useStyles = makeStyles((theme: Theme) => {
-  const base_margin = 6;
+  const baseMargin = 6;
   return createStyles({
     content: {
       flexGrow: 1,
-      padding: theme.spacing(base_margin),
+      padding: theme.spacing(baseMargin),
       position: "relative",
       height: "100vh",
     },
@@ -31,10 +31,6 @@ const useStyles = makeStyles((theme: Theme) => {
     },
   });
 });
-
-const createData = (index, icon, name, host, authentication) => {
-  return { index, icon, name, host, authentication };
-};
 
 const ProxiesPreferencesContainer: React.FC = () => {
   const [upstreams, setUpstreams] = React.useState([]);

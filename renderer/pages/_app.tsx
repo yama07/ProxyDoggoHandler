@@ -5,7 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { theme } from "../lib/theme";
 import type { AppProps } from "next/app";
 
-export default function (props: AppProps) {
+const _app = function (props: AppProps) {
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
@@ -29,4 +29,6 @@ export default function (props: AppProps) {
       </ThemeProvider>
     </React.Fragment>
   );
-}
+};
+
+export default _app;

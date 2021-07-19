@@ -1,4 +1,5 @@
 declare global {
+  // eslint-disable-next-line no-unused-vars
   interface Window {
     proxyChain: IProxyChain;
     store: IStore;

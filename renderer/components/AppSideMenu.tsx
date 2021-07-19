@@ -9,7 +9,6 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import TuneIcon from "@material-ui/icons/Tune";
-import HistoryIcon from "@material-ui/icons/History";
 import PetsIcon from "@material-ui/icons/Pets";
 
 const contents = [
@@ -25,7 +24,6 @@ const contents = [
     href: "/preferences/proxies",
     icon: <PetsIcon />,
   },
-  // { key: "log", text: "Log", href: "/preferences/log", icon: <HistoryIcon /> },
 ];
 
 type Props = {

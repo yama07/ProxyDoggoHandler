@@ -1,6 +1,6 @@
 import { app, ipcMain } from "electron";
 import serve from "electron-serve";
-import { createWindow, createTray } from "./helpers";
+import { createTray } from "./helpers";
 import {
   init,
   listen,
@@ -26,28 +26,10 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
-  const mainWindow = createWindow("main", {
-    width: 1000,
-    height: 600,
-    minWidth: 1000,
-    minHeight: 600,
-    titleBarStyle: "hidden",
-  });
-
-  if (isProd) {
-    await mainWindow.loadURL("app://./home.html");
-  } else {
-    const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}/preferences`);
-    mainWindow.webContents.openDevTools();
-  }
-
   createTray();
 })();
 
-app.on("window-all-closed", () => {
-  app.quit();
-});
+app.on("window-all-closed", () => {});
 
 // IPC handling //////////////////////////////////
 

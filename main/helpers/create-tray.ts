@@ -6,6 +6,7 @@ import {
   setProxiesPreference,
 } from "./preference-accessor";
 import { init, listen, updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
+import openPreferencesWindow from "./open-preferences-window";
 
 let tray: Tray = null;
 
@@ -38,7 +39,12 @@ export const updateTray = () => {
       })
   );
   const contextMenu = Menu.buildFromTemplate([
-    { label: "Preferences" },
+    {
+      label: "Preferences",
+      click: () => {
+        openPreferencesWindow();
+      },
+    },
     { type: "separator" },
     ...proxyMenuItems,
     { type: "separator" },

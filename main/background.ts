@@ -1,17 +1,14 @@
 import { app, ipcMain } from "electron";
 import serve from "electron-serve";
 import { createTray } from "./helpers";
-import {
-  init,
-  listen,
-  close,
-  updateUpstreamProxyUrl,
-} from "./helpers/proxy-chain-wrapper";
+import { listen, close } from "./helpers/proxy-chain-wrapper";
 import {
   getGeneralPreference,
   setGeneralPreference,
   getProxiesPreference,
   setProxiesPreference,
+  onProxiesPreferenceDidChange,
+  onGeneralPreferenceDidChange,
 } from "./helpers/preference-accessor";
 import { updateTray } from "./helpers/create-tray";
 
@@ -31,23 +28,23 @@ if (isProd) {
 
 app.on("window-all-closed", () => {});
 
-// IPC handling //////////////////////////////////
+const unsubscribeFunctions = [
+  onGeneralPreferenceDidChange((newValue, oldValue) => {
+    close();
+    listen(newValue);
+  }),
+  onProxiesPreferenceDidChange((newValue, oldValue) => {
+    updateTray();
+  }),
+];
 
-ipcMain.handle("proxyChain.init", (event, params: GeneralPreferenceType) => {
-  init(params);
+app.on("quit", () => {
+  unsubscribeFunctions.map((unsubscribe) => {
+    unsubscribe();
+  });
 });
-ipcMain.handle("proxyChain.listen", (event) => {
-  listen();
-});
-ipcMain.handle("proxyChain.close", (event) => {
-  close();
-});
-ipcMain.handle(
-  "proxyChain.updateUpstreamProxyUrl",
-  (event, params?: ConnectionSettingType) => {
-    updateUpstreamProxyUrl(params);
-  }
-);
+
+// IPC handling //////////////////////////////////
 
 ipcMain.handle("store.getGeneralPreference", (event): GeneralPreferenceType => {
   return getGeneralPreference();

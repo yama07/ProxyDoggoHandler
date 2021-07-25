@@ -5,7 +5,7 @@ import {
   getProxiesPreference,
   setProxiesPreference,
 } from "./preference-accessor";
-import { init, listen, updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
+import { listen, updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
 import openPreferencesWindow from "./open-preferences-window";
 
 let tray: Tray = null;
@@ -64,6 +64,5 @@ export default () => {
 
   updateTray();
 
-  init(getGeneralPreference());
-  listen();
+  listen(getGeneralPreference());
 };

@@ -1,14 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("proxyChain", {
-  init: (params: GeneralPreferenceType) =>
-    ipcRenderer.invoke("proxyChain.init", params),
-  listen: () => ipcRenderer.invoke("proxyChain.listen"),
-  close: () => ipcRenderer.invoke("proxyChain.close"),
-  updateUpstreamProxyUrl: (params?: ConnectionSettingType) =>
-    ipcRenderer.invoke("proxyChain.updateUpstreamProxyUrl", params),
-});
-
 contextBridge.exposeInMainWorld("store", {
   getGeneralPreference: (): Promise<GeneralPreferenceType> =>
     ipcRenderer.invoke("store.getGeneralPreference"),

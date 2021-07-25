@@ -3,31 +3,20 @@ import ProxyChain from "proxy-chain";
 let server: any = null;
 let upstreamProxyUrl: string | null = null;
 
-export const init = (params: GeneralPreferenceType) => {
+export const listen = (params: GeneralPreferenceType) => {
   close();
 
-  console.log(`exec init: port: ${params.port}, verbose: ${params.verbose}`);
   server = new ProxyChain.Server({
     port: params.port,
     verbose: params.verbose,
-    prepareRequestFunction: ({
-      request,
-      username,
-      password,
-      hostname,
-      port,
-      isHttp,
-      connectionId,
-    }) => {
+    prepareRequestFunction: () => {
       return {
         upstreamProxyUrl: upstreamProxyUrl,
       };
     },
   });
-};
 
-export const listen = () => {
-  server?.listen(() => {
+  server.listen(() => {
     console.log(`Proxy server is listening on port ${server.port}`);
   });
 };

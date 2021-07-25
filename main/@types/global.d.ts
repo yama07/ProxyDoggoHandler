@@ -7,13 +7,6 @@ declare global {
   }
 }
 
-export interface IProxyChain {
-  init: (params: GeneralPreferenceType) => void;
-  listen: () => void;
-  close: () => void;
-  updateUpstreamProxyUrl: (params?: ConnectionSettingType) => void;
-}
-
 export interface IStore {
   getGeneralPreference: () => Promise<GeneralPreferenceType>;
   setGeneralPreference: (GeneralPreferenceType) => void;

@@ -1,4 +1,4 @@
-import { app, ipcMain } from "electron";
+import { app, ipcMain, Menu } from "electron";
 import serve from "electron-serve";
 import { createTray } from "./helpers";
 import { listen, close } from "./helpers/proxy-chain-wrapper";
@@ -19,6 +19,8 @@ if (isProd) {
 } else {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
+
+Menu.setApplicationMenu(null);
 
 (async () => {
   await app.whenReady();

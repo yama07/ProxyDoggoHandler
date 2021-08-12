@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const AppSideMenu: React.FC<Props> = ({ onClick }) => {
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
   const classes = useStyles({});
   return (
     <Drawer
@@ -62,9 +63,10 @@ const AppSideMenu: React.FC<Props> = ({ onClick }) => {
         <List>
           {contents.map((content, index) => (
             <ListItem
-              button
+              selected={index == selectedIndex}
               key={index}
               onClick={() => {
+                setSelectedIndex(index);
                 onClick(index);
               }}
             >

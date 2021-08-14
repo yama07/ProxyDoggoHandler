@@ -183,33 +183,33 @@ const ProxiesPreferencesContainer: React.FC = () => {
         </TableBody>
       </Table>
 
-      <AddProxyDialog
-        isOpen={isAddDialogOpen}
-        onDismiss={closeAddDialog}
-        onConfirm={addSetting}
-      />
+      {isAddDialogOpen && (
+        <AddProxyDialog onDismiss={closeAddDialog} onConfirm={addSetting} />
+      )}
 
-      <EditProxyDialog
-        isOpen={isEditDialogOpen}
-        oldUpstream={upstreams[selectedIndex]}
-        onDismiss={() => {
-          closeEditDialog();
-        }}
-        onConfirm={(newUpstream: UpstreamType) => {
-          editSetting(selectedIndex, newUpstream);
-        }}
-      />
+      {isEditDialogOpen && (
+        <EditProxyDialog
+          oldUpstream={upstreams[selectedIndex]}
+          onDismiss={() => {
+            closeEditDialog();
+          }}
+          onConfirm={(newUpstream: UpstreamType) => {
+            editSetting(selectedIndex, newUpstream);
+          }}
+        />
+      )}
 
-      <DeleteProxyDialog
-        isOpen={isDeleteDialogOpen}
-        name={upstreams[selectedIndex]?.name}
-        onDismiss={() => {
-          closeDeleteDialog();
-        }}
-        onConfirm={() => {
-          deleteSetting(selectedIndex);
-        }}
-      />
+      {isDeleteDialogOpen && (
+        <DeleteProxyDialog
+          name={upstreams[selectedIndex]?.name}
+          onDismiss={() => {
+            closeDeleteDialog();
+          }}
+          onConfirm={() => {
+            deleteSetting(selectedIndex);
+          }}
+        />
+      )}
     </main>
   );
 };

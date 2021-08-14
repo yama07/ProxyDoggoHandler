@@ -31,54 +31,35 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 type Props = {
-  isOpen: boolean;
   oldUpstream: UpstreamType;
   onDismiss: () => void;
   onConfirm: (newUpstream: UpstreamType) => void;
 };
 
 const EditProxyDialog: React.FC<Props> = ({
-  isOpen,
   oldUpstream,
   onDismiss,
   onConfirm,
 }: Props) => {
-  const [open, setOpen] = React.useState(isOpen);
-  const [iconId, setIconId] = React.useState(DogIconIds[0]);
-  const [name, setName] = React.useState("");
-  const [host, setHost] = React.useState("");
-  const [port, setPort] = React.useState(80);
-  const [needsAuth, setNeedsAuth] = React.useState(false);
-  const [user, setUser] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [iconId, setIconId] = React.useState(oldUpstream.icon);
+  const [name, setName] = React.useState(oldUpstream.name);
 
-  React.useEffect(() => {
-    setOpen(isOpen);
-    if (oldUpstream != null) {
-      setIconId(oldUpstream.icon);
-      setName(oldUpstream.name);
-      setHost(oldUpstream.connectionSetting.host);
-      setPort(oldUpstream.connectionSetting.port);
+  const connectionSetting = oldUpstream.connectionSetting;
+  const [host, setHost] = React.useState(connectionSetting.host);
+  const [port, setPort] = React.useState(connectionSetting.port);
 
-      const credentials = oldUpstream.connectionSetting.credentials;
-      setNeedsAuth(credentials != null);
-      setUser(credentials?.user ?? "");
-      setPassword(credentials?.password ?? "");
-    }
-  }, [isOpen]);
+  const credentials = connectionSetting.credentials;
+  const [needsAuth, setNeedsAuth] = React.useState(credentials != null);
+  const [user, setUser] = React.useState(credentials?.user ?? "");
+  const [password, setPassword] = React.useState(credentials?.password ?? "");
 
   const handleClose = () => {
-    setOpen(false);
     onDismiss();
   };
 
   const classes = useStyles({});
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
+    <Dialog open onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogContent className={classes.content}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={2}>

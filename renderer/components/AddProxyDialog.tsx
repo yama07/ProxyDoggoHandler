@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 type Props = {
-  isOpen: boolean;
   onDismiss: () => void;
   onConfirm: (
     icon: string,
@@ -45,12 +44,7 @@ type Props = {
   ) => void;
 };
 
-const AddProxyDialog: React.FC<Props> = ({
-  isOpen,
-  onDismiss,
-  onConfirm,
-}: Props) => {
-  const [open, setOpen] = React.useState(false);
+const AddProxyDialog: React.FC<Props> = ({ onDismiss, onConfirm }: Props) => {
   const [iconId, setIconId] = React.useState(DogIconIds[0]);
   const [name, setName] = React.useState("");
   const [host, setHost] = React.useState("");
@@ -59,28 +53,13 @@ const AddProxyDialog: React.FC<Props> = ({
   const [user, setUser] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  React.useEffect(() => {
-    setOpen(isOpen);
-    setName("");
-    setHost("");
-    setPort(80);
-    setNeedsAuth(false);
-    setUser("");
-    setPassword("");
-  }, [isOpen]);
-
   const handleClose = () => {
-    setOpen(false);
     onDismiss();
   };
 
   const classes = useStyles({});
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
+    <Dialog open onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogContent className={classes.content}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={2}>

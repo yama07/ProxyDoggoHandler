@@ -64,23 +64,8 @@ const ProxiesPreferencesContainer: React.FC = () => {
     setIsAddDialogOpen(false);
   };
   const addSetting = React.useCallback(
-    (
-      icon: string,
-      name: string,
-      host: string,
-      port: number,
-      credentials?: { user: string; password: string }
-    ) => {
-      const upstream = {
-        name: name,
-        icon: icon,
-        connectionSetting: {
-          host: host,
-          port: port,
-          credentials: credentials,
-        },
-      };
-      setUpstreams(upstreams.concat(upstream));
+    (newSetting: UpstreamType) => {
+      setUpstreams(upstreams.concat(newSetting));
     },
     [upstreams]
   );
@@ -201,7 +186,7 @@ const ProxiesPreferencesContainer: React.FC = () => {
 
       {isDeleteDialogOpen && (
         <DeleteProxyDialog
-          name={upstreams[selectedIndex]?.name}
+          upstream={upstreams[selectedIndex]}
           onDismiss={() => {
             closeDeleteDialog();
           }}

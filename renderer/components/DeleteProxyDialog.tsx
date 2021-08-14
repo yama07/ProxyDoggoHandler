@@ -6,13 +6,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 
 type Props = {
-  name: string;
+  upstream: UpstreamType;
   onDismiss: () => void;
   onConfirm: () => void;
 };
 
 const DeleteProxyDialog: React.FC<Props> = ({
-  name,
+  upstream,
   onDismiss,
   onConfirm,
 }: Props) => {
@@ -32,8 +32,7 @@ const DeleteProxyDialog: React.FC<Props> = ({
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {" "}
-          {name}{" "}
+          {upstream.name}
         </DialogContentText>
       </DialogContent>
 

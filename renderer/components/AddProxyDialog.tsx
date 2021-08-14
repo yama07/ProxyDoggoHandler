@@ -32,16 +32,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 type Props = {
   onDismiss: () => void;
-  onConfirm: (
-    icon: string,
-    name: string,
-    host: string,
-    port: number,
-    credentials?: {
-      user: string;
-      password: string;
-    }
-  ) => void;
+  onConfirm: (newUpstream: UpstreamType) => void;
 };
 
 const AddProxyDialog: React.FC<Props> = ({ onDismiss, onConfirm }: Props) => {
@@ -183,13 +174,18 @@ const AddProxyDialog: React.FC<Props> = ({ onDismiss, onConfirm }: Props) => {
         </Button>
         <Button
           onClick={() => {
-            onConfirm(
-              iconId,
-              name,
-              host,
-              port,
-              needsAuth ? { user: user, password: password } : null
-            );
+            const upstream: UpstreamType = {
+              icon: iconId,
+              name: name,
+              connectionSetting: {
+                host: host,
+                port: port,
+                credentials: needsAuth
+                  ? { user: user, password: password }
+                  : null,
+              },
+            };
+            onConfirm(upstream);
             onDismiss();
           }}
           color="primary"

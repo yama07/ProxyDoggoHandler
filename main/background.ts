@@ -22,6 +22,8 @@ if (isProd) {
 
 Menu.setApplicationMenu(null);
 
+if (process.platform === "darwin") app.dock.hide();
+
 (async () => {
   await app.whenReady();
 

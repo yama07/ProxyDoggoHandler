@@ -9,12 +9,13 @@ import {
   TableCell,
   TableBody,
 } from "@material-ui/core";
-// import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import DogBreadsIcon from "./DogBreadsIcon";
 import AddProxyDialog from "./AddProxyDialog";
 import DeleteProxyDialog from "./DeleteProxyDialog";
+import EditProxyDialog from "./EditProxyDialog";
 
 const useStyles = makeStyles((theme: Theme) => {
   const baseMargin = 6;
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) => {
 const ProxiesPreferencesContainer: React.FC = () => {
   const [upstreams, setUpstreams] = React.useState([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
@@ -83,7 +85,24 @@ const ProxiesPreferencesContainer: React.FC = () => {
     [upstreams]
   );
 
-  // const handleEdit = React.useCallback((index: number) => { console.log(index) }, []);
+  const openEditDialog = () => {
+    setIsEditDialogOpen(true);
+  };
+  const closeEditDialog = () => {
+    setIsEditDialogOpen(false);
+  };
+  const handleEdit = React.useCallback((index: number) => {
+    setSelectedIndex(index);
+    openEditDialog();
+  }, []);
+  const editSetting = React.useCallback(
+    (index: number, newSetting) => {
+      const newUpstreams = upstreams.slice();
+      newUpstreams[index] = newSetting;
+      setUpstreams(newUpstreams);
+    },
+    [upstreams, selectedIndex]
+  );
 
   const openDeleteDialog = () => {
     setIsDeleteDialogOpen(true);
@@ -141,7 +160,15 @@ const ProxiesPreferencesContainer: React.FC = () => {
               <TableCell align="center">
                 {upstream.connectionSetting?.credentials != null ? "Yes" : ""}
               </TableCell>
-              {/* {0 < index && <TableCell><EditIcon onClick={() => { handleEdit(index) }} /></TableCell>} */}
+              {0 < index && (
+                <TableCell>
+                  <EditIcon
+                    onClick={() => {
+                      handleEdit(index);
+                    }}
+                  />
+                </TableCell>
+              )}
               {0 < index && (
                 <TableCell>
                   <DeleteIcon
@@ -160,6 +187,17 @@ const ProxiesPreferencesContainer: React.FC = () => {
         isOpen={isAddDialogOpen}
         onDismiss={closeAddDialog}
         onConfirm={addSetting}
+      />
+
+      <EditProxyDialog
+        isOpen={isEditDialogOpen}
+        oldUpstream={upstreams[selectedIndex]}
+        onDismiss={() => {
+          closeEditDialog();
+        }}
+        onConfirm={(newUpstream: UpstreamType) => {
+          editSetting(selectedIndex, newUpstream);
+        }}
       />
 
       <DeleteProxyDialog

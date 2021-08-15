@@ -19,9 +19,9 @@ const contents = [
     icon: <TuneIcon />,
   },
   {
-    key: "proxies",
-    text: "Proxies",
-    href: "/preferences/proxies",
+    key: "upstreams",
+    text: "Upstreams",
+    href: "/preferences/upstreams",
     icon: <PetsIcon />,
   },
 ];

@@ -27,6 +27,14 @@ const useStyles = makeStyles((theme: Theme) => {
     formControl: {
       display: "flex",
     },
+    actions: {
+      paddingLeft: theme.spacing(baseMargin),
+      paddingRight: theme.spacing(baseMargin),
+      paddingBottom: theme.spacing(baseMargin),
+    },
+    button: {
+      textTransform: "none",
+    },
   });
 });
 
@@ -59,15 +67,15 @@ const EditDialog: React.FC<Props> = ({
 
   const classes = useStyles({});
   return (
-    <Dialog open onClose={handleClose} aria-labelledby="form-dialog-title">
+    <Dialog open onClose={handleClose}>
       <DialogContent className={classes.content}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={2}>
             <FormControl className={classes.formControl}>
-              <InputLabel id="demo-simple-select-label">Icon</InputLabel>
+              <InputLabel id="icon-select-label">Icon</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId="icon-select-label"
+                id="icon-select"
                 defaultValue={DogIconIds[0]}
                 value={iconId}
                 onChange={(e) => {
@@ -84,7 +92,6 @@ const EditDialog: React.FC<Props> = ({
           </Grid>
           <Grid item xs={12} sm={10}>
             <TextField
-              autoFocus
               margin="dense"
               id="name"
               label="Name"
@@ -98,7 +105,6 @@ const EditDialog: React.FC<Props> = ({
           <Grid item xs={12} sm={6}>
             <TextField
               required
-              autoFocus
               margin="dense"
               id="host"
               label="Host"
@@ -112,7 +118,6 @@ const EditDialog: React.FC<Props> = ({
           <Grid item xs={12} sm={6}>
             <TextField
               required
-              autoFocus
               margin="dense"
               id="port"
               label="Port number"
@@ -143,7 +148,6 @@ const EditDialog: React.FC<Props> = ({
           <Grid item xs={12} sm={6} hidden={!needsAuth}>
             <TextField
               required
-              autoFocus
               margin="dense"
               id="user"
               label="Login"
@@ -157,7 +161,6 @@ const EditDialog: React.FC<Props> = ({
           <Grid item xs={12} sm={6} hidden={!needsAuth}>
             <TextField
               required
-              autoFocus
               margin="dense"
               id="password"
               label="Password"
@@ -172,16 +175,22 @@ const EditDialog: React.FC<Props> = ({
         </Grid>
       </DialogContent>
 
-      <DialogActions>
+      <DialogActions className={classes.actions}>
         <Button
+          className={classes.button}
+          variant="outlined"
+          color="primary"
+          autoFocus
           onClick={() => {
             onDismiss();
           }}
-          color="primary"
         >
           Cancel
         </Button>
         <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
           onClick={() => {
             const upstream: UpstreamType = {
               name: name,
@@ -197,9 +206,8 @@ const EditDialog: React.FC<Props> = ({
             onConfirm(upstream);
             onDismiss();
           }}
-          color="primary"
         >
-          Edit
+          OK
         </Button>
       </DialogActions>
     </Dialog>

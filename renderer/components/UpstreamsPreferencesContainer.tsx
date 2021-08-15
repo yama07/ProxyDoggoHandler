@@ -8,6 +8,7 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Tooltip,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => {
   });
 });
 
-const ProxiesPreferencesContainer: React.FC = () => {
+const UpstreamsPreferencesContainer: React.FC = () => {
   const [upstreams, setUpstreams] = React.useState([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
@@ -114,17 +115,18 @@ const ProxiesPreferencesContainer: React.FC = () => {
     <main className={classes.content}>
       <Toolbar />
 
-      <Button
-        className={classes.button}
-        variant="text"
-        color="primary"
-        onClick={() => {
-          openAddDialog();
-        }}
-      >
-        <AddIcon />
-        Add
-      </Button>
+      <Tooltip title="追加">
+        <Button
+          className={classes.button}
+          variant="text"
+          color="primary"
+          onClick={() => {
+            openAddDialog();
+          }}
+        >
+          <AddIcon />
+        </Button>
+      </Tooltip>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -147,20 +149,24 @@ const ProxiesPreferencesContainer: React.FC = () => {
               </TableCell>
               {0 < index && (
                 <TableCell>
-                  <EditIcon
-                    onClick={() => {
-                      handleEdit(index);
-                    }}
-                  />
+                  <Tooltip title="編集">
+                    <EditIcon
+                      onClick={() => {
+                        handleEdit(index);
+                      }}
+                    />
+                  </Tooltip>
                 </TableCell>
               )}
               {0 < index && (
                 <TableCell>
-                  <DeleteIcon
-                    onClick={() => {
-                      handleDelete(index);
-                    }}
-                  />
+                  <Tooltip title="削除">
+                    <DeleteIcon
+                      onClick={() => {
+                        handleDelete(index);
+                      }}
+                    />
+                  </Tooltip>
                 </TableCell>
               )}
             </TableRow>
@@ -199,4 +205,4 @@ const ProxiesPreferencesContainer: React.FC = () => {
   );
 };
 
-export default ProxiesPreferencesContainer;
+export default UpstreamsPreferencesContainer;

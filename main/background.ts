@@ -1,14 +1,16 @@
 import { app, ipcMain, Menu } from "electron";
 import serve from "electron-serve";
-import { createTray } from "./helpers";
+import { createTray, openPreferencesWindow } from "./helpers";
 import { listen, close } from "./helpers/proxy-chain-wrapper";
 import {
   getGeneralPreference,
   setGeneralPreference,
-  getProxiesPreference,
-  setProxiesPreference,
-  onProxiesPreferenceDidChange,
-  onGeneralPreferenceDidChange,
+  getProxyPreference,
+  setProxyPreference,
+  getUpstreamsPreference,
+  setUpstreamsPreference,
+  onUpstreamsPreferenceDidChange,
+  onProxyPreferenceDidChange,
 } from "./helpers/preference-accessor";
 import { updateTray } from "./helpers/create-tray";
 
@@ -28,16 +30,20 @@ if (process.platform === "darwin") app.dock.hide();
   await app.whenReady();
 
   createTray();
+
+  if (getGeneralPreference().isOpenAtStartup) {
+    openPreferencesWindow();
+  }
 })();
 
 app.on("window-all-closed", () => {});
 
 const unsubscribeFunctions = [
-  onGeneralPreferenceDidChange((newValue, oldValue) => {
+  onProxyPreferenceDidChange((newValue, oldValue) => {
     close();
     listen(newValue);
   }),
-  onProxiesPreferenceDidChange((newValue, oldValue) => {
+  onUpstreamsPreferenceDidChange((newValue, oldValue) => {
     updateTray();
   }),
 ];
@@ -59,13 +65,25 @@ ipcMain.handle(
     setGeneralPreference(preference);
   }
 );
-ipcMain.handle("store.getProxiesPreference", (event): ProxiesPreferenceType => {
-  return getProxiesPreference();
+ipcMain.handle("store.getProxyPreference", (event): ProxyPreferenceType => {
+  return getProxyPreference();
 });
 ipcMain.handle(
-  "store.setProxiesPreference",
-  (event, preference: ProxiesPreferenceType) => {
-    setProxiesPreference(preference);
+  "store.setProxyPreference",
+  (event, preference: ProxyPreferenceType) => {
+    setProxyPreference(preference);
+  }
+);
+ipcMain.handle(
+  "store.getUpstreamsPreference",
+  (event): UpstreamsPreferenceType => {
+    return getUpstreamsPreference();
+  }
+);
+ipcMain.handle(
+  "store.setUpstreamsPreference",
+  (event, preference: UpstreamsPreferenceType) => {
+    setUpstreamsPreference(preference);
   }
 );
 

@@ -2,8 +2,9 @@ import Store from "electron-store";
 
 const store = new Store<PreferenceType>({
   defaults: {
-    general: { port: 8080, verbose: false },
-    proxies: {
+    general: { isOpenAtStartup: true },
+    proxy: { port: 8080, verbose: false },
+    upstreams: {
       selectedIndex: 0,
       upstreams: [
         { name: "Dynamic", icon: "001-dog", connectionSetting: null },
@@ -29,19 +30,36 @@ export const onGeneralPreferenceDidChange = (
   return store.onDidChange("general", callback);
 };
 
-export const getProxiesPreference = (): ProxiesPreferenceType => {
-  return store.get("proxies");
+export const getProxyPreference = (): ProxyPreferenceType => {
+  return store.get("proxy");
 };
 
-export const setProxiesPreference = (preference: ProxiesPreferenceType) => {
-  store.set("proxies", preference);
+export const setProxyPreference = (preference: ProxyPreferenceType) => {
+  store.set("proxy", preference);
 };
 
-export const onProxiesPreferenceDidChange = (
+export const onProxyPreferenceDidChange = (
   callback: (
-    newValue: ProxiesPreferenceType,
-    oldValue: ProxiesPreferenceType
+    newValue: ProxyPreferenceType,
+    oldValue: ProxyPreferenceType
   ) => void
 ): (() => void) => {
-  return store.onDidChange("proxies", callback);
+  return store.onDidChange("proxy", callback);
+};
+
+export const getUpstreamsPreference = (): UpstreamsPreferenceType => {
+  return store.get("upstreams");
+};
+
+export const setUpstreamsPreference = (preference: UpstreamsPreferenceType) => {
+  store.set("upstreams", preference);
+};
+
+export const onUpstreamsPreferenceDidChange = (
+  callback: (
+    newValue: UpstreamsPreferenceType,
+    oldValue: UpstreamsPreferenceType
+  ) => void
+): (() => void) => {
+  return store.onDidChange("upstreams", callback);
 };

@@ -2,8 +2,8 @@ import { Tray, Menu, MenuItem } from "electron";
 import path from "path";
 import {
   getGeneralPreference,
-  getProxiesPreference,
-  setProxiesPreference,
+  getUpstreamsPreference,
+  setUpstreamsPreference,
 } from "./preference-accessor";
 import { listen, updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
 import openPreferencesWindow from "./open-preferences-window";
@@ -19,21 +19,21 @@ const getIconPath = (iconId: string): string =>
   );
 
 export const updateTray = () => {
-  const proxiesPreference = getProxiesPreference();
+  const upstreamsPreference = getUpstreamsPreference();
 
-  const proxyMenuItems = proxiesPreference.upstreams.map(
+  const proxyMenuItems = upstreamsPreference.upstreams.map(
     (proxy, index) =>
       new MenuItem({
         label: proxy.name,
         type: "radio",
-        checked: proxiesPreference.selectedIndex == index,
+        checked: upstreamsPreference.selectedIndex == index,
         icon: getIconPath(proxy.icon),
         click: (item, window, event) => {
-          proxiesPreference.selectedIndex = index;
-          setProxiesPreference(proxiesPreference);
+          upstreamsPreference.selectedIndex = index;
+          setUpstreamsPreference(upstreamsPreference);
           updateTray();
           updateUpstreamProxyUrl(
-            proxiesPreference.upstreams[index].connectionSetting
+            upstreamsPreference.upstreams[index].connectionSetting
           );
         },
       })
@@ -60,7 +60,7 @@ export const updateTray = () => {
   tray.setContextMenu(contextMenu);
 
   const iconPath = getIconPath(
-    proxiesPreference.upstreams[proxiesPreference.selectedIndex].icon
+    upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon
   );
   tray.setImage(iconPath);
 };

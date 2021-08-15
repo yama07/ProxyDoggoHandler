@@ -5,10 +5,14 @@ contextBridge.exposeInMainWorld("store", {
     ipcRenderer.invoke("store.getGeneralPreference"),
   setGeneralPreference: (preference: GeneralPreferenceType) =>
     ipcRenderer.invoke("store.setGeneralPreference", preference),
-  getProxiesPreference: (): Promise<ProxiesPreferenceType> =>
-    ipcRenderer.invoke("store.getProxiesPreference"),
-  setProxiesPreference: (preference: ProxiesPreferenceType) =>
-    ipcRenderer.invoke("store.setProxiesPreference", preference),
+  getProxyPreference: (): Promise<ProxyPreferenceType> =>
+    ipcRenderer.invoke("store.getProxyPreference"),
+  setProxyPreference: (preference: ProxyPreferenceType) =>
+    ipcRenderer.invoke("store.setProxyPreference", preference),
+  getUpstreamsPreference: (): Promise<UpstreamsPreferenceType> =>
+    ipcRenderer.invoke("store.getUpstreamsPreference"),
+  setUpstreamsPreference: (preference: UpstreamsPreferenceType) =>
+    ipcRenderer.invoke("store.setUpstreamsPreference", preference),
 });
 
 contextBridge.exposeInMainWorld("app", {

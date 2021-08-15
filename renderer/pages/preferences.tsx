@@ -3,8 +3,9 @@ import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
 
 import AppHeader from "../components/AppHeader";
 import AppSideMenu from "../components/AppSideMenu";
-import GeneralPreferencesContainer from "../components/GeneralPreferencesContainer";
+import ProxyPreferencesContainer from "../components/ProxyPreferencesContainer";
 import UpstreamsPreferencesContainer from "../components/UpstreamsPreferencesContainer";
+import GeneralPreferencesContainer from "../components/GeneralPreferencesContainer";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,7 +31,8 @@ const preferences = function () {
         <AppSideMenu onClick={onSideMenuSelect} />
 
         {selectedMenuIndex == 0 && <GeneralPreferencesContainer />}
-        {selectedMenuIndex == 1 && <UpstreamsPreferencesContainer />}
+        {selectedMenuIndex == 1 && <ProxyPreferencesContainer />}
+        {selectedMenuIndex == 2 && <UpstreamsPreferencesContainer />}
       </div>
     </React.Fragment>
   );

@@ -3,7 +3,7 @@ import ProxyChain from "proxy-chain";
 let server: any = null;
 let upstreamProxyUrl: string | null = null;
 
-export const listen = (params: GeneralPreferenceType) => {
+export const listen = (params: ProxyPreferenceType) => {
   close();
 
   server = new ProxyChain.Server({

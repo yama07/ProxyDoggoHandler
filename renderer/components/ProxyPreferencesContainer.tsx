@@ -1,6 +1,7 @@
 import React from "react";
 import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
 import {
+  TextField,
   Toolbar,
   FormControlLabel,
   Button,
@@ -38,22 +39,24 @@ const useStyles = makeStyles((theme: Theme) => {
   });
 });
 
-const GeneralPreferencesContainer: React.FC = () => {
-  const [isOpenAtStartup, setIsOpenAtStartup] = React.useState(false);
+const DEFAULT_PROXY_SERVER_PORT = 8080;
+
+const ProxyPreferencesContainer: React.FC = () => {
+  const [port, setPort] = React.useState(DEFAULT_PROXY_SERVER_PORT);
+  const [verbose, setVerbose] = React.useState(false);
 
   React.useEffect(() => {
-    const generalPreferencePromise = window.store.getGeneralPreference();
-    generalPreferencePromise.then(
-      (generalPreference: GeneralPreferenceType) => {
-        setIsOpenAtStartup(generalPreference.isOpenAtStartup);
-      }
-    );
+    const proxyPreferencePromise = window.store.getProxyPreference();
+    proxyPreferencePromise.then((proxyPreference: ProxyPreferenceType) => {
+      setPort(proxyPreference.port);
+      setVerbose(proxyPreference.verbose);
+    });
   }, []);
 
   const handleChange = React.useCallback(() => {
-    const params: GeneralPreferenceType = { isOpenAtStartup: isOpenAtStartup };
-    window.store.setGeneralPreference(params);
-  }, [isOpenAtStartup]);
+    const params: ProxyPreferenceType = { port: port, verbose: verbose };
+    window.store.setProxyPreference(params);
+  }, [port, verbose]);
 
   const classes = useStyles({});
   return (
@@ -61,17 +64,31 @@ const GeneralPreferencesContainer: React.FC = () => {
       <Toolbar />
 
       <form noValidate autoComplete="off" className={classes.form}>
+        <TextField
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{ inputProps: { min: 0, max: 65535 } }}
+          fullWidth
+          value={port}
+          label="Port where the proxy server will listen"
+          onChange={(e) => {
+            setPort(parseInt(e.target.value) || DEFAULT_PROXY_SERVER_PORT);
+          }}
+        />
+
         <FormControlLabel
           control={
             <Checkbox
-              checked={isOpenAtStartup}
+              checked={verbose}
               onClick={(e: object) => {
-                setIsOpenAtStartup(e["target"]["checked"]);
+                setVerbose(e["target"]["checked"]);
               }}
               color="primary"
             />
           }
-          label="アプリケーション起動時にウィンドウを表示する"
+          label="Verbose logging mode"
         />
       </form>
 
@@ -86,7 +103,7 @@ const GeneralPreferencesContainer: React.FC = () => {
               handleChange();
             }}
           >
-            {"Apply"}
+            {"Apply & Restart"}
           </Button>
         </div>
       </div>
@@ -94,4 +111,4 @@ const GeneralPreferencesContainer: React.FC = () => {
   );
 };
 
-export default GeneralPreferencesContainer;
+export default ProxyPreferencesContainer;

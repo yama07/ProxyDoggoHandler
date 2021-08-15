@@ -43,7 +43,7 @@ const UpstreamsPreferencesContainer: React.FC = () => {
 
   React.useEffect(() => {
     if (0 < upstreams.length) {
-      window.store.setProxiesPreference({
+      window.store.setUpstreamsPreference({
         selectedIndex: 0,
         upstreams: upstreams,
       });
@@ -52,10 +52,12 @@ const UpstreamsPreferencesContainer: React.FC = () => {
   }, [upstreams]);
 
   React.useEffect(() => {
-    const getProxiesPreferencePromise = window.store.getProxiesPreference();
-    getProxiesPreferencePromise.then((proxiesPreference) => {
-      setUpstreams(proxiesPreference["upstreams"]);
-    });
+    const getUpstreamsPreferencePromise = window.store.getUpstreamsPreference();
+    getUpstreamsPreferencePromise.then(
+      (upstreamsPreference: UpstreamsPreferenceType) => {
+        setUpstreams(upstreamsPreference.upstreams);
+      }
+    );
   }, []);
 
   const openAddDialog = () => {

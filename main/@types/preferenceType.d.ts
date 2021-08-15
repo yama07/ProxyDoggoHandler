@@ -1,14 +1,19 @@
 type PreferenceType = {
   general: GeneralPreferenceType;
-  proxies: ProxiesPreferenceType;
+  proxy: ProxyPreferenceType;
+  upstreams: UpstreamsPreferenceType;
 };
 
 type GeneralPreferenceType = {
+  isOpenAtStartup: boolean;
+};
+
+type ProxyPreferenceType = {
   port: number;
   verbose: boolean;
 };
 
-type ProxiesPreferenceType = {
+type UpstreamsPreferenceType = {
   selectedIndex: number;
   upstreams: [UpstreamType];
 };

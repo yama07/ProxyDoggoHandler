@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import TuneIcon from "@material-ui/icons/Tune";
 import PetsIcon from "@material-ui/icons/Pets";
+import TrafficIcon from "@material-ui/icons/Traffic";
 
 const contents = [
   {
@@ -17,6 +18,12 @@ const contents = [
     text: "General",
     href: "/preferences/general",
     icon: <TuneIcon />,
+  },
+  {
+    key: "proxy",
+    text: "Proxy",
+    href: "/preferences/proxy",
+    icon: <TrafficIcon />,
   },
   {
     key: "upstreams",

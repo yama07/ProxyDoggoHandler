@@ -10,8 +10,10 @@ declare global {
 export interface IStore {
   getGeneralPreference: () => Promise<GeneralPreferenceType>;
   setGeneralPreference: (GeneralPreferenceType) => void;
-  getProxiesPreference: () => Promise<ProxiesPreferenceType>;
-  setProxiesPreference: (ProxiesPreferenceType) => void;
+  getProxyPreference: () => Promise<ProxyPreferenceType>;
+  setProxyPreference: (ProxyPreferenceType) => void;
+  getUpstreamsPreference: () => Promise<UpstreamsPreferenceType>;
+  setUpstreamsPreference: (UpstreamsPreferenceType) => void;
 }
 
 export interface IApp {

@@ -40,7 +40,9 @@ export const updateTray = () => {
   );
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: "Preferences",
+      label: "環境設定",
+      accelerator:
+        (process.platform === "darwin" ? "Command" : "Control") + "+,",
       click: () => {
         openPreferencesWindow();
       },
@@ -48,7 +50,12 @@ export const updateTray = () => {
     { type: "separator" },
     ...proxyMenuItems,
     { type: "separator" },
-    { label: "Quit Proxy Doggo Switcher", role: "quit" },
+    {
+      label: "終了",
+      accelerator:
+        (process.platform === "darwin" ? "Command" : "Control") + "+Q",
+      role: "quit",
+    },
   ]);
   tray.setContextMenu(contextMenu);
 

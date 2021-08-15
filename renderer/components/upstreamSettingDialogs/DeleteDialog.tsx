@@ -11,7 +11,7 @@ type Props = {
   onConfirm: () => void;
 };
 
-const DeleteProxyDialog: React.FC<Props> = ({
+const DeleteDialog: React.FC<Props> = ({
   upstream,
   onDismiss,
   onConfirm,
@@ -54,4 +54,4 @@ const DeleteProxyDialog: React.FC<Props> = ({
   );
 };
 
-export default DeleteProxyDialog;
+export default DeleteDialog;

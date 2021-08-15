@@ -13,9 +13,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import DogBreadsIcon from "./DogBreadsIcon";
-import AddProxyDialog from "./AddProxyDialog";
-import DeleteProxyDialog from "./DeleteProxyDialog";
-import EditProxyDialog from "./EditProxyDialog";
+import AddDialog from "./upstreamSettingDialogs/AddDialog";
+import DeleteDialog from "./upstreamSettingDialogs/DeleteDialog";
+import EditDialog from "./upstreamSettingDialogs/EditDialog";
 
 const useStyles = makeStyles((theme: Theme) => {
   const baseMargin = 6;
@@ -169,11 +169,11 @@ const ProxiesPreferencesContainer: React.FC = () => {
       </Table>
 
       {isAddDialogOpen && (
-        <AddProxyDialog onDismiss={closeAddDialog} onConfirm={addSetting} />
+        <AddDialog onDismiss={closeAddDialog} onConfirm={addSetting} />
       )}
 
       {isEditDialogOpen && (
-        <EditProxyDialog
+        <EditDialog
           oldUpstream={upstreams[selectedIndex]}
           onDismiss={() => {
             closeEditDialog();
@@ -185,7 +185,7 @@ const ProxiesPreferencesContainer: React.FC = () => {
       )}
 
       {isDeleteDialogOpen && (
-        <DeleteProxyDialog
+        <DeleteDialog
           upstream={upstreams[selectedIndex]}
           onDismiss={() => {
             closeDeleteDialog();

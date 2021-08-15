@@ -16,7 +16,7 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DogBreadsIcon, { DogIconIds } from "./DogBreadsIcon";
+import DogBreadsIcon, { DogIconIds } from "../DogBreadsIcon";
 
 const useStyles = makeStyles((theme: Theme) => {
   const baseMargin = 3;
@@ -35,7 +35,7 @@ type Props = {
   onConfirm: (newUpstream: UpstreamType) => void;
 };
 
-const AddProxyDialog: React.FC<Props> = ({ onDismiss, onConfirm }: Props) => {
+const AddDialog: React.FC<Props> = ({ onDismiss, onConfirm }: Props) => {
   const [iconId, setIconId] = React.useState(DogIconIds[0]);
   const [name, setName] = React.useState("");
   const [host, setHost] = React.useState("");
@@ -197,4 +197,4 @@ const AddProxyDialog: React.FC<Props> = ({ onDismiss, onConfirm }: Props) => {
   );
 };
 
-export default AddProxyDialog;
+export default AddDialog;

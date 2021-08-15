@@ -16,7 +16,7 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DogBreadsIcon, { DogIconIds } from "./DogBreadsIcon";
+import DogBreadsIcon, { DogIconIds } from "../DogBreadsIcon";
 
 const useStyles = makeStyles((theme: Theme) => {
   const baseMargin = 3;
@@ -36,7 +36,7 @@ type Props = {
   onConfirm: (newUpstream: UpstreamType) => void;
 };
 
-const EditProxyDialog: React.FC<Props> = ({
+const EditDialog: React.FC<Props> = ({
   oldUpstream,
   onDismiss,
   onConfirm,
@@ -206,4 +206,4 @@ const EditProxyDialog: React.FC<Props> = ({
   );
 };
 
-export default EditProxyDialog;
+export default EditDialog;

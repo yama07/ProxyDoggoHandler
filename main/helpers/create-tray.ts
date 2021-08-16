@@ -1,11 +1,10 @@
 import { Tray, Menu, MenuItem } from "electron";
 import path from "path";
 import {
-  getGeneralPreference,
   getUpstreamsPreference,
   setUpstreamsPreference,
 } from "./preference-accessor";
-import { listen, updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
+import { updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
 import openPreferencesWindow from "./open-preferences-window";
 
 let tray: Tray = null;
@@ -70,6 +69,4 @@ export default () => {
   tray = new Tray(imgFilePath);
 
   updateTray();
-
-  listen(getGeneralPreference());
 };

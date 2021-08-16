@@ -29,6 +29,8 @@ if (process.platform === "darwin") app.dock.hide();
 (async () => {
   await app.whenReady();
 
+  listen(getProxyPreference());
+
   createTray();
 
   if (getGeneralPreference().isOpenAtStartup) {

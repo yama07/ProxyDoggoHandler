@@ -31,10 +31,13 @@ const contents = [
     href: "/preferences/upstreams",
     icon: <PetsIcon />,
   },
-];
+] as const;
+
+const contentKeys = contents.map((v) => v.key);
+export type MenuContentType = typeof contentKeys[number];
 
 type Props = {
-  onClick: (index: number) => void;
+  onClick: (contents: MenuContentType) => void;
 };
 
 const drawerWidth = 25;
@@ -74,7 +77,7 @@ const AppSideMenu: React.FC<Props> = ({ onClick }) => {
               key={index}
               onClick={() => {
                 setSelectedIndex(index);
-                onClick(index);
+                onClick(contents[index].key);
               }}
             >
               <ListItemIcon>{content.icon}</ListItemIcon>

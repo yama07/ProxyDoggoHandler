@@ -40,8 +40,7 @@ export const updateTray = () => {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "環境設定",
-      accelerator:
-        (process.platform === "darwin" ? "Command" : "Control") + "+,",
+      accelerator: process.platform === "darwin" ? "Command+," : null,
       click: () => {
         openPreferencesWindow();
       },
@@ -51,8 +50,7 @@ export const updateTray = () => {
     { type: "separator" },
     {
       label: "終了",
-      accelerator:
-        (process.platform === "darwin" ? "Command" : "Control") + "+Q",
+      accelerator: process.platform === "darwin" ? "Command+Q" : null,
       role: "quit",
     },
   ]);

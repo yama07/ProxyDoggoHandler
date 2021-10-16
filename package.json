@@ -19,7 +19,8 @@
     "ajv": "^6.12.6",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.0.0",
-    "proxy-chain": "^1.0.2"
+    "proxy-chain": "^1.0.2",
+    "react-hook-form": "^7.17.2"
   },
   "devDependencies": {
     "@material-ui/core": "^4.12.2",

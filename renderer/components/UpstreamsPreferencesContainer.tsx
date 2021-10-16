@@ -14,9 +14,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import DogBreadsIcon from "./DogBreadsIcon";
-import AddDialog from "./upstreamSettingDialogs/AddDialog";
 import DeleteDialog from "./upstreamSettingDialogs/DeleteDialog";
-import EditDialog from "./upstreamSettingDialogs/EditDialog";
+import AddOrEditDialog from "./upstreamSettingDialogs/AddOrEditDialog";
 
 const useStyles = makeStyles((theme: Theme) => {
   const baseMargin = 6;
@@ -177,11 +176,11 @@ const UpstreamsPreferencesContainer: React.FC = () => {
       </Table>
 
       {isAddDialogOpen && (
-        <AddDialog onDismiss={closeAddDialog} onConfirm={addSetting} />
+        <AddOrEditDialog onDismiss={closeAddDialog} onConfirm={addSetting} />
       )}
 
       {isEditDialogOpen && (
-        <EditDialog
+        <AddOrEditDialog
           oldUpstream={upstreams[selectedIndex]}
           onDismiss={() => {
             closeEditDialog();

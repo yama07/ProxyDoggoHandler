@@ -1,4 +1,4 @@
-import { Tray, Menu, MenuItem } from "electron";
+import { Tray, Menu, MenuItem, nativeImage } from "electron";
 import path from "path";
 import {
   getUpstreamsPreference,
@@ -10,12 +10,7 @@ import openPreferencesWindow from "./open-preferences-window";
 let tray: Tray = null;
 
 const getIconPath = (iconId: string): string =>
-  path.join(
-    __dirname,
-    "tray-icons",
-    "dog-breeds",
-    iconId + (process.platform === "win32" ? ".ico" : ".png")
-  );
+  path.join(__dirname, "tray-icons", "dog-breeds", iconId + ".png");
 
 export const updateTray = () => {
   const upstreamsPreference = getUpstreamsPreference();
@@ -64,7 +59,8 @@ export const updateTray = () => {
 
 export default () => {
   const imgFilePath = getIconPath("001-dog");
-  tray = new Tray(imgFilePath);
+  const icon = nativeImage.createFromPath(imgFilePath);
+  tray = new Tray(icon);
 
   updateTray();
 };

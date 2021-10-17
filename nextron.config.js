@@ -3,7 +3,7 @@ module.exports = {
     Object.assign(config, {
       entry: {
         background: "./main/background.ts",
-        preload: "./main/preload.ts",
+        preload: "./preload/preload.ts",
       },
     }),
 };

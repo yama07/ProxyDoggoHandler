@@ -1,7 +1,6 @@
 declare global {
   // eslint-disable-next-line no-unused-vars
   interface Window {
-    proxyChain: IProxyChain;
     store: IStore;
     app: IApp;
   }
@@ -9,11 +8,11 @@ declare global {
 
 export interface IStore {
   getGeneralPreference: () => Promise<GeneralPreferenceType>;
-  setGeneralPreference: (GeneralPreferenceType) => void;
+  setGeneralPreference: (preference: GeneralPreferenceType) => void;
   getProxyPreference: () => Promise<ProxyPreferenceType>;
-  setProxyPreference: (ProxyPreferenceType) => void;
+  setProxyPreference: (preference: ProxyPreferenceType) => void;
   getUpstreamsPreference: () => Promise<UpstreamsPreferenceType>;
-  setUpstreamsPreference: (UpstreamsPreferenceType) => void;
+  setUpstreamsPreference: (preference: UpstreamsPreferenceType) => void;
 }
 
 export interface IApp {

@@ -74,7 +74,7 @@ export default (
     ...options,
     ...state,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
       nodeIntegrationInWorker: false,
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),

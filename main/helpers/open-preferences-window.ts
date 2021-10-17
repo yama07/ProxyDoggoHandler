@@ -16,6 +16,6 @@ export default async () => {
   } else {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/preferences`);
-    mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools({ mode: "detach" });
   }
 };

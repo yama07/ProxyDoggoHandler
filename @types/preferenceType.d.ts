@@ -15,7 +15,7 @@ type ProxyPreferenceType = {
 
 type UpstreamsPreferenceType = {
   selectedIndex: number;
-  upstreams: [UpstreamType];
+  upstreams: UpstreamType[];
 };
 
 type UpstreamType = {

@@ -61,6 +61,9 @@ export default () => {
   const imgFilePath = getIconPath("001-dog");
   const icon = nativeImage.createFromPath(imgFilePath);
   tray = new Tray(icon);
+  tray.addListener("click", () => {
+    tray.popUpContextMenu();
+  });
 
   updateTray();
 };

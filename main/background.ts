@@ -1,5 +1,6 @@
 import { app, ipcMain, Menu } from "electron";
 import serve from "electron-serve";
+import isDev from "electron-is-dev";
 import { createTray, openPreferencesWindow } from "./helpers";
 import { listen, close } from "./helpers/proxy-chain-wrapper";
 import {
@@ -14,12 +15,10 @@ import {
 } from "./helpers/preference-accessor";
 import { updateTray } from "./helpers/create-tray";
 
-const isProd: boolean = process.env.NODE_ENV === "production";
-
-if (isProd) {
-  serve({ directory: "app" });
-} else {
+if (isDev) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
+} else {
+  serve({ directory: "app" });
 }
 
 Menu.setApplicationMenu(null);

@@ -1,6 +1,5 @@
+import isDev from "electron-is-dev";
 import { createWindow } from ".";
-
-const isProd: boolean = process.env.NODE_ENV === "production";
 
 export default async () => {
   const mainWindow = createWindow("main", {
@@ -11,11 +10,11 @@ export default async () => {
     titleBarStyle: "hidden",
   });
 
-  if (isProd) {
-    await mainWindow.loadURL("app://./preferences.html");
-  } else {
+  if (isDev) {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/preferences`);
     mainWindow.webContents.openDevTools({ mode: "detach" });
+  } else {
+    await mainWindow.loadURL("app://./preferences.html");
   }
 };

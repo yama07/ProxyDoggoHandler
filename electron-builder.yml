@@ -10,3 +10,7 @@ files:
       - package.json
       - app
 publish: null
+mac:
+  target: dmg
+win:
+  target: portable

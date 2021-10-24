@@ -5,7 +5,7 @@ import {
   setUpstreamsPreference,
 } from "./preference-accessor";
 import { updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
-import openPreferencesWindow from "./open-preferences-window";
+import { openPrefsWindow } from "../windows/preferences";
 
 let tray: Tray | undefined;
 
@@ -48,7 +48,7 @@ export const updateTray = () => {
       label: "環境設定",
       accelerator: process.platform === "darwin" ? "Command+," : null,
       click: () => {
-        openPreferencesWindow();
+        openPrefsWindow();
       },
     },
     { type: "separator" },

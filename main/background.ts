@@ -1,7 +1,7 @@
 import { app, Menu } from "electron";
 import serve from "electron-serve";
 import isDev from "electron-is-dev";
-import { openPreferencesWindow } from "./helpers";
+import { openPrefsWindow } from "./windows/preferences";
 import { listen, close } from "./helpers/proxy-chain-wrapper";
 import {
   getGeneralPreference,
@@ -37,7 +37,7 @@ if (process.platform === "darwin") app.dock.hide();
   initializeIpc();
 
   if (getGeneralPreference().isOpenAtStartup) {
-    openPreferencesWindow();
+    openPrefsWindow();
   }
 })();
 

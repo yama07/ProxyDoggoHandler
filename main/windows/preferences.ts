@@ -3,10 +3,10 @@ import isDev from "electron-is-dev";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 
-let preferencesWindow: BrowserWindow | null = null;
+let preferencesWindow: BrowserWindow | undefined;
 
-export default async () => {
-  if (preferencesWindow != null && !preferencesWindow.isDestroyed()) {
+export const openPrefsWindow = async () => {
+  if (preferencesWindow && !preferencesWindow.isDestroyed()) {
     preferencesWindow.show();
     preferencesWindow.focus();
     return;

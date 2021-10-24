@@ -20,6 +20,7 @@
     "electron-is-dev": "^2.0.0",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.0.1",
+    "electron-window-state": "^5.0.3",
     "proxy-chain": "^1.0.4",
     "react-hook-form": "^7.17.4"
   },

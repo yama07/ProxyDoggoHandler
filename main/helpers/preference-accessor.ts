@@ -1,24 +1,30 @@
 import Store from "electron-store";
 
-const store = new Store<PreferenceType>({
-  defaults: {
-    general: { isOpenAtStartup: true },
-    proxy: { port: 8080, verbose: false },
-    upstreams: {
-      selectedIndex: 0,
-      upstreams: [
-        { name: "Dynamic", icon: "001-dog", connectionSetting: null },
-      ],
-    },
-  },
-});
+let _storeInstance: Store<PreferenceType> | null = null;
+const getStoreInsance = (): Store<PreferenceType> => {
+  if (!_storeInstance) {
+    _storeInstance = new Store<PreferenceType>({
+      defaults: {
+        general: { isOpenAtStartup: true },
+        proxy: { port: 8080, verbose: false },
+        upstreams: {
+          selectedIndex: 0,
+          upstreams: [
+            { name: "Dynamic", icon: "001-dog", connectionSetting: null },
+          ],
+        },
+      },
+    });
+  }
+  return _storeInstance;
+};
 
 export const getGeneralPreference = (): GeneralPreferenceType => {
-  return store.get("general");
+  return getStoreInsance().get("general");
 };
 
 export const setGeneralPreference = (preference: GeneralPreferenceType) => {
-  store.set("general", preference);
+  getStoreInsance().set("general", preference);
 };
 
 export const onGeneralPreferenceDidChange = (
@@ -27,15 +33,15 @@ export const onGeneralPreferenceDidChange = (
     oldValue: GeneralPreferenceType
   ) => void
 ): (() => void) => {
-  return store.onDidChange("general", callback);
+  return getStoreInsance().onDidChange("general", callback);
 };
 
 export const getProxyPreference = (): ProxyPreferenceType => {
-  return store.get("proxy");
+  return getStoreInsance().get("proxy");
 };
 
 export const setProxyPreference = (preference: ProxyPreferenceType) => {
-  store.set("proxy", preference);
+  getStoreInsance().set("proxy", preference);
 };
 
 export const onProxyPreferenceDidChange = (
@@ -44,15 +50,15 @@ export const onProxyPreferenceDidChange = (
     oldValue: ProxyPreferenceType
   ) => void
 ): (() => void) => {
-  return store.onDidChange("proxy", callback);
+  return getStoreInsance().onDidChange("proxy", callback);
 };
 
 export const getUpstreamsPreference = (): UpstreamsPreferenceType => {
-  return store.get("upstreams");
+  return getStoreInsance().get("upstreams");
 };
 
 export const setUpstreamsPreference = (preference: UpstreamsPreferenceType) => {
-  store.set("upstreams", preference);
+  getStoreInsance().set("upstreams", preference);
 };
 
 export const onUpstreamsPreferenceDidChange = (
@@ -61,5 +67,5 @@ export const onUpstreamsPreferenceDidChange = (
     oldValue: UpstreamsPreferenceType
   ) => void
 ): (() => void) => {
-  return store.onDidChange("upstreams", callback);
+  return getStoreInsance().onDidChange("upstreams", callback);
 };

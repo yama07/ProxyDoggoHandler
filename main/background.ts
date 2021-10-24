@@ -15,6 +15,12 @@ import {
 } from "./helpers/preference-accessor";
 import { updateTray } from "./helpers/create-tray";
 
+// アプリの多重起動防止
+const instanceLock = app.requestSingleInstanceLock();
+if (!instanceLock) {
+  app.exit();
+}
+
 if (isDev) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 } else {

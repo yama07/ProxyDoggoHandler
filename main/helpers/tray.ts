@@ -7,10 +7,21 @@ import {
 import { updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
 import openPreferencesWindow from "./open-preferences-window";
 
-let tray: Tray = null;
+let tray: Tray | undefined;
 
 const getIconPath = (iconId: string): string =>
   path.join(__dirname, "tray-icons", "dog-breeds", iconId + ".png");
+
+export const initializeTray = () => {
+  const imgFilePath = getIconPath("001-dog");
+  const icon = nativeImage.createFromPath(imgFilePath);
+  tray = new Tray(icon);
+  tray.addListener("click", () => {
+    tray.popUpContextMenu();
+  });
+
+  updateTray();
+};
 
 export const updateTray = () => {
   const upstreamsPreference = getUpstreamsPreference();
@@ -55,15 +66,4 @@ export const updateTray = () => {
     upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon
   );
   tray.setImage(iconPath);
-};
-
-export default () => {
-  const imgFilePath = getIconPath("001-dog");
-  const icon = nativeImage.createFromPath(imgFilePath);
-  tray = new Tray(icon);
-  tray.addListener("click", () => {
-    tray.popUpContextMenu();
-  });
-
-  updateTray();
 };

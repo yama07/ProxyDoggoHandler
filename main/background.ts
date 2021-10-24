@@ -1,7 +1,7 @@
 import { app, ipcMain, Menu } from "electron";
 import serve from "electron-serve";
 import isDev from "electron-is-dev";
-import { createTray, openPreferencesWindow } from "./helpers";
+import { openPreferencesWindow } from "./helpers";
 import { listen, close } from "./helpers/proxy-chain-wrapper";
 import {
   getGeneralPreference,
@@ -13,7 +13,7 @@ import {
   onUpstreamsPreferenceDidChange,
   onProxyPreferenceDidChange,
 } from "./helpers/preference-accessor";
-import { updateTray } from "./helpers/create-tray";
+import { initializeTray, updateTray } from "./helpers/tray";
 
 // アプリの多重起動防止
 const instanceLock = app.requestSingleInstanceLock();
@@ -36,7 +36,7 @@ if (process.platform === "darwin") app.dock.hide();
 
   listen(getProxyPreference());
 
-  createTray();
+  initializeTray();
 
   if (getGeneralPreference().isOpenAtStartup) {
     openPreferencesWindow();

@@ -3,7 +3,14 @@ import isDev from "electron-is-dev";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 
+let preferencesWindow: BrowserWindow | null = null;
+
 export default async () => {
+  if (preferencesWindow != null && !preferencesWindow.isDestroyed()) {
+    preferencesWindow.show();
+    preferencesWindow.focus();
+    return;
+  }
   const windowState = windowStateKeeper({
     defaultWidth: 1000,
     defaultHeight: 600,
@@ -24,15 +31,15 @@ export default async () => {
       preload: path.join(__dirname, "preload.js"),
     },
   };
-  const window = new BrowserWindow(browserOptions);
+  preferencesWindow = new BrowserWindow(browserOptions);
 
-  windowState.manage(window);
+  windowState.manage(preferencesWindow);
 
   if (isDev) {
     const port = process.argv[2];
-    await window.loadURL(`http://localhost:${port}/preferences`);
-    window.webContents.openDevTools({ mode: "detach" });
+    await preferencesWindow.loadURL(`http://localhost:${port}/preferences`);
+    preferencesWindow.webContents.openDevTools({ mode: "detach" });
   } else {
-    await window.loadURL("app://./preferences.html");
+    await preferencesWindow.loadURL("app://./preferences.html");
   }
 };

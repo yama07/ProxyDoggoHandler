@@ -125,7 +125,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     {...field}
                     margin="dense"
                     label="Host"
-                    placeholder="http://example.com"
+                    placeholder="example.com"
                     error={error != null}
                     helperText={error != null ? error["message"] : null}
                     fullWidth

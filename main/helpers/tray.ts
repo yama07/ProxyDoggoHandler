@@ -6,6 +6,7 @@ import {
 } from "./preference-accessor";
 import { updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
 import { openPrefsWindow } from "../windows/preferences";
+import { openAboutWindow } from "../windows/about";
 
 let tray: Tray | undefined;
 
@@ -49,6 +50,12 @@ export const updateTray = () => {
       accelerator: process.platform === "darwin" ? "Command+," : null,
       click: () => {
         openPrefsWindow();
+      },
+    },
+    {
+      label: "Proxy Doggo Switcherについて",
+      click: () => {
+        openAboutWindow();
       },
     },
     { type: "separator" },

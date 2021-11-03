@@ -1,6 +1,9 @@
 module.exports = {
-  webpack: (config) =>
-    Object.assign(config, {
-      target: "electron-renderer",
-    }),
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.target = "web";
+    }
+
+    return config;
+  },
 };

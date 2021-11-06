@@ -31,6 +31,7 @@ const DogBreadsIcon: React.FC<Props> = ({ iconId }) => {
         className={classes.imageIcon}
         src={`/images/dog-breeds/${iconId}.svg`}
         alt={iconId}
+        draggable={false}
       />
     </Icon>
   );

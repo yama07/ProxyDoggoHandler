@@ -88,7 +88,7 @@ const UpstreamsPreferencesContainer: React.FC = () => {
       newUpstreams[index] = newSetting;
       setUpstreams(newUpstreams);
     },
-    [upstreams, selectedIndex]
+    [upstreams]
   );
 
   const openDeleteDialog = () => {
@@ -108,7 +108,7 @@ const UpstreamsPreferencesContainer: React.FC = () => {
         ...upstreams.slice(index + 1),
       ]);
     },
-    [upstreams, selectedIndex]
+    [upstreams]
   );
 
   const classes = useStyles({});

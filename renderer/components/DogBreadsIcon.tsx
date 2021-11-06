@@ -30,6 +30,7 @@ const DogBreadsIcon: React.FC<Props> = ({ iconId }) => {
       <img
         className={classes.imageIcon}
         src={`/images/dog-breeds/${iconId}.svg`}
+        alt={iconId}
       />
     </Icon>
   );

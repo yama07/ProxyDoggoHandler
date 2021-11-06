@@ -64,23 +64,26 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
 
   const onClose = React.useCallback(() => {
     props.onDismiss();
-  }, []);
+  }, [props]);
 
-  const onSubmit = React.useCallback((formData) => {
-    const newUpstream: UpstreamType = {
-      icon: formData.iconId,
-      name: formData.name,
-      connectionSetting: {
-        host: formData.host,
-        port: formData.port,
-        credentials: formData.needsAuth
-          ? { user: formData.user, password: formData.password }
-          : null,
-      },
-    };
-    props.onConfirm(newUpstream);
-    props.onDismiss();
-  }, []);
+  const onSubmit = React.useCallback(
+    (formData) => {
+      const newUpstream: UpstreamType = {
+        icon: formData.iconId,
+        name: formData.name,
+        connectionSetting: {
+          host: formData.host,
+          port: formData.port,
+          credentials: formData.needsAuth
+            ? { user: formData.user, password: formData.password }
+            : null,
+        },
+      };
+      props.onConfirm(newUpstream);
+      props.onDismiss();
+    },
+    [props]
+  );
 
   const classes = useStyles({});
   return (

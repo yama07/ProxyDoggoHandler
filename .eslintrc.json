@@ -1,0 +1,6 @@
+{
+  "extends": ["next", "google", "prettier"],
+  "rules": {
+    "@next/next/no-img-element": "off"
+  }
+}

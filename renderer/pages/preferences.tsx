@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const preferences = function () {
+const Preferences = function () {
   const classes = useStyles({});
   const [selectedMenuContent, setSelectedMenuContent] =
     React.useState<MenuContentType>("general");
@@ -41,4 +41,4 @@ const preferences = function () {
   );
 };
 
-export default preferences;
+export default Preferences;

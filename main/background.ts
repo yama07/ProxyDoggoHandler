@@ -11,12 +11,24 @@ import {
 } from "./helpers/preference-accessor";
 import { initializeTray, updateTray } from "./helpers/tray";
 import { initializeIpc } from "./helpers/ipc";
+import log from "electron-log";
+
+log.info("Startup");
 
 // アプリの多重起動防止
 const instanceLock = app.requestSingleInstanceLock();
 if (!instanceLock) {
+  log.info("Another instance is already running.");
   app.exit();
 }
+
+console.log = log.log;
+process.on("uncaughtException", (err) => {
+  log.error("electron:event:uncaughtException");
+  log.error(err);
+  log.error(err.stack);
+  app.quit();
+});
 
 if (isDev) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
@@ -54,6 +66,7 @@ const unsubscribeFunctions = [
 ];
 
 app.on("quit", () => {
+  log.info("Shutdown");
   unsubscribeFunctions.map((unsubscribe) => {
     unsubscribe();
   });

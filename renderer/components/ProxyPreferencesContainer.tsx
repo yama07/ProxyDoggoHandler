@@ -7,7 +7,9 @@ import {
   Button,
   Divider,
   Checkbox,
+  Box,
 } from "@material-ui/core";
+import ProxyUsageCard from "./ProxyUsageCard";
 
 const useStyles = makeStyles((theme: Theme) => {
   const baseMargin = 6;
@@ -36,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => {
     button: {
       textTransform: "none",
     },
+    spacer: {
+      margin: theme.spacing(2),
+    },
   });
 });
 
@@ -44,18 +49,24 @@ const DEFAULT_PROXY_SERVER_PORT = 8080;
 const ProxyPreferencesContainer: React.FC = () => {
   const [port, setPort] = React.useState(DEFAULT_PROXY_SERVER_PORT);
   const [verbose, setVerbose] = React.useState(false);
+  const [examplePort, setExamplePort] = React.useState(
+    DEFAULT_PROXY_SERVER_PORT
+  );
 
   React.useEffect(() => {
     const proxyPreferencePromise = window.store.getProxyPreference();
     proxyPreferencePromise.then((proxyPreference: ProxyPreferenceType) => {
       setPort(proxyPreference.port);
       setVerbose(proxyPreference.verbose);
+      setExamplePort(proxyPreference.port);
     });
   }, []);
 
   const handleChange = React.useCallback(() => {
     const params: ProxyPreferenceType = { port: port, verbose: verbose };
     window.store.setProxyPreference(params);
+
+    setExamplePort(port);
   }, [port, verbose]);
 
   const classes = useStyles({});
@@ -90,6 +101,10 @@ const ProxyPreferencesContainer: React.FC = () => {
           }
           label="Verbose logging mode"
         />
+
+        <Box className={classes.spacer} />
+
+        <ProxyUsageCard port={examplePort} />
       </form>
 
       <div className={classes.formComponents}>

@@ -13,7 +13,11 @@ import { initializeTray, updateTray } from "./helpers/tray";
 import { initializeIpc } from "./helpers/ipc";
 import log from "electron-log";
 
-log.info("Startup");
+// ロギング設定
+console.log = log.log;
+log.transports.console.level = isDev ? "silly" : "info";
+log.transports.file.level = isDev ? "silly" : "info";
+log.info(`Startup with PID ${process.pid}`);
 
 // アプリの多重起動防止
 const instanceLock = app.requestSingleInstanceLock();
@@ -22,7 +26,8 @@ if (!instanceLock) {
   app.exit();
 }
 
-console.log = log.log;
+// 例外をキャッチできなかった場合、
+// ログに出力して終了する
 process.on("uncaughtException", (err) => {
   log.error("electron:event:uncaughtException");
   log.error(err);
@@ -66,7 +71,7 @@ const unsubscribeFunctions = [
 ];
 
 app.on("quit", () => {
-  log.info("Shutdown");
+  log.info(`Shutdown with PID ${process.pid}`);
   unsubscribeFunctions.map((unsubscribe) => {
     unsubscribe();
   });

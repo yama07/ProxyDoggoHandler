@@ -11,7 +11,13 @@ import { openAboutWindow } from "../windows/about";
 let tray: Tray | undefined;
 
 const getIconPath = (iconId: string): string =>
-  path.join(__dirname, "tray-icons", "dog-breeds", iconId + ".png");
+  path.join(
+    __dirname,
+    "tray-icons",
+    "dog-breeds",
+    "default",
+    iconId + "Template.png"
+  );
 
 export const initializeTray = () => {
   const imgFilePath = getIconPath("001-dog");

@@ -23,7 +23,8 @@ export const openPrefsWindow = async () => {
     height: windowState.height,
     minWidth: 1000,
     minHeight: 600,
-    titleBarStyle: "hidden",
+    titleBarStyle: is.macos ? "hidden" : "default",
+    title: "環境設定",
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,

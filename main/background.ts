@@ -1,6 +1,5 @@
 import { app, Menu } from "electron";
 import serve from "electron-serve";
-import isDev from "electron-is-dev";
 import { openPrefsWindow } from "./windows/preferences";
 import { listen, close } from "./helpers/proxy-chain-wrapper";
 import {
@@ -12,11 +11,12 @@ import {
 import { initializeTray, updateTray } from "./helpers/tray";
 import { initializeIpc } from "./helpers/ipc";
 import log from "electron-log";
+import { is } from "electron-util";
 
 // ロギング設定
 console.log = log.log;
-log.transports.console.level = isDev ? "silly" : "info";
-log.transports.file.level = isDev ? "silly" : "info";
+log.transports.console.level = is.development ? "silly" : "info";
+log.transports.file.level = is.development ? "silly" : "info";
 log.info(`Startup with PID ${process.pid}`);
 
 // アプリの多重起動防止
@@ -35,7 +35,7 @@ process.on("uncaughtException", (err) => {
   app.quit();
 });
 
-if (isDev) {
+if (is.development) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 } else {
   serve({ directory: "app" });

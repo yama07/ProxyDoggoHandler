@@ -1,5 +1,5 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
-import isDev from "electron-is-dev";
+import { is } from "electron-util";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 
@@ -35,7 +35,7 @@ export const openPrefsWindow = async () => {
 
   windowState.manage(preferencesWindow);
 
-  if (isDev) {
+  if (is.development) {
     const port = process.argv[2];
     await preferencesWindow.loadURL(`http://localhost:${port}/preferences`);
     preferencesWindow.webContents.openDevTools({ mode: "detach" });

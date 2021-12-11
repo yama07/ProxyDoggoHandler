@@ -59,7 +59,7 @@ export const updateTray = () => {
       },
     },
     {
-      label: "Proxy Doggo Switcherについて",
+      label: "Proxy Doggo Handlerについて",
       click: () => {
         openAboutWindow();
       },

@@ -1,5 +1,5 @@
-appId: jp.yama07.proxy-doggo-switcher
-productName: Proxy Doggo Switcher
+appId: jp.yama07.proxy-doggo-handler
+productName: Proxy Doggo Handler
 copyright: Copyright © 2021 Naoki Yamamoto
 directories:
   output: dist

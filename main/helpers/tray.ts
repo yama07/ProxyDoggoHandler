@@ -13,8 +13,8 @@ let tray: Tray | undefined;
 const getIconPath = (iconId: string): string =>
   path.join(
     __dirname,
+    "images",
     "tray-icons",
-    "dog-breeds",
     "default",
     iconId + "Template.png"
   );

@@ -29,7 +29,7 @@ const DogBreadsIcon: React.FC<Props> = ({ iconId }) => {
     <Icon className={classes.iconRoot}>
       <img
         className={classes.imageIcon}
-        src={`/images/dog-breeds/${iconId}.svg`}
+        src={`/images/tray-icons/default/${iconId}Template@3x.png`}
         alt={iconId}
         draggable={false}
       />

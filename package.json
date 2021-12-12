@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "proxy-doggo-handler",
-  "description": "My application description",
+  "description": "Proxy integration and switching tools",
   "version": "0.1.0",
   "author": "Naoki Yamamoto",
   "main": "app/background.js",

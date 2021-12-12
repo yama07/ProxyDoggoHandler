@@ -10,7 +10,7 @@ const getStoreInsance = (): Store<PreferenceType> => {
         upstreams: {
           selectedIndex: 0,
           upstreams: [
-            { name: "Dynamic", icon: "001-dog", connectionSetting: null },
+            { name: "Direct", icon: "001-dog", connectionSetting: null },
           ],
         },
       },

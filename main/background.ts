@@ -7,6 +7,7 @@ import {
   getProxyPreference,
   onUpstreamsPreferenceDidChange,
   onProxyPreferenceDidChange,
+  onGeneralPreferenceDidChange,
 } from "./helpers/preference-accessor";
 import { initializeTray, updateTray } from "./helpers/tray";
 import { initializeIpc } from "./helpers/ipc";
@@ -61,6 +62,15 @@ if (process.platform === "darwin") app.dock.hide();
 app.on("window-all-closed", () => {});
 
 const unsubscribeFunctions = [
+  onGeneralPreferenceDidChange((newValue, oldValue) => {
+    if (
+      newValue.menuIconStyle != oldValue.menuIconStyle ||
+      newValue.trayIconStyle != oldValue.trayIconStyle
+    ) {
+      // アイコンスタイルが変更されたらアップデートする
+      updateTray();
+    }
+  }),
   onProxyPreferenceDidChange((newValue, oldValue) => {
     close();
     listen(newValue);

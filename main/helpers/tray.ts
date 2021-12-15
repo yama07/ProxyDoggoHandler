@@ -1,6 +1,8 @@
 import { Tray, Menu, MenuItem, nativeImage } from "electron";
+import fs from "fs";
 import path from "path";
 import {
+  getGeneralPreference,
   getUpstreamsPreference,
   setUpstreamsPreference,
 } from "./preference-accessor";
@@ -10,17 +12,16 @@ import { openAboutWindow } from "../windows/about";
 
 let tray: Tray | undefined;
 
-const getIconPath = (iconId: string): string =>
-  path.join(
-    __dirname,
-    "images",
-    "tray-icons",
-    "default",
-    iconId + "Template.png"
-  );
+const getIconPath = (iconId: string, style: string): string => {
+  const basePath = path.join(__dirname, "images", "tray-icons", style);
+  return fs.existsSync(path.join(basePath, iconId + "Template@1x.png"))
+    ? path.join(basePath, iconId + "Template.png")
+    : path.join(basePath, iconId + ".png");
+};
 
 export const initializeTray = () => {
-  const imgFilePath = getIconPath("001-dog");
+  const generalPreference = getGeneralPreference();
+  const imgFilePath = getIconPath("001-dog", generalPreference.trayIconStyle);
   const icon = nativeImage.createFromPath(imgFilePath);
   tray = new Tray(icon);
   tray.addListener("click", () => {
@@ -32,6 +33,7 @@ export const initializeTray = () => {
 
 export const updateTray = () => {
   const upstreamsPreference = getUpstreamsPreference();
+  const generalPreference = getGeneralPreference();
 
   const proxyMenuItems = upstreamsPreference.upstreams.map(
     (proxy, index) =>
@@ -39,7 +41,7 @@ export const updateTray = () => {
         label: proxy.name,
         type: "radio",
         checked: upstreamsPreference.selectedIndex == index,
-        icon: getIconPath(proxy.icon),
+        icon: getIconPath(proxy.icon, generalPreference.menuIconStyle),
         click: (item, window, event) => {
           upstreamsPreference.selectedIndex = index;
           setUpstreamsPreference(upstreamsPreference);
@@ -76,7 +78,8 @@ export const updateTray = () => {
   tray.setContextMenu(contextMenu);
 
   const iconPath = getIconPath(
-    upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon
+    upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon,
+    generalPreference.trayIconStyle
   );
   tray.setImage(iconPath);
 };

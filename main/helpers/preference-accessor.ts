@@ -5,7 +5,11 @@ const getStoreInsance = (): Store<PreferenceType> => {
   if (!_storeInstance) {
     _storeInstance = new Store<PreferenceType>({
       defaults: {
-        general: { isOpenAtStartup: true },
+        general: {
+          isOpenAtStartup: true,
+          trayIconStyle: "default",
+          menuIconStyle: "default",
+        },
         proxy: { port: 8080, verbose: false },
         upstreams: {
           selectedIndex: 0,

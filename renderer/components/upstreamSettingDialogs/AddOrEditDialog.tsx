@@ -101,7 +101,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     <Select {...field}>
                       {DogIconIds.map((iconId) => (
                         <MenuItem value={iconId} key={iconId}>
-                          <DogBreadsIcon iconId={iconId} />
+                          <DogBreadsIcon iconId={iconId} style="default" />
                         </MenuItem>
                       ))}
                     </Select>

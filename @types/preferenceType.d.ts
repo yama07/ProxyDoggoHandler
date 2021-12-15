@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 type PreferenceType = {
   general: GeneralPreferenceType;
   proxy: ProxyPreferenceType;
@@ -6,6 +7,8 @@ type PreferenceType = {
 
 type GeneralPreferenceType = {
   isOpenAtStartup: boolean;
+  trayIconStyle: string;
+  menuIconStyle: string;
 };
 
 type ProxyPreferenceType = {

@@ -6,7 +6,14 @@ import {
   Button,
   Divider,
   Checkbox,
+  capitalize,
+  FormControl,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Grid,
 } from "@material-ui/core";
+import { DogIconStyle } from "./DogBreadsIcon";
 
 const useStyles = makeStyles((theme: Theme) => {
   const baseMargin = 6;
@@ -40,20 +47,28 @@ const useStyles = makeStyles((theme: Theme) => {
 
 const GeneralPreferencesContainer: React.FC = () => {
   const [isOpenAtStartup, setIsOpenAtStartup] = React.useState(false);
+  const [trayIconStyle, setTrayIconStyle] = React.useState("default");
+  const [menuIconStyle, setMenuIconStyle] = React.useState("default");
 
   React.useEffect(() => {
     const generalPreferencePromise = window.store.getGeneralPreference();
     generalPreferencePromise.then(
       (generalPreference: GeneralPreferenceType) => {
         setIsOpenAtStartup(generalPreference.isOpenAtStartup);
+        setTrayIconStyle(generalPreference.trayIconStyle);
+        setMenuIconStyle(generalPreference.menuIconStyle);
       }
     );
   }, []);
 
   const handleChange = React.useCallback(() => {
-    const params: GeneralPreferenceType = { isOpenAtStartup: isOpenAtStartup };
+    const params: GeneralPreferenceType = {
+      isOpenAtStartup: isOpenAtStartup,
+      trayIconStyle: trayIconStyle,
+      menuIconStyle: menuIconStyle,
+    };
     window.store.setGeneralPreference(params);
-  }, [isOpenAtStartup]);
+  }, [isOpenAtStartup, trayIconStyle, menuIconStyle]);
 
   const classes = useStyles({});
   return (
@@ -61,18 +76,69 @@ const GeneralPreferencesContainer: React.FC = () => {
       <Toolbar />
 
       <form noValidate autoComplete="off" className={classes.form}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isOpenAtStartup}
-              onClick={(e: object) => {
-                setIsOpenAtStartup(e["target"]["checked"]);
-              }}
-              color="primary"
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isOpenAtStartup}
+                  onClick={(e: object) => {
+                    setIsOpenAtStartup(e["target"]["checked"]);
+                  }}
+                  color="primary"
+                />
+              }
+              label="アプリケーション起動時にウィンドウを表示する"
             />
-          }
-          label="アプリケーション起動時にウィンドウを表示する"
-        />
+          </Grid>
+
+          <Grid item xs={12}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">
+                トレイアイコンのスタイル:
+              </FormLabel>
+              <RadioGroup
+                row
+                value={trayIconStyle}
+                onChange={(event) => {
+                  setTrayIconStyle(String(event.target.value));
+                }}
+              >
+                {DogIconStyle.map((iconStyle) => (
+                  <FormControlLabel
+                    key={iconStyle}
+                    value={iconStyle}
+                    control={<Radio color="primary" />}
+                    label={capitalize(iconStyle)}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">
+                メニューアイコンのスタイル:
+              </FormLabel>
+              <RadioGroup
+                row
+                value={menuIconStyle}
+                onChange={(event) => {
+                  setMenuIconStyle(String(event.target.value));
+                }}
+              >
+                {DogIconStyle.map((iconStyle) => (
+                  <FormControlLabel
+                    key={iconStyle}
+                    value={iconStyle}
+                    control={<Radio color="primary" />}
+                    label={capitalize(iconStyle)}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
       </form>
 
       <div className={classes.formComponents}>

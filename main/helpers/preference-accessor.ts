@@ -7,6 +7,7 @@ const getStoreInsance = (): Store<PreferenceType> => {
       defaults: {
         general: {
           isOpenAtStartup: true,
+          isLaunchProxyServerAtStartup: true,
           trayIconStyle: "default",
           menuIconStyle: "default",
         },

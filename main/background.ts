@@ -49,14 +49,16 @@ if (process.platform === "darwin") app.dock.hide();
 (async () => {
   await app.whenReady();
 
-  listen(getProxyPreference());
-
   initializeTray();
   updateTray();
 
   initializeIpc();
 
-  if (getGeneralPreference().isOpenAtStartup) {
+  const generalPreference = getGeneralPreference();
+  if (generalPreference.isLaunchProxyServerAtStartup) {
+    listen(getProxyPreference());
+  }
+  if (generalPreference.isOpenAtStartup) {
     openPrefsWindow();
   }
 })();

@@ -47,6 +47,8 @@ const useStyles = makeStyles((theme: Theme) => {
 
 const GeneralPreferencesContainer: React.FC = () => {
   const [isOpenAtStartup, setIsOpenAtStartup] = React.useState(false);
+  const [isLaunchProxyServerAtStartup, setIsLaunchProxyServerAtStartup] =
+    React.useState(true);
   const [trayIconStyle, setTrayIconStyle] = React.useState("default");
   const [menuIconStyle, setMenuIconStyle] = React.useState("default");
 
@@ -64,11 +66,17 @@ const GeneralPreferencesContainer: React.FC = () => {
   const handleChange = React.useCallback(() => {
     const params: GeneralPreferenceType = {
       isOpenAtStartup: isOpenAtStartup,
+      isLaunchProxyServerAtStartup: isLaunchProxyServerAtStartup,
       trayIconStyle: trayIconStyle,
       menuIconStyle: menuIconStyle,
     };
     window.store.setGeneralPreference(params);
-  }, [isOpenAtStartup, trayIconStyle, menuIconStyle]);
+  }, [
+    isOpenAtStartup,
+    isLaunchProxyServerAtStartup,
+    trayIconStyle,
+    menuIconStyle,
+  ]);
 
   const classes = useStyles({});
   return (
@@ -89,6 +97,21 @@ const GeneralPreferencesContainer: React.FC = () => {
                 />
               }
               label="アプリケーション起動時にウィンドウを表示する"
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isLaunchProxyServerAtStartup}
+                  onClick={(e: object) => {
+                    setIsLaunchProxyServerAtStartup(e["target"]["checked"]);
+                  }}
+                  color="primary"
+                />
+              }
+              label="アプリケーション起動時にプロキシサーバを立ち上げる"
             />
           </Grid>
 

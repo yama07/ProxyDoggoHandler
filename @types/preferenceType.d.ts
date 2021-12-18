@@ -7,6 +7,7 @@ type PreferenceType = {
 
 type GeneralPreferenceType = {
   isOpenAtStartup: boolean;
+  isLaunchProxyServerAtStartup: boolean;
   trayIconStyle: string;
   menuIconStyle: string;
 };

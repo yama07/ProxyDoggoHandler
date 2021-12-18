@@ -34,30 +34,24 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 const UpstreamsPreferencesContainer: React.FC = () => {
-  const [upstreams, setUpstreams] = React.useState([]);
+  const [upstreams, setUpstreams] = React.useState<UpstreamType[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
+  // 初回レンダリング時に、設定情報を画面に反映する
   React.useEffect(() => {
-    if (0 < upstreams.length) {
-      window.store.setUpstreamsPreference({
-        selectedIndex: 0,
-        upstreams: upstreams,
-      });
-      window.app.updateTray();
-    }
-  }, [upstreams]);
-
-  React.useEffect(() => {
-    const getUpstreamsPreferencePromise = window.store.getUpstreamsPreference();
-    getUpstreamsPreferencePromise.then(
-      (upstreamsPreference: UpstreamsPreferenceType) => {
-        setUpstreams(upstreamsPreference.upstreams);
-      }
-    );
+    (async () => {
+      const upstreamsPreference = await window.store.getUpstreamsPreference();
+      setUpstreams(upstreamsPreference.upstreams);
+    })();
   }, []);
+
+  const updateUpstreamsPreference = (preference: UpstreamsPreferenceType) => {
+    window.store.setUpstreamsPreference(preference);
+    setUpstreams(preference.upstreams);
+  };
 
   const openAddDialog = () => {
     setIsAddDialogOpen(true);
@@ -66,8 +60,15 @@ const UpstreamsPreferencesContainer: React.FC = () => {
     setIsAddDialogOpen(false);
   };
   const addSetting = React.useCallback(
-    (newSetting: UpstreamType) => {
-      setUpstreams(upstreams.concat(newSetting));
+    async (newSetting: UpstreamType) => {
+      const currentPreference = await window.store.getUpstreamsPreference();
+      const newSelectedIndex = currentPreference.selectedIndex;
+      const newUpstreams = upstreams.concat(newSetting);
+
+      updateUpstreamsPreference({
+        selectedIndex: newSelectedIndex,
+        upstreams: newUpstreams,
+      });
     },
     [upstreams]
   );
@@ -83,10 +84,16 @@ const UpstreamsPreferencesContainer: React.FC = () => {
     openEditDialog();
   }, []);
   const editSetting = React.useCallback(
-    (index: number, newSetting) => {
+    async (index: number, newSetting) => {
+      const currentPreference = await window.store.getUpstreamsPreference();
+      const newSelectedIndex = currentPreference.selectedIndex;
       const newUpstreams = upstreams.slice();
       newUpstreams[index] = newSetting;
-      setUpstreams(newUpstreams);
+
+      updateUpstreamsPreference({
+        selectedIndex: newSelectedIndex,
+        upstreams: newUpstreams,
+      });
     },
     [upstreams]
   );
@@ -102,11 +109,28 @@ const UpstreamsPreferencesContainer: React.FC = () => {
     openDeleteDialog();
   }, []);
   const deleteSetting = React.useCallback(
-    (index: number) => {
-      setUpstreams([
+    async (index: number) => {
+      const currentPreference = await window.store.getUpstreamsPreference();
+      const newIndex: number = ((deletedIndex, selectedIndex) => {
+        // 選択されている設定を消す場合は、0番目の設定に変更
+        // それ以外の場合は、選択されている設定が変わらないようにする
+        if (deletedIndex == selectedIndex) {
+          return 0;
+        } else if (deletedIndex < selectedIndex) {
+          return selectedIndex - 1;
+        } else {
+          return selectedIndex;
+        }
+      })(index, currentPreference.selectedIndex);
+      const newUpstreams = [
         ...upstreams.slice(0, index),
         ...upstreams.slice(index + 1),
-      ]);
+      ];
+
+      updateUpstreamsPreference({
+        selectedIndex: newIndex,
+        upstreams: newUpstreams,
+      });
     },
     [upstreams]
   );

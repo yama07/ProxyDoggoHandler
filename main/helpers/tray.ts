@@ -21,14 +21,12 @@ const getIconPath = (iconId: string, style: string): string => {
 
 export const initializeTray = () => {
   const generalPreference = getGeneralPreference();
-  const imgFilePath = getIconPath("001-dog", generalPreference.trayIconStyle);
+  const imgFilePath = getIconPath("dog-house", generalPreference.trayIconStyle);
   const icon = nativeImage.createFromPath(imgFilePath);
   tray = new Tray(icon);
   tray.addListener("click", () => {
     tray.popUpContextMenu();
   });
-
-  updateTray();
 };
 
 export const updateTray = () => {

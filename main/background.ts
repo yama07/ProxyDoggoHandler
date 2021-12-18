@@ -52,6 +52,8 @@ if (process.platform === "darwin") app.dock.hide();
   listen(getProxyPreference());
 
   initializeTray();
+  updateTray();
+
   initializeIpc();
 
   if (getGeneralPreference().isOpenAtStartup) {

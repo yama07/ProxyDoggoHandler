@@ -7,7 +7,7 @@ import {
   Button,
   Divider,
   Checkbox,
-  Box,
+  Grid,
 } from "@material-ui/core";
 import ProxyUsageCard from "./ProxyUsageCard";
 
@@ -37,9 +37,6 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     button: {
       textTransform: "none",
-    },
-    spacer: {
-      margin: theme.spacing(2),
     },
   });
 });
@@ -75,36 +72,40 @@ const ProxyPreferencesContainer: React.FC = () => {
       <Toolbar />
 
       <form noValidate autoComplete="off" className={classes.form}>
-        <TextField
-          type="number"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          InputProps={{ inputProps: { min: 0, max: 65535 } }}
-          fullWidth
-          value={port}
-          label="Port where the proxy server will listen"
-          onChange={(e) => {
-            setPort(parseInt(e.target.value) || DEFAULT_PROXY_SERVER_PORT);
-          }}
-        />
-
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={verbose}
-              onClick={(e: object) => {
-                setVerbose(e["target"]["checked"]);
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <TextField
+              type="number"
+              InputLabelProps={{ shrink: true }}
+              InputProps={{ inputProps: { min: 0, max: 65535 } }}
+              fullWidth
+              value={port}
+              label="Port where the proxy server will listen"
+              onChange={(e) => {
+                setPort(parseInt(e.target.value) || DEFAULT_PROXY_SERVER_PORT);
               }}
-              color="primary"
             />
-          }
-          label="Verbose logging mode"
-        />
+          </Grid>
 
-        <Box className={classes.spacer} />
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={verbose}
+                  onClick={(e: object) => {
+                    setVerbose(e["target"]["checked"]);
+                  }}
+                  color="primary"
+                />
+              }
+              label="Verbose logging mode"
+            />
+          </Grid>
 
-        <ProxyUsageCard port={examplePort} />
+          <Grid item xs={12}>
+            <ProxyUsageCard port={examplePort} />
+          </Grid>
+        </Grid>
       </form>
 
       <div className={classes.formComponents}>

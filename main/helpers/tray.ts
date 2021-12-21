@@ -1,4 +1,5 @@
 import { Tray, Menu, MenuItem, nativeImage } from "electron";
+import { is } from "electron-util";
 import fs from "fs";
 import path from "path";
 
@@ -82,7 +83,7 @@ export const updateTray = () => {
     { type: "separator" },
     {
       label: "環境設定",
-      accelerator: process.platform === "darwin" ? "Command+," : null,
+      accelerator: is.macos ? "Command+," : null,
       click: handler.clickPrefsWindowMenu,
     },
     {
@@ -94,7 +95,7 @@ export const updateTray = () => {
     { type: "separator" },
     {
       label: "終了",
-      accelerator: process.platform === "darwin" ? "Command+Q" : null,
+      accelerator: is.macos ? "Command+Q" : null,
       role: "quit",
     },
   ]);

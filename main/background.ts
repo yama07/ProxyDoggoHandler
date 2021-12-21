@@ -55,7 +55,7 @@ if (is.development) {
 
 Menu.setApplicationMenu(null);
 
-if (process.platform === "darwin") app.dock.hide();
+if (is.macos) app.dock.hide();
 
 (async () => {
   await app.whenReady();

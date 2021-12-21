@@ -1,38 +1,24 @@
-<p align="center"><img src="https://i.imgur.com/flcMvDC.png"></p>
+# Proxy Doggo Handler
 
-## Usage
+Proxy integration and switching tool
 
-### Create an App
+## Build
 
-```
-# with npx
-$ npx create-nextron-app my-app --example with-typescript-material-ui
+```sh
+## for macOS
+$ npm run build:mac
 
-# with yarn
-$ yarn create nextron-app my-app --example with-typescript-material-ui
-
-# with pnpx
-$ pnpx create-nextron-app my-app --example with-typescript-material-ui
-```
-
-### Install Dependencies
-
-```
-$ cd my-app
-
-# using yarn or npm
-$ yarn (or `npm install`)
-
-# using pnpm
-$ pnpm install --shamefully-hoist
+## for Windows
+### x64
+$ npm run build:win64
+### x86
+$ npm run build:win632
 ```
 
-### Use it
+## Screenshot
 
-```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
+![Tray](img/tray.png)
 
-# production build
-$ yarn build (or `npm run build` or `pnpm run build`)
-```
+![General](img/generalPreference.png)
+![Proxy](img/proxyPreference.png)
+![Upstream](img/upstreamPreference.png)

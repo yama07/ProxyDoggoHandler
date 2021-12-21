@@ -57,6 +57,9 @@ const GeneralPreferencesContainer: React.FC = () => {
     generalPreferencePromise.then(
       (generalPreference: GeneralPreferenceType) => {
         setIsOpenAtStartup(generalPreference.isOpenAtStartup);
+        setIsLaunchProxyServerAtStartup(
+          generalPreference.isLaunchProxyServerAtStartup
+        );
         setTrayIconStyle(generalPreference.trayIconStyle);
         setMenuIconStyle(generalPreference.menuIconStyle);
       }

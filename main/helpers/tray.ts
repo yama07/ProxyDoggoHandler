@@ -1,16 +1,23 @@
 import { Tray, Menu, MenuItem, nativeImage } from "electron";
 import fs from "fs";
 import path from "path";
-import {
-  getGeneralPreference,
-  getUpstreamsPreference,
-  setUpstreamsPreference,
-} from "./preference-accessor";
-import { updateUpstreamProxyUrl } from "./proxy-chain-wrapper";
-import { openPrefsWindow } from "../windows/preferences";
-import { openAboutWindow } from "../windows/about";
+
+type Accessor = {
+  generalPreference: () => GeneralPreferenceType;
+  upstreamsPreference: () => UpstreamsPreferenceType;
+  proxyServerEndpoint: () => String | undefined;
+  isProxyServerRunning: () => boolean;
+};
+
+type Handler = {
+  clickPrefsWindowMenu: () => void;
+  clickAboutWindow: () => void;
+  selectUpstream: (index: number) => void;
+};
 
 let tray: Tray | undefined;
+let handler: Handler;
+let accessor: Accessor;
 
 const getIconPath = (iconId: string, style: string): string => {
   const basePath = path.join(__dirname, "images", "tray-icons", style);
@@ -19,8 +26,17 @@ const getIconPath = (iconId: string, style: string): string => {
     : path.join(basePath, iconId + ".png");
 };
 
-export const initializeTray = () => {
-  const generalPreference = getGeneralPreference();
+const getStatusIconPath = (status: "active" | "inactive"): string =>
+  path.join(__dirname, "images", "status-icons", status + ".png");
+
+export const initializeTray = (param: {
+  accessor: Accessor;
+  handler: Handler;
+}) => {
+  accessor = param.accessor;
+  handler = param.handler;
+
+  const generalPreference = accessor.generalPreference();
   const imgFilePath = getIconPath("dog-house", generalPreference.trayIconStyle);
   const icon = nativeImage.createFromPath(imgFilePath);
   tray = new Tray(icon);
@@ -30,8 +46,22 @@ export const initializeTray = () => {
 };
 
 export const updateTray = () => {
-  const upstreamsPreference = getUpstreamsPreference();
-  const generalPreference = getGeneralPreference();
+  const upstreamsPreference = accessor.upstreamsPreference();
+  const generalPreference = accessor.generalPreference();
+
+  const StatusMenuItem = new MenuItem(
+    accessor.isProxyServerRunning
+      ? {
+          label: `Running on ${accessor.proxyServerEndpoint()}`,
+          icon: getStatusIconPath("active"),
+          enabled: false,
+        }
+      : {
+          label: "Stopped",
+          icon: getStatusIconPath("inactive"),
+          enabled: false,
+        }
+  );
 
   const proxyMenuItems = upstreamsPreference.upstreams.map(
     (proxy, index) =>
@@ -40,29 +70,24 @@ export const updateTray = () => {
         type: "radio",
         checked: upstreamsPreference.selectedIndex == index,
         icon: getIconPath(proxy.icon, generalPreference.menuIconStyle),
+        id: String(index),
         click: (item, window, event) => {
-          upstreamsPreference.selectedIndex = index;
-          setUpstreamsPreference(upstreamsPreference);
-          updateTray();
-          updateUpstreamProxyUrl(
-            upstreamsPreference.upstreams[index].connectionSetting
-          );
+          handler.selectUpstream(Number(item.id));
         },
       })
   );
+
   const contextMenu = Menu.buildFromTemplate([
+    StatusMenuItem,
+    { type: "separator" },
     {
       label: "環境設定",
       accelerator: process.platform === "darwin" ? "Command+," : null,
-      click: () => {
-        openPrefsWindow();
-      },
+      click: handler.clickPrefsWindowMenu,
     },
     {
       label: "Proxy Doggo Handlerについて",
-      click: () => {
-        openAboutWindow();
-      },
+      click: handler.clickAboutWindow,
     },
     { type: "separator" },
     ...proxyMenuItems,

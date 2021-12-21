@@ -1,11 +1,17 @@
 import ProxyChain from "proxy-chain";
 
-let server: any = null;
-let upstreamProxyUrl: string | null = null;
+type ProxyServerStatus = "stopped" | "running";
 
-export const listen = (params: ProxyPreferenceType) => {
-  close();
+let server: any = undefined;
+let upstreamProxyUrl: string | undefined = undefined;
+let proxyServerEndpoint: string | undefined = undefined;
+let status: ProxyServerStatus = "stopped";
+let onStatusChangeCallback: ((status: ProxyServerStatus) => void) | undefined;
 
+export const initializeProxyServer = (params: ProxyPreferenceType) => {
+  closePorxyPort();
+
+  proxyServerEndpoint = `http://localhost:${params.port}`;
   server = new ProxyChain.Server({
     port: params.port,
     verbose: params.verbose,
@@ -15,15 +21,21 @@ export const listen = (params: ProxyPreferenceType) => {
       };
     },
   });
+};
 
-  server.listen(() => {
+export const listenProxyPort = () => {
+  server?.listen(() => {
     console.log(`Proxy server is listening on port ${server.port}`);
+    status = "running";
+    onStatusChangeCallback ?? onStatusChangeCallback("running");
   });
 };
 
-export const close = () => {
+export const closePorxyPort = () => {
   server?.close(true, () => {
     console.log("Proxy server was closed.");
+    status = "stopped";
+    onStatusChangeCallback ?? onStatusChangeCallback("stopped");
   });
   server = null;
 };
@@ -40,4 +52,15 @@ export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
   } else {
     upstreamProxyUrl = null;
   }
+};
+
+export const getProxyServerEndpoint = (): string | undefined =>
+  proxyServerEndpoint;
+
+export const isProxyServerRunning = (): boolean => status == "running";
+
+export const onProxyStatusDidChange = (
+  callback: (status: ProxyServerStatus) => void
+) => {
+  onStatusChangeCallback = callback;
 };

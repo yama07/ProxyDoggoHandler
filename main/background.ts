@@ -1,18 +1,29 @@
 import { app, Menu } from "electron";
 import serve from "electron-serve";
 import { openPrefsWindow } from "./windows/preferences";
-import { listen, close } from "./helpers/proxy-chain-wrapper";
+import {
+  listenProxyPort,
+  closePorxyPort,
+  updateUpstreamProxyUrl,
+  initializeProxyServer,
+  onProxyStatusDidChange,
+  isProxyServerRunning,
+  getProxyServerEndpoint,
+} from "./helpers/proxy-chain-wrapper";
 import {
   getGeneralPreference,
   getProxyPreference,
   onUpstreamsPreferenceDidChange,
   onProxyPreferenceDidChange,
   onGeneralPreferenceDidChange,
+  getUpstreamsPreference,
+  setUpstreamsPreference,
 } from "./helpers/preference-accessor";
 import { initializeTray, updateTray } from "./helpers/tray";
 import { initializeIpc } from "./helpers/ipc";
 import log from "electron-log";
 import { is } from "electron-util";
+import { openAboutWindow } from "./windows/about";
 
 // ロギング設定
 console.log = log.log;
@@ -49,18 +60,45 @@ if (process.platform === "darwin") app.dock.hide();
 (async () => {
   await app.whenReady();
 
-  initializeTray();
-  updateTray();
-
   initializeIpc();
 
+  initializeTray({
+    accessor: {
+      generalPreference: getGeneralPreference,
+      upstreamsPreference: getUpstreamsPreference,
+      proxyServerEndpoint: getProxyServerEndpoint,
+      isProxyServerRunning: isProxyServerRunning,
+    },
+    handler: {
+      selectUpstream: (index: number) => {
+        const newPreference = getUpstreamsPreference();
+        newPreference.selectedIndex = index;
+        setUpstreamsPreference(newPreference);
+        updateUpstreamProxyUrl(
+          newPreference.upstreams[index].connectionSetting
+        );
+        updateTray();
+      },
+      clickPrefsWindowMenu: openPrefsWindow,
+      clickAboutWindow: openAboutWindow,
+    },
+  });
+
   const generalPreference = getGeneralPreference();
+  initializeProxyServer(getProxyPreference());
+  onProxyStatusDidChange(() => {
+    updateTray();
+  });
+
   if (generalPreference.isLaunchProxyServerAtStartup) {
-    listen(getProxyPreference());
+    listenProxyPort();
   }
+
   if (generalPreference.isOpenAtStartup) {
     openPrefsWindow();
   }
+
+  updateTray();
 })();
 
 app.on("window-all-closed", () => {});
@@ -76,8 +114,12 @@ const unsubscribeFunctions = [
     }
   }),
   onProxyPreferenceDidChange((newValue, oldValue) => {
-    close();
-    listen(newValue);
+    closePorxyPort();
+    initializeProxyServer(newValue);
+    listenProxyPort();
+    if (newValue.port != oldValue.port) {
+      updateTray();
+    }
   }),
   onUpstreamsPreferenceDidChange((newValue, oldValue) => {
     updateTray();

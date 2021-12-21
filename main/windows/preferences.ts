@@ -24,7 +24,7 @@ export const openPrefsWindow = async () => {
     minWidth: 1000,
     minHeight: 600,
     titleBarStyle: is.macos ? "hidden" : "default",
-    title: "環境設定",
+    title: "環境設定 | Proxy Doggo Handler",
     webPreferences: {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,

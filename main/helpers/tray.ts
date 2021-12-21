@@ -51,7 +51,7 @@ export const updateTray = () => {
   const generalPreference = accessor.generalPreference();
 
   const StatusMenuItem = new MenuItem(
-    accessor.isProxyServerRunning
+    accessor.isProxyServerRunning()
       ? {
           label: `Running on ${accessor.proxyServerEndpoint()}`,
           icon: getStatusIconPath("active"),
@@ -102,7 +102,9 @@ export const updateTray = () => {
   tray.setContextMenu(contextMenu);
 
   const iconPath = getIconPath(
-    upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon,
+    accessor.isProxyServerRunning()
+      ? upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon
+      : "dog-house",
     generalPreference.trayIconStyle
   );
   tray.setImage(iconPath);

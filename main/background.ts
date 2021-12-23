@@ -25,6 +25,11 @@ import log from "electron-log";
 import { is } from "electron-util";
 import { openAboutWindow } from "./windows/about";
 
+// DevelopmentとProductionでユーザデータの格納先を分ける
+if (is.development) {
+  app.setPath("userData", `${app.getPath("userData")} (development)`);
+}
+
 // ロギング設定
 console.log = log.log;
 log.transports.console.level = is.development ? "silly" : "info";
@@ -38,8 +43,7 @@ if (!instanceLock) {
   app.exit();
 }
 
-// 例外をキャッチできなかった場合、
-// ログに出力して終了する
+// 例外をキャッチできなかった場合、ログに出力して終了する
 process.on("uncaughtException", (err) => {
   log.error("electron:event:uncaughtException");
   log.error(err);
@@ -47,21 +51,63 @@ process.on("uncaughtException", (err) => {
   app.quit();
 });
 
-if (is.development) {
-  app.setPath("userData", `${app.getPath("userData")} (development)`);
-} else {
-  serve({ directory: "app" });
-}
-
+// アプリケーションメニューは不要のため非表示にする
 Menu.setApplicationMenu(null);
 
+// macの場合、Dockerにアイコンを表示させる必要がないため非表示にする
 if (is.macos) app.dock.hide();
+
+if (!is.development) serve({ directory: "app" });
 
 (async () => {
   await app.whenReady();
+  setup();
+})();
 
+app.on("window-all-closed", () => {
+  log.debug("All windows are closed.");
+});
+
+app.on("quit", () => {
+  log.info(`Shutdown with PID ${process.pid}`);
+  unsubscribeFunctions.map((unsubscribe) => {
+    unsubscribe();
+  });
+});
+
+let unsubscribeFunctions: (() => void)[];
+
+const setup = () => {
+  log.debug("Begin application setup.");
+
+  // 設定変更の監視
+  unsubscribeFunctions = [
+    onGeneralPreferenceDidChange((newValue, oldValue) => {
+      if (
+        newValue.menuIconStyle != oldValue.menuIconStyle ||
+        newValue.trayIconStyle != oldValue.trayIconStyle
+      ) {
+        // アイコンスタイルが変更されたらアップデートする
+        updateTray();
+      }
+    }),
+    onProxyPreferenceDidChange((newValue, oldValue) => {
+      closePorxyPort();
+      initializeProxyServer(newValue);
+      listenProxyPort();
+      if (newValue.port != oldValue.port) {
+        updateTray();
+      }
+    }),
+    onUpstreamsPreferenceDidChange((newValue, oldValue) => {
+      updateTray();
+    }),
+  ];
+
+  // IPCハンドリングの設定
   initializeIpc();
 
+  // システムトレイの初期化
   initializeTray({
     accessor: {
       generalPreference: getGeneralPreference,
@@ -71,12 +117,15 @@ if (is.macos) app.dock.hide();
     },
     handler: {
       selectUpstream: (index: number) => {
+        // 設定ファイルを更新
         const newPreference = getUpstreamsPreference();
         newPreference.selectedIndex = index;
         setUpstreamsPreference(newPreference);
+        // Proxyサーバのアップストリームを切り替え
         updateUpstreamProxyUrl(
           newPreference.upstreams[index].connectionSetting
         );
+        // システムトレイを更新
         updateTray();
       },
       clickPrefsWindowMenu: openPrefsWindow,
@@ -84,12 +133,14 @@ if (is.macos) app.dock.hide();
     },
   });
 
-  const generalPreference = getGeneralPreference();
+  // プロキシサーバの初期化
   initializeProxyServer(getProxyPreference());
   onProxyStatusDidChange(() => {
+    log.debug("Proxy server status was changed.");
     updateTray();
   });
 
+  const generalPreference = getGeneralPreference();
   if (generalPreference.isLaunchProxyServerAtStartup) {
     listenProxyPort();
   }
@@ -99,36 +150,6 @@ if (is.macos) app.dock.hide();
   }
 
   updateTray();
-})();
 
-app.on("window-all-closed", () => {});
-
-const unsubscribeFunctions = [
-  onGeneralPreferenceDidChange((newValue, oldValue) => {
-    if (
-      newValue.menuIconStyle != oldValue.menuIconStyle ||
-      newValue.trayIconStyle != oldValue.trayIconStyle
-    ) {
-      // アイコンスタイルが変更されたらアップデートする
-      updateTray();
-    }
-  }),
-  onProxyPreferenceDidChange((newValue, oldValue) => {
-    closePorxyPort();
-    initializeProxyServer(newValue);
-    listenProxyPort();
-    if (newValue.port != oldValue.port) {
-      updateTray();
-    }
-  }),
-  onUpstreamsPreferenceDidChange((newValue, oldValue) => {
-    updateTray();
-  }),
-];
-
-app.on("quit", () => {
-  log.info(`Shutdown with PID ${process.pid}`);
-  unsubscribeFunctions.map((unsubscribe) => {
-    unsubscribe();
-  });
-});
+  log.debug("Finish application setup.");
+};

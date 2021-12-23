@@ -1,3 +1,4 @@
+import log from "electron-log";
 import ProxyChain from "proxy-chain";
 
 type ProxyServerStatus = "stopped" | "running";
@@ -9,9 +10,11 @@ let status: ProxyServerStatus = "stopped";
 let onStatusChangeCallback: ((status: ProxyServerStatus) => void) | undefined;
 
 export const initializeProxyServer = (params: ProxyPreferenceType) => {
-  closePorxyPort();
+  log.debug("Proxy init params:", params);
 
   proxyServerEndpoint = `http://localhost:${params.port}`;
+  log.debug("New proxy server endpoint:", proxyServerEndpoint);
+
   server = new ProxyChain.Server({
     port: params.port,
     verbose: params.verbose,
@@ -21,26 +24,30 @@ export const initializeProxyServer = (params: ProxyPreferenceType) => {
       };
     },
   });
+
+  log.info("Proxy server is initialized.");
 };
 
 export const listenProxyPort = () => {
   server?.listen(() => {
-    console.log(`Proxy server is listening on port ${server.port}`);
+    log.info(`Proxy server is listening on port ${server.port}.`);
     status = "running";
-    onStatusChangeCallback ?? onStatusChangeCallback("running");
+    onStatusChangeCallback && onStatusChangeCallback("running");
   });
 };
 
 export const closePorxyPort = () => {
   server?.close(true, () => {
-    console.log("Proxy server was closed.");
+    log.info("Proxy server was closed.");
     status = "stopped";
-    onStatusChangeCallback ?? onStatusChangeCallback("stopped");
+    onStatusChangeCallback && onStatusChangeCallback("stopped");
   });
   server = null;
 };
 
 export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
+  log.debug("Upstream URl update params:", params);
+
   if (params) {
     let credential: string = "";
     if (params?.credentials) {
@@ -52,6 +59,9 @@ export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
   } else {
     upstreamProxyUrl = null;
   }
+  log.debug("New upstream proxy URL:", upstreamProxyUrl);
+
+  log.info("Upstream proxy URL is updated.");
 };
 
 export const getProxyServerEndpoint = (): string | undefined =>

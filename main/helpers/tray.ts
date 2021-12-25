@@ -1,7 +1,6 @@
-import { Tray, Menu, MenuItem, nativeImage } from "electron";
+import { Tray, Menu, MenuItem, nativeImage, NativeImage } from "electron";
 import log from "electron-log";
 import { is } from "electron-util";
-import fs from "fs";
 import path from "path";
 
 type Accessor = {
@@ -21,15 +20,15 @@ let tray: Tray | undefined;
 let handler: Handler;
 let accessor: Accessor;
 
-const getIconPath = (iconId: string, style: string): string => {
-  const basePath = path.join(__dirname, "images", "tray-icons", style);
-  return fs.existsSync(path.join(basePath, iconId + "Template@1x.png"))
-    ? path.join(basePath, iconId + "Template.png")
-    : path.join(basePath, iconId + ".png");
-};
+const getIcon = (iconId: string, style: string): NativeImage =>
+  nativeImage.createFromPath(
+    path.join(__dirname, "images", "tray-icons", style, iconId + ".png")
+  );
 
-const getStatusIconPath = (status: "active" | "inactive"): string =>
-  path.join(__dirname, "images", "status-icons", status + ".png");
+const getStatusIcon = (status: "active" | "inactive"): NativeImage =>
+  nativeImage.createFromPath(
+    path.join(__dirname, "images", "status-icons", status + ".png")
+  );
 
 export const initializeTray = (param: {
   accessor: Accessor;
@@ -39,8 +38,7 @@ export const initializeTray = (param: {
   handler = param.handler;
 
   const generalPreference = accessor.generalPreference();
-  const imgFilePath = getIconPath("dog-house", generalPreference.trayIconStyle);
-  const icon = nativeImage.createFromPath(imgFilePath);
+  const icon = getIcon("dog-house", generalPreference.trayIconStyle);
   tray = new Tray(icon);
   tray.addListener("click", () => {
     tray.popUpContextMenu();
@@ -57,12 +55,12 @@ export const updateTray = () => {
     accessor.isProxyServerRunning()
       ? {
           label: `Running on ${accessor.proxyServerEndpoint()}`,
-          icon: getStatusIconPath("active"),
+          icon: getStatusIcon("active"),
           enabled: false,
         }
       : {
           label: "Stopped",
-          icon: getStatusIconPath("inactive"),
+          icon: getStatusIcon("inactive"),
           enabled: false,
         }
   );
@@ -73,7 +71,7 @@ export const updateTray = () => {
         label: proxy.name,
         type: "radio",
         checked: upstreamsPreference.selectedIndex == index,
-        icon: getIconPath(proxy.icon, generalPreference.menuIconStyle),
+        icon: getIcon(proxy.icon, generalPreference.menuIconStyle),
         id: String(index),
         click: (item, window, event) => {
           log.debug("Click tray menu:", item.id, item.label);
@@ -105,13 +103,14 @@ export const updateTray = () => {
   ]);
   tray.setContextMenu(contextMenu);
 
-  const iconPath = getIconPath(
+  const icon = getIcon(
     accessor.isProxyServerRunning()
       ? upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon
       : "dog-house",
     generalPreference.trayIconStyle
   );
-  tray.setImage(iconPath);
+  icon.setTemplateImage(generalPreference.trayIconStyle == "default");
+  tray.setImage(icon);
 
   log.info("System tray is updated.");
 };

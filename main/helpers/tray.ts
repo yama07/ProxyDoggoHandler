@@ -1,4 +1,5 @@
 import { Tray, Menu, MenuItem, nativeImage } from "electron";
+import log from "electron-log";
 import { is } from "electron-util";
 import fs from "fs";
 import path from "path";
@@ -44,6 +45,8 @@ export const initializeTray = (param: {
   tray.addListener("click", () => {
     tray.popUpContextMenu();
   });
+
+  log.info("System tray is initialized.");
 };
 
 export const updateTray = () => {
@@ -73,6 +76,7 @@ export const updateTray = () => {
         icon: getIconPath(proxy.icon, generalPreference.menuIconStyle),
         id: String(index),
         click: (item, window, event) => {
+          log.debug("Click tray menu:", item.id, item.label);
           handler.selectUpstream(Number(item.id));
         },
       })
@@ -108,4 +112,6 @@ export const updateTray = () => {
     generalPreference.trayIconStyle
   );
   tray.setImage(iconPath);
+
+  log.info("System tray is updated.");
 };

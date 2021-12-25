@@ -100,6 +100,12 @@ const setup = () => {
       }
     }),
     onUpstreamsPreferenceDidChange((newValue, oldValue) => {
+      const newSelectedUpstream = newValue.upstreams[newValue.selectedIndex];
+      const oldSelectedUpstream = oldValue.upstreams[oldValue.selectedIndex];
+      if (newSelectedUpstream != oldSelectedUpstream) {
+        // Proxyサーバのアップストリームを切り替え
+        updateUpstreamProxyUrl(newSelectedUpstream.connectionSetting);
+      }
       updateTray();
     }),
   ];
@@ -121,12 +127,6 @@ const setup = () => {
         const newPreference = getUpstreamsPreference();
         newPreference.selectedIndex = index;
         setUpstreamsPreference(newPreference);
-        // Proxyサーバのアップストリームを切り替え
-        updateUpstreamProxyUrl(
-          newPreference.upstreams[index].connectionSetting
-        );
-        // システムトレイを更新
-        updateTray();
       },
       clickPrefsWindowMenu: openPrefsWindow,
       clickAboutWindow: openAboutWindow,

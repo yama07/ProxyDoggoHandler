@@ -9,18 +9,8 @@ export const DogIconIds = [...Array(50)].map(
 export const DogIconStyle = ["default", "color", "black", "white"] as const;
 type DogIconStyleType = typeof DogIconStyle[number];
 
-const getIconPath = (iconId: string, style: DogIconStyleType): string => {
-  switch (style) {
-    case "default":
-      return `/images/tray-icons/default/${iconId}Template@3x.png`;
-    case "color":
-      return `/images/tray-icons/color/${iconId}@3x.png`;
-    case "black":
-      return `/images/tray-icons/black/${iconId}@3x.png`;
-    case "white":
-      return `/images/tray-icons/white/${iconId}@3x.png`;
-  }
-};
+const getIconPath = (iconId: string, style: DogIconStyleType): string =>
+  `/images/tray-icons/${style}/${iconId}@3x.png`;
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({

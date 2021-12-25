@@ -1,21 +1,17 @@
 import log from "electron-log";
-import ProxyChain from "proxy-chain";
+import { Server, redactUrl } from "proxy-chain";
 
 type ProxyServerStatus = "stopped" | "running";
 
 let server: any = undefined;
 let upstreamProxyUrl: string | undefined = undefined;
-let proxyServerEndpoint: string | undefined = undefined;
 let status: ProxyServerStatus = "stopped";
 let onStatusChangeCallback: ((status: ProxyServerStatus) => void) | undefined;
 
 export const initializeProxyServer = (params: ProxyPreferenceType) => {
   log.debug("Proxy init params:", params);
 
-  proxyServerEndpoint = `http://localhost:${params.port}`;
-  log.debug("New proxy server endpoint:", proxyServerEndpoint);
-
-  server = new ProxyChain.Server({
+  server = new Server({
     port: params.port,
     verbose: params.verbose,
     prepareRequestFunction: () => {
@@ -23,6 +19,11 @@ export const initializeProxyServer = (params: ProxyPreferenceType) => {
         upstreamProxyUrl: upstreamProxyUrl,
       };
     },
+  });
+
+  server.on("requestFailed", ({ request, error }) => {
+    log.info(`Request ${request.url} failed.`);
+    log.error(error);
   });
 
   log.info("Proxy server is initialized.");
@@ -50,7 +51,7 @@ export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
 
   if (params) {
     let credential: string = "";
-    if (params?.credentials) {
+    if (params.credentials) {
       const user = encodeURI(params.credentials.user);
       const password = encodeURI(params.credentials.password);
       credential = `${user}:${password}@`;
@@ -60,12 +61,17 @@ export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
     upstreamProxyUrl = null;
   }
   log.debug("New upstream proxy URL:", upstreamProxyUrl);
-
-  log.info("Upstream proxy URL is updated.");
+  log.info(
+    `Upstream proxy URL is updated to "${
+      upstreamProxyUrl
+        ? redactUrl(upstreamProxyUrl, "****")
+        : "None (direct access mode)"
+    }".`
+  );
 };
 
 export const getProxyServerEndpoint = (): string | undefined =>
-  proxyServerEndpoint;
+  server ? `http://localhost:${server.port}` : undefined;
 
 export const isProxyServerRunning = (): boolean => status == "running";
 

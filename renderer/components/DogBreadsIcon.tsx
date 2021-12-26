@@ -2,15 +2,27 @@ import React from "react";
 import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
 import { Icon } from "@material-ui/core";
 
+export const DogIconStyles = [
+  "lineal",
+  "fill",
+  "linealColor",
+  "flatColor",
+] as const;
+export type DogIconStyleType = typeof DogIconStyles[number];
+
 export const DogIconIds = [...Array(50)].map(
   (_, index) => ("000" + (index + 1)).slice(-3) + "-dog"
 );
 
-export const DogIconStyle = ["default", "color", "black", "white"] as const;
-type DogIconStyleType = typeof DogIconStyle[number];
-
-const getIconPath = (iconId: string, style: DogIconStyleType): string =>
-  `/images/tray-icons/${style}/${iconId}@3x.png`;
+const getIconPath = (
+  iconId: string,
+  style: DogIconStyleType,
+  inverse: boolean = false
+): string => {
+  const styleDir =
+    style + (["lineal", "fill"].includes(style) && inverse ? "_inverse" : "");
+  return `/images/tray-icons/${styleDir}/${iconId}@3x.png`;
+};
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({

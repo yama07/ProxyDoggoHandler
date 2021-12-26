@@ -8,8 +8,8 @@ const getStoreInsance = (): Store<PreferenceType> => {
         general: {
           isOpenAtStartup: true,
           isLaunchProxyServerAtStartup: true,
-          trayIconStyle: "default",
-          menuIconStyle: "default",
+          trayIconStyle: "lineal",
+          menuIconStyle: "lineal",
         },
         proxy: { port: 8080, verbose: false },
         upstreams: {

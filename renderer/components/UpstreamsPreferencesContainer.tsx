@@ -165,7 +165,7 @@ const UpstreamsPreferencesContainer: React.FC = () => {
           {upstreams.map((upstream, index) => (
             <TableRow key={index}>
               <TableCell align="center">
-                <DogBreadsIcon iconId={upstream.icon} style="default" />
+                <DogBreadsIcon iconId={upstream.icon} style="lineal" />
               </TableCell>
               <TableCell>{upstream.name}</TableCell>
               <TableCell>{upstream.connectionSetting?.host ?? ""}</TableCell>

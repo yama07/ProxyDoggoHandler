@@ -24,12 +24,27 @@ let accessor: Accessor;
 
 const getIcon = (iconId: string, style: string): NativeImage =>
   nativeImage.createFromPath(
-    path.join(__dirname, "images", "tray-icons", style, iconId + ".png")
+    path.join(
+      ...(is.development
+        ? [__dirname, "..", "renderer", "public"]
+        : [__dirname]),
+      "images",
+      "tray-icons",
+      style,
+      iconId + ".png"
+    )
   );
 
 const getStatusIcon = (status: "active" | "inactive"): NativeImage =>
   nativeImage.createFromPath(
-    path.join(__dirname, "images", "status-icons", status + ".png")
+    path.join(
+      ...(is.development
+        ? [__dirname, "..", "renderer", "public"]
+        : [__dirname]),
+      "images",
+      "status-icons",
+      status + ".png"
+    )
   );
 
 export const initializeTray = (param: {
@@ -130,7 +145,9 @@ export const updateTray = () => {
       : "dog-house",
     generalPreference.trayIconStyle
   );
-  icon.setTemplateImage(generalPreference.trayIconStyle == "default");
+  icon.setTemplateImage(
+    ["lineal", "fill"].includes(generalPreference.trayIconStyle)
+  );
   tray.setImage(icon);
 
   log.info("System tray is updated.");

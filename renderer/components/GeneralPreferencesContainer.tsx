@@ -13,7 +13,7 @@ import {
   RadioGroup,
   Grid,
 } from "@material-ui/core";
-import { DogIconStyle } from "./DogBreadsIcon";
+import { DogIconStyles, DogIconStyleType } from "./DogBreadsIcon";
 
 const useStyles = makeStyles((theme: Theme) => {
   const baseMargin = 6;
@@ -45,12 +45,20 @@ const useStyles = makeStyles((theme: Theme) => {
   });
 });
 
+const toDogIconStyle = (
+  value: any,
+  defaultStyle: DogIconStyleType = "lineal"
+): DogIconStyleType =>
+  DogIconStyles.find((style) => style == value) ?? defaultStyle;
+
 const GeneralPreferencesContainer: React.FC = () => {
   const [isOpenAtStartup, setIsOpenAtStartup] = React.useState(false);
   const [isLaunchProxyServerAtStartup, setIsLaunchProxyServerAtStartup] =
     React.useState(true);
-  const [trayIconStyle, setTrayIconStyle] = React.useState("default");
-  const [menuIconStyle, setMenuIconStyle] = React.useState("default");
+  const [trayIconStyle, setTrayIconStyle] =
+    React.useState<DogIconStyleType>("lineal");
+  const [menuIconStyle, setMenuIconStyle] =
+    React.useState<DogIconStyleType>("lineal");
 
   React.useEffect(() => {
     const generalPreferencePromise = window.store.getGeneralPreference();
@@ -60,8 +68,8 @@ const GeneralPreferencesContainer: React.FC = () => {
         setIsLaunchProxyServerAtStartup(
           generalPreference.isLaunchProxyServerAtStartup
         );
-        setTrayIconStyle(generalPreference.trayIconStyle);
-        setMenuIconStyle(generalPreference.menuIconStyle);
+        setTrayIconStyle(toDogIconStyle(generalPreference.trayIconStyle));
+        setMenuIconStyle(toDogIconStyle(generalPreference.menuIconStyle));
       }
     );
   }, []);
@@ -127,10 +135,10 @@ const GeneralPreferencesContainer: React.FC = () => {
                 row
                 value={trayIconStyle}
                 onChange={(event) => {
-                  setTrayIconStyle(String(event.target.value));
+                  setTrayIconStyle(toDogIconStyle(event.target.value));
                 }}
               >
-                {DogIconStyle.map((iconStyle) => (
+                {DogIconStyles.map((iconStyle) => (
                   <FormControlLabel
                     key={iconStyle}
                     value={iconStyle}
@@ -150,10 +158,10 @@ const GeneralPreferencesContainer: React.FC = () => {
                 row
                 value={menuIconStyle}
                 onChange={(event) => {
-                  setMenuIconStyle(String(event.target.value));
+                  setMenuIconStyle(toDogIconStyle(event.target.value));
                 }}
               >
-                {DogIconStyle.map((iconStyle) => (
+                {DogIconStyles.map((iconStyle) => (
                   <FormControlLabel
                     key={iconStyle}
                     value={iconStyle}

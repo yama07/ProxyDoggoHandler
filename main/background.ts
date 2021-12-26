@@ -122,6 +122,12 @@ const setup = () => {
       isProxyServerRunning: isProxyServerRunning,
     },
     handler: {
+      startProxyServer: () => {
+        listenProxyPort();
+      },
+      stopProxyServer: () => {
+        closePorxyPort();
+      },
       selectUpstream: (index: number) => {
         // 設定ファイルを更新
         const newPreference = getUpstreamsPreference();

@@ -30,6 +30,8 @@ export const initializeProxyServer = (params: ProxyPreferenceType) => {
 };
 
 export const listenProxyPort = () => {
+  log.debug("Attempt to listen proxy port.");
+
   server?.listen(() => {
     log.info(`Proxy server is listening on port ${server.port}.`);
     status = "running";
@@ -37,13 +39,13 @@ export const listenProxyPort = () => {
   });
 };
 
-export const closePorxyPort = () => {
-  server?.close(true, () => {
-    log.info("Proxy server was closed.");
-    status = "stopped";
-    onStatusChangeCallback && onStatusChangeCallback("stopped");
-  });
-  server = null;
+export const closePorxyPort = async () => {
+  log.debug("Attempt to close proxy port.");
+
+  await server?.close(true);
+  log.info("Proxy server was closed.");
+  status = "stopped";
+  onStatusChangeCallback && onStatusChangeCallback("stopped");
 };
 
 export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {

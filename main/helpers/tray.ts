@@ -11,6 +11,8 @@ type Accessor = {
 };
 
 type Handler = {
+  startProxyServer: () => void;
+  stopProxyServer: () => void;
   clickPrefsWindowMenu: () => void;
   clickAboutWindow: () => void;
   selectUpstream: (index: number) => void;
@@ -51,7 +53,7 @@ export const updateTray = () => {
   const upstreamsPreference = accessor.upstreamsPreference();
   const generalPreference = accessor.generalPreference();
 
-  const StatusMenuItem = new MenuItem(
+  const statusMenuItem = new MenuItem(
     accessor.isProxyServerRunning()
       ? {
           label: `Running on ${accessor.proxyServerEndpoint()}`,
@@ -62,6 +64,24 @@ export const updateTray = () => {
           label: "Stopped",
           icon: getStatusIcon("inactive"),
           enabled: false,
+        }
+  );
+
+  const proxyServerControlItem = new MenuItem(
+    accessor.isProxyServerRunning()
+      ? {
+          label: "プロキシサーバを停止",
+          click: (item, window, event) => {
+            log.debug("Click tray menu:", item.label);
+            handler.stopProxyServer();
+          },
+        }
+      : {
+          label: "プロキシサーバを起動",
+          click: (item, window, event) => {
+            log.debug("Click tray menu:", item.label);
+            handler.startProxyServer();
+          },
         }
   );
 
@@ -81,7 +101,7 @@ export const updateTray = () => {
   );
 
   const contextMenu = Menu.buildFromTemplate([
-    StatusMenuItem,
+    statusMenuItem,
     { type: "separator" },
     {
       label: "環境設定",
@@ -95,6 +115,7 @@ export const updateTray = () => {
     { type: "separator" },
     ...proxyMenuItems,
     { type: "separator" },
+    proxyServerControlItem,
     {
       label: "終了",
       accelerator: is.macos ? "Command+Q" : null,

@@ -172,17 +172,17 @@ const UpstreamsPreferencesContainer: React.FC = () => {
               <TableCell align="center">
                 {upstream.connectionSetting?.credentials != null ? "Yes" : ""}
               </TableCell>
-              {0 < index && (
-                <TableCell>
-                  <Tooltip title="編集">
-                    <EditIcon
-                      onClick={() => {
-                        handleEdit(index);
-                      }}
-                    />
-                  </Tooltip>
-                </TableCell>
-              )}
+
+              <TableCell>
+                <Tooltip title="編集">
+                  <EditIcon
+                    onClick={() => {
+                      handleEdit(index);
+                    }}
+                  />
+                </Tooltip>
+              </TableCell>
+
               {0 < index && (
                 <TableCell>
                   <Tooltip title="削除">

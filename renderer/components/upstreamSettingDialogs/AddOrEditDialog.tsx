@@ -46,18 +46,27 @@ type Props = {
 };
 
 const AddOrEditDialog: React.FC<Props> = (props: Props) => {
+  // 設定自体は与えられているが、接続情報が設定されていない場合は、
+  // ダイレクトアクセスの設定とみなす
+  const isDirectAccessSetting: boolean =
+    props.oldUpstream && !props.oldUpstream.connectionSetting;
+
+  const oldConnectionSetting = props.oldUpstream?.connectionSetting;
+  const oldCredentials = oldConnectionSetting?.credentials;
+
   const { trigger, handleSubmit, watch, control } = useForm({
     criteriaMode: "all",
     shouldUseNativeValidation: false,
     defaultValues: {
       iconId: props.oldUpstream?.icon ?? "001-dog",
       name: props.oldUpstream?.name ?? "",
-      host: props.oldUpstream?.connectionSetting?.host ?? "",
-      port: props.oldUpstream?.connectionSetting?.port ?? 80,
-      needsAuth: props.oldUpstream?.connectionSetting?.credentials != null,
-      user: props.oldUpstream?.connectionSetting?.credentials?.user ?? "",
-      password:
-        props.oldUpstream?.connectionSetting?.credentials?.password ?? "",
+      host: isDirectAccessSetting
+        ? "Direct access (no proxy)"
+        : oldConnectionSetting?.host ?? "",
+      port: isDirectAccessSetting ? 0 : oldConnectionSetting?.port ?? 80,
+      needsAuth: oldCredentials != null,
+      user: oldCredentials?.user ?? "",
+      password: oldCredentials?.password ?? "",
     },
   });
   const needsAuth = watch("needsAuth");
@@ -71,18 +80,20 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
       const newUpstream: UpstreamType = {
         icon: formData.iconId,
         name: formData.name,
-        connectionSetting: {
-          host: formData.host,
-          port: formData.port,
-          credentials: formData.needsAuth
-            ? { user: formData.user, password: formData.password }
-            : null,
-        },
+        connectionSetting: isDirectAccessSetting
+          ? null
+          : {
+              host: formData.host,
+              port: formData.port,
+              credentials: formData.needsAuth
+                ? { user: formData.user, password: formData.password }
+                : null,
+            },
       };
       props.onConfirm(newUpstream);
       props.onDismiss();
     },
-    [props]
+    [isDirectAccessSetting, props]
   );
 
   const classes = useStyles({});
@@ -122,7 +133,11 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               <Controller
                 control={control}
                 name="host"
-                rules={{ required: "このフィールドを入力してください。" }}
+                rules={
+                  isDirectAccessSetting
+                    ? {}
+                    : { required: "このフィールドを入力してください。" }
+                }
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
@@ -132,7 +147,8 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     error={error != null}
                     helperText={error != null ? error["message"] : null}
                     fullWidth
-                    required
+                    required={!isDirectAccessSetting}
+                    disabled={isDirectAccessSetting}
                   />
                 )}
               />
@@ -141,18 +157,25 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               <Controller
                 control={control}
                 name="port"
-                rules={{
-                  required: "このフィールドを入力してください。",
-                  pattern: {
-                    value: /^[0-9]+$/,
-                    message: "数字を入力してください。",
-                  },
-                  min: { value: 0, message: "値は0以上にする必要があります。" },
-                  max: {
-                    value: 65535,
-                    message: "値は65535以下にする必要があります。",
-                  },
-                }}
+                rules={
+                  isDirectAccessSetting
+                    ? {}
+                    : {
+                        required: "このフィールドを入力してください。",
+                        pattern: {
+                          value: /^[0-9]+$/,
+                          message: "数字を入力してください。",
+                        },
+                        min: {
+                          value: 0,
+                          message: "値は0以上にする必要があります。",
+                        },
+                        max: {
+                          value: 65535,
+                          message: "値は65535以下にする必要があります。",
+                        },
+                      }
+                }
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
@@ -163,7 +186,8 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     error={error != null}
                     helperText={error != null ? error["message"] : null}
                     fullWidth
-                    required
+                    required={!isDirectAccessSetting}
+                    disabled={isDirectAccessSetting}
                   />
                 )}
               />
@@ -179,6 +203,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                         {...field}
                         checked={field.value}
                         color="primary"
+                        disabled={isDirectAccessSetting}
                       />
                     }
                     label="Authentication"

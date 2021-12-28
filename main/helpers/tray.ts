@@ -146,7 +146,7 @@ export const updateTray = () => {
     generalPreference.trayIconStyle
   );
   icon.setTemplateImage(
-    ["lineal", "fill"].includes(generalPreference.trayIconStyle)
+    is.macos && ["lineal", "fill"].includes(generalPreference.trayIconStyle)
   );
   tray.setImage(icon);
 

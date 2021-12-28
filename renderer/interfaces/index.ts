@@ -1,9 +1,14 @@
 declare global {
   // eslint-disable-next-line no-unused-vars
   interface Window {
+    system: ISystem;
     store: IStore;
     app: IApp;
   }
+}
+
+export interface ISystem {
+  isMacos: () => Promise<boolean>;
 }
 
 export interface IStore {

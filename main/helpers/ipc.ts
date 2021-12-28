@@ -1,4 +1,5 @@
 import { ipcMain } from "electron";
+import { is } from "electron-util";
 import {
   getGeneralPreference,
   setGeneralPreference,
@@ -10,6 +11,8 @@ import {
 import { updateTray } from "./tray";
 
 export const initializeIpc = () => {
+  ipcMain.handle("system.isMacos", (event): boolean => is.macos);
+
   ipcMain.handle(
     "store.getGeneralPreference",
     (event): GeneralPreferenceType => {

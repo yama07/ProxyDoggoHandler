@@ -51,6 +51,9 @@ const toDogIconStyle = (
 ): DogIconStyleType =>
   DogIconStyles.find((style) => style == value) ?? defaultStyle;
 
+const getIconStyleLabel = (style: DogIconStyleType): string =>
+  capitalize(style).replace("_inverse", " (white)");
+
 const GeneralPreferencesContainer: React.FC = () => {
   const [isOpenAtStartup, setIsOpenAtStartup] = React.useState(false);
   const [isLaunchProxyServerAtStartup, setIsLaunchProxyServerAtStartup] =
@@ -59,19 +62,27 @@ const GeneralPreferencesContainer: React.FC = () => {
     React.useState<DogIconStyleType>("lineal");
   const [menuIconStyle, setMenuIconStyle] =
     React.useState<DogIconStyleType>("lineal");
+  const [availableDogIconStyles, setAvailableDogIconStyles] = React.useState(
+    DogIconStyles.slice()
+  );
 
   React.useEffect(() => {
-    const generalPreferencePromise = window.store.getGeneralPreference();
-    generalPreferencePromise.then(
-      (generalPreference: GeneralPreferenceType) => {
-        setIsOpenAtStartup(generalPreference.isOpenAtStartup);
-        setIsLaunchProxyServerAtStartup(
-          generalPreference.isLaunchProxyServerAtStartup
+    (async () => {
+      const generalPreference = await window.store.getGeneralPreference();
+      setIsOpenAtStartup(generalPreference.isOpenAtStartup);
+      setIsLaunchProxyServerAtStartup(
+        generalPreference.isLaunchProxyServerAtStartup
+      );
+      setTrayIconStyle(toDogIconStyle(generalPreference.trayIconStyle));
+      setMenuIconStyle(toDogIconStyle(generalPreference.menuIconStyle));
+
+      if (await window.system.isMacos()) {
+        // macの場合はアイコンの色が自動で切り替わるため、反転スタイルは不要
+        setAvailableDogIconStyles(
+          DogIconStyles.filter((v) => !v.includes("_inverse"))
         );
-        setTrayIconStyle(toDogIconStyle(generalPreference.trayIconStyle));
-        setMenuIconStyle(toDogIconStyle(generalPreference.menuIconStyle));
       }
-    );
+    })();
   }, []);
 
   const handleChange = React.useCallback(() => {
@@ -138,12 +149,12 @@ const GeneralPreferencesContainer: React.FC = () => {
                   setTrayIconStyle(toDogIconStyle(event.target.value));
                 }}
               >
-                {DogIconStyles.map((iconStyle) => (
+                {availableDogIconStyles.map((iconStyle) => (
                   <FormControlLabel
                     key={iconStyle}
                     value={iconStyle}
                     control={<Radio color="primary" />}
-                    label={capitalize(iconStyle)}
+                    label={getIconStyleLabel(iconStyle)}
                   />
                 ))}
               </RadioGroup>
@@ -161,12 +172,12 @@ const GeneralPreferencesContainer: React.FC = () => {
                   setMenuIconStyle(toDogIconStyle(event.target.value));
                 }}
               >
-                {DogIconStyles.map((iconStyle) => (
+                {availableDogIconStyles.map((iconStyle) => (
                   <FormControlLabel
                     key={iconStyle}
                     value={iconStyle}
                     control={<Radio color="primary" />}
-                    label={capitalize(iconStyle)}
+                    label={getIconStyleLabel(iconStyle)}
                   />
                 ))}
               </RadioGroup>

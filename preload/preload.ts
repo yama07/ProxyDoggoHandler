@@ -1,5 +1,9 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+contextBridge.exposeInMainWorld("system", {
+  isMacos: (): Promise<boolean> => ipcRenderer.invoke("system.isMacos"),
+});
+
 contextBridge.exposeInMainWorld("store", {
   getGeneralPreference: (): Promise<GeneralPreferenceType> =>
     ipcRenderer.invoke("store.getGeneralPreference"),

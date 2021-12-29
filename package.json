@@ -17,34 +17,34 @@
   "dependencies": {
     "@material-ui/icons": "^4.11.2",
     "about-window": "^1.15.2",
-    "ajv": "^6.12.6",
-    "electron-log": "^4.4.1",
+    "ajv": "^8.8.2",
+    "electron-log": "^4.4.4",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.0.1",
     "electron-util": "^0.17.2",
     "electron-window-state": "^5.0.3",
     "proxy-chain": "^1.0.4",
-    "react-hook-form": "^7.18.1"
+    "react-hook-form": "^7.22.5"
   },
   "devDependencies": {
     "@material-ui/core": "^4.12.3",
     "@types/node": "^16.11.6",
-    "@types/react": "^17.0.34",
+    "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "@typescript-eslint/parser": "^4.28.4",
-    "acorn": "^8.5.0",
-    "electron": "^15.3.0",
-    "electron-builder": "^22.13.1",
-    "eslint": "7.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "acorn": "^8.7.0",
+    "electron": "^16.0.5",
+    "electron-builder": "^22.14.5",
+    "eslint": "8.5.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-next": "12.0.3",
+    "eslint-config-next": "12.0.7",
     "eslint-config-prettier": "^8.3.0",
     "next": "^12.0.7",
     "nextron": "^7.1.0",
-    "prettier": "^2.3.2",
+    "prettier": "^2.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.4"
   }
 }

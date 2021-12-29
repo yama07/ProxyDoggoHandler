@@ -44,10 +44,22 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: true
 
-      - name: Upload Release Asset
+      - name: Upload Release Asset on macos
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: '["dist/*.dmg", "dist/*.exe"]'
+          asset_path: "dist/*.dmg"
+          asset_name: "Proxy Doggo Handler-arm64.dmg"
+
+      - name: Upload Release Asset on windows
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "dist/*.exe"
+          asset_name: "Proxy Doggo Handler-win64.exe"

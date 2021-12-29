@@ -1,9 +1,9 @@
-name: 'Build and release'
+name: "Build and release"
 
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   release:
@@ -21,18 +21,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-          cache: 'npm'
+          cache: npm
 
       - name: Install modules
         run: npm ci
 
-      - name: Build
+      - name: Build on macos
         if: matrix.os == 'macos-latest'
-        run: npm build:mac
+        run: npm run build:mac
 
-      - name: Build
+      - name: Build on windows
         if: matrix.os == 'windows-latest'
-        run: npm build:win64
+        run: npm run build:win64
 
       - name: Create Release
         id: create_release

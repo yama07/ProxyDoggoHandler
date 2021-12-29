@@ -10,6 +10,7 @@ files:
       - package.json
       - app
 publish: null
+artifactName: ${productName}.${ext}
 mac:
   target: dmg
 win:

@@ -11,7 +11,17 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        include:
+          - os: macos-latest
+            build_script: build:mac
+            asset_path: "dist/Proxy Doggo Handler.dmg"
+            asset_name: "Proxy Doggo Handler-macos-arm64.dmg"
+            asset_content_type: application/x-apple-diskimage
+          - os: windows-latest
+            build_script: build:win64
+            asset_path: "dist/Proxy Doggo Handler.exe"
+            asset_name: "Proxy Doggo Handler-win64.dmg"
+            asset_content_type: application/octet-stream
 
     steps:
       - name: Check out Git repository
@@ -26,13 +36,8 @@ jobs:
       - name: Install modules
         run: npm ci
 
-      - name: Build on macos
-        if: matrix.os == 'macos-latest'
-        run: npm run build:mac
-
-      - name: Build on windows
-        if: matrix.os == 'windows-latest'
-        run: npm run build:win64
+      - name: Build
+        run: npm run ${{ matrix.build_script }}
 
       - name: Create Release
         id: create_release
@@ -44,24 +49,12 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: true
 
-      - name: Upload Release Asset on macos
-        if: matrix.os == 'macos-latest'
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "dist/*.dmg"
-          asset_name: "Proxy Doggo Handler-arm64.dmg"
-          asset_content_type: application/x-apple-diskimage
-
-      - name: Upload Release Asset on windows
-        if: matrix.os == 'windows-latest'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "dist/*.exe"
-          asset_name: "Proxy Doggo Handler-win64.exe"
-          asset_content_type: application/octet-stream
+          asset_path: ${{ matrix.asset_path }}
+          asset_name: ${{ matrix.asset_name }}
+          asset_content_type: ${{ matrix.asset_content_type }}

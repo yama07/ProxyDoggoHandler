@@ -40,6 +40,8 @@ jobs:
           path: dist/
 
   release:
+    needs: build
+
     runs-on: ubuntu-latest
 
     steps:

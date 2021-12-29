@@ -6,7 +6,7 @@ on:
       - "v*"
 
 jobs:
-  release:
+  build:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -14,14 +14,8 @@ jobs:
         include:
           - os: macos-latest
             build_script: build:mac
-            asset_path: "dist/Proxy Doggo Handler.dmg"
-            asset_name: "Proxy Doggo Handler-macos-arm64.dmg"
-            asset_content_type: application/x-apple-diskimage
           - os: windows-latest
             build_script: build:win64
-            asset_path: "dist/Proxy Doggo Handler.exe"
-            asset_name: "Proxy Doggo Handler-win64.dmg"
-            asset_content_type: application/octet-stream
 
     steps:
       - name: Check out Git repository
@@ -39,6 +33,16 @@ jobs:
       - name: Build
         run: npm run ${{ matrix.build_script }}
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}
+          path: dist/
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -49,12 +53,36 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: true
 
+      - name: Download macos artifacts
+        uses: actions/download-artifact@v2
+        id: download_mac
+        with:
+          name: macos-latest
+          path: macos/
+
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ matrix.asset_path }}
-          asset_name: ${{ matrix.asset_name }}
-          asset_content_type: ${{ matrix.asset_content_type }}
+          asset_path: ${{ steps.download_mac.outputs.download-path }}/Proxy Doggo Handler.dmg
+          asset_name: macos-dmg
+          asset_content_type: application/x-apple-diskimage
+
+      - name: Download windows artifacts
+        uses: actions/download-artifact@v2
+        id: download_win
+        with:
+          name: windows-latest
+          path: windows/
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.download_win.outputs.download-path }}/Proxy Doggo Handler.exe
+          asset_name: windows-exe
+          asset_content_type: application/octet-stream

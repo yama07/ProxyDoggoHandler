@@ -1,7 +1,5 @@
 import React from "react";
 import {
-  Theme,
-  createStyles,
   Grid,
   Checkbox,
   FormControlLabel,
@@ -14,30 +12,9 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+} from "@mui/material";
 import DogBreadsIcon, { DogIconIds } from "../DogBreadsIcon";
 import { Controller, useForm } from "react-hook-form";
-
-const useStyles = makeStyles((theme: Theme) => {
-  const baseMargin = 3;
-  return createStyles({
-    content: {
-      padding: theme.spacing(baseMargin),
-    },
-    formControl: {
-      display: "flex",
-    },
-    actions: {
-      paddingLeft: theme.spacing(baseMargin),
-      paddingRight: theme.spacing(baseMargin),
-      paddingBottom: theme.spacing(baseMargin),
-    },
-    button: {
-      textTransform: "none",
-    },
-  });
-});
 
 type Props = {
   oldUpstream?: UpstreamType;
@@ -96,18 +73,17 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
     [isDirectAccessSetting, props]
   );
 
-  const classes = useStyles({});
   return (
     <Dialog open onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)} className="form" noValidate>
-        <DialogContent className={classes.content}>
-          <Grid container spacing={3}>
+        <DialogContent sx={{ p: (theme) => theme.spacing(4) }}>
+          <Grid container spacing={2}>
             <Grid item xs={12} sm={2}>
               <Controller
                 control={control}
                 name="iconId"
                 render={({ field }) => (
-                  <FormControl className={classes.formControl}>
+                  <FormControl variant="standard" sx={{ display: "flex" }}>
                     <InputLabel id="icon-select-label">Icon</InputLabel>
                     <Select {...field}>
                       {DogIconIds.map((iconId) => (
@@ -125,7 +101,13 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 control={control}
                 name="name"
                 render={({ field }) => (
-                  <TextField {...field} margin="dense" label="Name" fullWidth />
+                  <TextField
+                    {...field}
+                    variant="standard"
+                    margin="dense"
+                    label="Name"
+                    fullWidth
+                  />
                 )}
               />
             </Grid>
@@ -141,6 +123,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
+                    variant="standard"
                     margin="dense"
                     label="Host"
                     placeholder="example.com"
@@ -179,6 +162,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
+                    variant="standard"
                     margin="dense"
                     label="Port number"
                     type="number"
@@ -221,6 +205,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     render={({ field, fieldState: { error } }) => (
                       <TextField
                         {...field}
+                        variant="standard"
                         margin="dense"
                         label="Login"
                         placeholder="alex@example.com"
@@ -240,6 +225,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     render={({ field, fieldState: { error } }) => (
                       <TextField
                         {...field}
+                        variant="standard"
                         margin="dense"
                         label="Password"
                         type="password"
@@ -256,9 +242,14 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
             )}
           </Grid>
         </DialogContent>
-        <DialogActions className={classes.actions}>
+        <DialogActions
+          sx={{
+            px: (theme) => theme.spacing(4),
+            pb: (theme) => theme.spacing(4),
+          }}
+        >
           <Button
-            className={classes.button}
+            sx={{ textTransform: "none" }}
             variant="outlined"
             color="primary"
             autoFocus
@@ -267,7 +258,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
             Cancel
           </Button>
           <Button
-            className={classes.button}
+            sx={{ textTransform: "none" }}
             type="submit"
             variant="contained"
             color="primary"

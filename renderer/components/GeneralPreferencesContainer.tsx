@@ -1,10 +1,6 @@
 import React from "react";
-import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
 import {
-  Toolbar,
   FormControlLabel,
-  Button,
-  Divider,
   Checkbox,
   capitalize,
   FormControl,
@@ -12,38 +8,8 @@ import {
   Radio,
   RadioGroup,
   Grid,
-} from "@material-ui/core";
+} from "@mui/material";
 import { DogIconStyles, DogIconStyleType } from "./DogBreadsIcon";
-
-const useStyles = makeStyles((theme: Theme) => {
-  const baseMargin = 6;
-  return createStyles({
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(baseMargin),
-      position: "relative",
-      height: "100vh",
-    },
-    form: {},
-    formComponents: {
-      position: "absolute",
-      right: 0,
-      left: 0,
-      bottom: theme.spacing(baseMargin / 2),
-    },
-    formButtons: {
-      float: "right",
-      marginRight: theme.spacing(baseMargin),
-    },
-    divider: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-    button: {
-      textTransform: "none",
-    },
-  });
-});
 
 const toDogIconStyle = (
   value: any,
@@ -85,7 +51,7 @@ const GeneralPreferencesContainer: React.FC = () => {
     })();
   }, []);
 
-  const handleChange = React.useCallback(() => {
+  React.useEffect(() => {
     const params: GeneralPreferenceType = {
       isOpenAtStartup: isOpenAtStartup,
       isLaunchProxyServerAtStartup: isLaunchProxyServerAtStartup,
@@ -100,108 +66,85 @@ const GeneralPreferencesContainer: React.FC = () => {
     menuIconStyle,
   ]);
 
-  const classes = useStyles({});
   return (
-    <main className={classes.content}>
-      <Toolbar />
-
-      <form noValidate autoComplete="off" className={classes.form}>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isOpenAtStartup}
-                  onClick={(e: object) => {
-                    setIsOpenAtStartup(e["target"]["checked"]);
-                  }}
-                  color="primary"
-                />
-              }
-              label="アプリケーション起動時にウィンドウを表示する"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isLaunchProxyServerAtStartup}
-                  onClick={(e: object) => {
-                    setIsLaunchProxyServerAtStartup(e["target"]["checked"]);
-                  }}
-                  color="primary"
-                />
-              }
-              label="アプリケーション起動時にプロキシサーバを立ち上げる"
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">
-                トレイアイコンのスタイル:
-              </FormLabel>
-              <RadioGroup
-                row
-                value={trayIconStyle}
-                onChange={(event) => {
-                  setTrayIconStyle(toDogIconStyle(event.target.value));
+    <form noValidate autoComplete="off">
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isOpenAtStartup}
+                onClick={(e: object) => {
+                  setIsOpenAtStartup(e["target"]["checked"]);
                 }}
-              >
-                {availableDogIconStyles.map((iconStyle) => (
-                  <FormControlLabel
-                    key={iconStyle}
-                    value={iconStyle}
-                    control={<Radio color="primary" />}
-                    label={getIconStyleLabel(iconStyle)}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">
-                メニューアイコンのスタイル:
-              </FormLabel>
-              <RadioGroup
-                row
-                value={menuIconStyle}
-                onChange={(event) => {
-                  setMenuIconStyle(toDogIconStyle(event.target.value));
-                }}
-              >
-                {availableDogIconStyles.map((iconStyle) => (
-                  <FormControlLabel
-                    key={iconStyle}
-                    value={iconStyle}
-                    control={<Radio color="primary" />}
-                    label={getIconStyleLabel(iconStyle)}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
+                color="primary"
+              />
+            }
+            label="アプリケーション起動時にウィンドウを表示する"
+          />
         </Grid>
-      </form>
 
-      <div className={classes.formComponents}>
-        <Divider className={classes.divider} />
-        <div className={classes.formButtons}>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              handleChange();
-            }}
-          >
-            {"Apply"}
-          </Button>
-        </div>
-      </div>
-    </main>
+        <Grid item xs={12}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isLaunchProxyServerAtStartup}
+                onClick={(e: object) => {
+                  setIsLaunchProxyServerAtStartup(e["target"]["checked"]);
+                }}
+                color="primary"
+              />
+            }
+            label="アプリケーション起動時にプロキシサーバを立ち上げる"
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">トレイアイコンのスタイル:</FormLabel>
+            <RadioGroup
+              row
+              value={trayIconStyle}
+              onChange={(event) => {
+                setTrayIconStyle(toDogIconStyle(event.target.value));
+              }}
+            >
+              {availableDogIconStyles.map((iconStyle) => (
+                <FormControlLabel
+                  key={iconStyle}
+                  value={iconStyle}
+                  control={<Radio color="primary" />}
+                  label={getIconStyleLabel(iconStyle)}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">
+              メニューアイコンのスタイル:
+            </FormLabel>
+            <RadioGroup
+              row
+              value={menuIconStyle}
+              onChange={(event) => {
+                setMenuIconStyle(toDogIconStyle(event.target.value));
+              }}
+            >
+              {availableDogIconStyles.map((iconStyle) => (
+                <FormControlLabel
+                  key={iconStyle}
+                  value={iconStyle}
+                  control={<Radio color="primary" />}
+                  label={getIconStyleLabel(iconStyle)}
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+      </Grid>
+    </form>
   );
 };
 

@@ -1,6 +1,5 @@
 import React from "react";
-import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
-import { Icon } from "@material-ui/core";
+import { Icon } from "@mui/material";
 
 export const DogIconStyles = [
   "lineal",
@@ -19,35 +18,22 @@ export const DogIconIds = [...Array(50)].map(
 const getIconPath = (iconId: string, style: DogIconStyleType): string =>
   `/images/tray-icons/${style}/${iconId}@3x.png`;
 
-const useStyles = makeStyles((theme: Theme) => {
-  return createStyles({
-    imageIcon: {
-      display: "flex",
-      height: "inherit",
-      width: "inherit",
-    },
-    iconRoot: {
-      textAlign: "center",
-    },
-  });
-});
-
 type Props = {
   iconId: string;
   style: DogIconStyleType;
 };
 
 const DogBreadsIcon: React.FC<Props> = ({ iconId, style }) => {
-  const classes = useStyles({});
   const path = getIconPath(iconId, style);
 
   return (
-    <Icon className={classes.iconRoot}>
+    <Icon sx={{ display: "flex" }}>
       <img
-        className={classes.imageIcon}
         src={path}
         alt={iconId}
         draggable={false}
+        height="inherit"
+        width="inherit"
       />
     </Icon>
   );

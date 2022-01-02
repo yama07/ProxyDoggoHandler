@@ -1,45 +1,14 @@
 import React from "react";
-import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
 import {
   TextField,
-  Toolbar,
   FormControlLabel,
   Button,
   Divider,
   Checkbox,
   Grid,
-} from "@material-ui/core";
+  Box,
+} from "@mui/material";
 import ProxyUsageCard from "./ProxyUsageCard";
-
-const useStyles = makeStyles((theme: Theme) => {
-  const baseMargin = 6;
-  return createStyles({
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(baseMargin),
-      position: "relative",
-      height: "100vh",
-    },
-    form: {},
-    formComponents: {
-      position: "absolute",
-      right: 0,
-      left: 0,
-      bottom: theme.spacing(baseMargin / 2),
-    },
-    formButtons: {
-      float: "right",
-      marginRight: theme.spacing(baseMargin),
-    },
-    divider: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-    button: {
-      textTransform: "none",
-    },
-  });
-});
 
 const DEFAULT_PROXY_SERVER_PORT = 8080;
 
@@ -66,16 +35,20 @@ const ProxyPreferencesContainer: React.FC = () => {
     setExamplePort(port);
   }, [port, verbose]);
 
-  const classes = useStyles({});
   return (
-    <main className={classes.content}>
-      <Toolbar />
-
-      <form noValidate autoComplete="off" className={classes.form}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        position: "relative",
+        height: "100%",
+      }}
+    >
+      <form noValidate autoComplete="off">
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <TextField
               type="number"
+              variant="standard"
               InputLabelProps={{ shrink: true }}
               InputProps={{ inputProps: { min: 0, max: 65535 } }}
               fullWidth
@@ -108,11 +81,17 @@ const ProxyPreferencesContainer: React.FC = () => {
         </Grid>
       </form>
 
-      <div className={classes.formComponents}>
-        <Divider className={classes.divider} />
-        <div className={classes.formButtons}>
+      <Box
+        sx={{
+          position: "absolute",
+          width: "100%",
+          bottom: (theme) => theme.spacing(0),
+        }}
+      >
+        <Divider sx={{ marginBottom: (theme) => theme.spacing(2) }} />
+        <Box sx={{ float: "right", mr: (theme) => theme.spacing(2) }}>
           <Button
-            className={classes.button}
+            sx={{ textTransform: "none" }}
             variant="contained"
             color="primary"
             onClick={() => {
@@ -121,9 +100,9 @@ const ProxyPreferencesContainer: React.FC = () => {
           >
             {"Apply & Restart"}
           </Button>
-        </div>
-      </div>
-    </main>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

@@ -38,9 +38,11 @@ export const openPrefsWindow = async () => {
 
   if (is.development) {
     const port = process.argv[2];
-    await preferencesWindow.loadURL(`http://localhost:${port}/preferences`);
+    await preferencesWindow.loadURL(
+      `http://localhost:${port}/preferences/general`
+    );
     preferencesWindow.webContents.openDevTools({ mode: "detach" });
   } else {
-    await preferencesWindow.loadURL("app://./preferences.html");
+    await preferencesWindow.loadURL("app://./preferences/general");
   }
 };

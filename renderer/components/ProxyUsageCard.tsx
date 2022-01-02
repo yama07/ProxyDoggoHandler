@@ -1,30 +1,5 @@
 import React from "react";
-import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
-import { Box, Card, CardContent, Paper, Typography } from "@material-ui/core";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {},
-    title: {
-      fontSize: 14,
-    },
-    console: {
-      padding: theme.spacing(1),
-      background: theme.palette.common.black,
-      color: theme.palette.common.white,
-      WebkitUserSelect: "text",
-    },
-    exampleBox: {
-      display: "flex",
-      flexDirection: "column",
-      gridGap: theme.spacing(1),
-    },
-    prompt: {
-      color: theme.palette.primary.light,
-      WebkitUserSelect: "none",
-    },
-  })
-);
+import { Box, Card, CardContent, Paper, Typography } from "@mui/material";
 
 type Props = {
   host?: string;
@@ -32,35 +7,67 @@ type Props = {
 };
 
 const ProxyUsageCard: React.FC<Props> = ({ host = "localhost", port }) => {
-  const classes = useStyles({});
-
   const bashZshCmd = {
     name: "bash/zsh",
-    prompt: <span className={classes.prompt}>$ </span>,
+    prompt: (
+      <Box
+        component="span"
+        sx={{
+          color: (theme) => theme.palette.primary.light,
+          WebkitUserSelect: "none",
+        }}
+      >
+        ${" "}
+      </Box>
+    ),
     http: `export http_proxy="http://${host}:${port}"`,
     https: `export https_proxy="http://${host}:${port}"`,
   };
   const psCmd = {
     name: "PowerShell",
-    prompt: <span className={classes.prompt}>PS C:{">"} </span>,
+    prompt: (
+      <Box
+        component="span"
+        sx={{
+          color: (theme) => theme.palette.primary.light,
+          WebkitUserSelect: "none",
+        }}
+      >
+        PS C:{">"}{" "}
+      </Box>
+    ),
     http: `$env:http_proxy="http://${host}:${port}"`,
     https: `$env:http_sproxy="http://${host}:${port}"`,
   };
 
   return (
-    <Card className={classes.root}>
+    <Card>
       <CardContent>
-        <Typography className={classes.title} color="textPrimary" gutterBottom>
+        <Typography sx={{ fontSize: 14 }} color="textPrimary" gutterBottom>
           プロキシ設定例
         </Typography>
 
-        <Box className={classes.exampleBox}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gridGap: 1,
+          }}
+        >
           {[bashZshCmd, psCmd].map((cmd, index) => (
             <Box key={index}>
-              <Typography className={classes.title} color="textSecondary">
+              <Typography sx={{ fontSize: 14 }} color="textSecondary">
                 {cmd.name}
               </Typography>
-              <Paper className={classes.console} variant="outlined">
+              <Paper
+                sx={{
+                  p: (theme) => theme.spacing(1),
+                  background: (theme) => theme.palette.common.black,
+                  color: (theme) => theme.palette.common.white,
+                  WebkitUserSelect: "text",
+                }}
+                variant="outlined"
+              >
                 <Typography>
                   {cmd.prompt}
                   {cmd.http}

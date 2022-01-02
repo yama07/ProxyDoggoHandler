@@ -1,37 +1,20 @@
 import React from "react";
-import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
 import {
   Button,
-  Toolbar,
   TableHead,
   Table,
   TableRow,
   TableCell,
   TableBody,
   Tooltip,
-} from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/Add";
+  Box,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import DogBreadsIcon from "./DogBreadsIcon";
 import DeleteDialog from "./upstreamSettingDialogs/DeleteDialog";
 import AddOrEditDialog from "./upstreamSettingDialogs/AddOrEditDialog";
-
-const useStyles = makeStyles((theme: Theme) => {
-  const baseMargin = 6;
-  return createStyles({
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(baseMargin),
-      position: "relative",
-      height: "100vh",
-    },
-    button: {
-      textTransform: "none",
-      float: "right",
-    },
-  });
-});
 
 const UpstreamsPreferencesContainer: React.FC = () => {
   const [upstreams, setUpstreams] = React.useState<UpstreamType[]>([]);
@@ -135,14 +118,11 @@ const UpstreamsPreferencesContainer: React.FC = () => {
     [upstreams]
   );
 
-  const classes = useStyles({});
   return (
-    <main className={classes.content}>
-      <Toolbar />
-
+    <Box sx={{ flexGrow: 1 }}>
       <Tooltip title="追加">
         <Button
-          className={classes.button}
+          sx={{ textTransform: "none", float: "right" }}
           variant="text"
           color="primary"
           onClick={() => {
@@ -226,7 +206,7 @@ const UpstreamsPreferencesContainer: React.FC = () => {
           }}
         />
       )}
-    </main>
+    </Box>
   );
 };
 

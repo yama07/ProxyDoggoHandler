@@ -1,37 +1,12 @@
 import React from "react";
 import {
-  Theme,
-  createStyles,
   DialogTitle,
   DialogContentText,
-} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import { makeStyles } from "@material-ui/styles";
-
-const useStyles = makeStyles((theme: Theme) => {
-  const baseMargin = 3;
-  return createStyles({
-    title: {
-      paddingTop: theme.spacing(baseMargin),
-      paddingLeft: theme.spacing(baseMargin),
-      paddingRight: theme.spacing(baseMargin),
-    },
-    content: {
-      padding: theme.spacing(baseMargin),
-    },
-    actions: {
-      paddingLeft: theme.spacing(baseMargin),
-      paddingRight: theme.spacing(baseMargin),
-      paddingBottom: theme.spacing(baseMargin),
-    },
-    button: {
-      textTransform: "none",
-    },
-  });
-});
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+} from "@mui/material";
 
 type Props = {
   upstream: UpstreamType;
@@ -48,19 +23,27 @@ const DeleteDialog: React.FC<Props> = ({
     onDismiss();
   };
 
-  const classes = useStyles({});
   return (
     <Dialog open onClose={handleClose}>
-      <DialogTitle className={classes.title}>
-        {"設定を削除してよろしいですか？"}
+      <DialogTitle
+        sx={{
+          p: (theme) => theme.spacing(4),
+        }}
+      >
+        設定を削除してよろしいですか？
       </DialogTitle>
-      <DialogContent className={classes.content}>
-        <DialogContentText>{upstream.name}</DialogContentText>
+      <DialogContent sx={{ px: (theme) => theme.spacing(4) }}>
+        <DialogContentText noWrap>{upstream.name}</DialogContentText>
       </DialogContent>
 
-      <DialogActions className={classes.actions}>
+      <DialogActions
+        sx={{
+          px: (theme) => theme.spacing(4),
+          pb: (theme) => theme.spacing(4),
+        }}
+      >
         <Button
-          className={classes.button}
+          sx={{ textTransform: "none" }}
           variant="outlined"
           color="primary"
           autoFocus
@@ -69,7 +52,7 @@ const DeleteDialog: React.FC<Props> = ({
           Cancel
         </Button>
         <Button
-          className={classes.button}
+          sx={{ textTransform: "none" }}
           variant="contained"
           color="primary"
           onClick={() => {

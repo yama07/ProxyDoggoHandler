@@ -1,31 +1,35 @@
 import React from "react";
-import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, styled, Toolbar, Typography } from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    title: {
-      flexGrow: 1,
-      textAlign: "center",
-    },
-
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      WebkitAppRegion: "drag",
-    },
-  })
-);
+const DraggableAppBar = styled(AppBar)({
+  WebkitAppRegion: "drag",
+});
 
 const AppHeader: React.FC = () => {
-  const classes = useStyles({});
   return (
-    <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar>
-        <Typography variant="h6" align="center" className={classes.title}>
+    <DraggableAppBar
+      position="fixed"
+      sx={{
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+      }}
+    >
+      <Toolbar
+        sx={{
+          height: (theme) => theme.spacing(10),
+          verticalAlign: "middle",
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            flexGrow: 1,
+            textAlign: "center",
+          }}
+        >
           Proxy Doggo Handler
         </Typography>
       </Toolbar>
-    </AppBar>
+    </DraggableAppBar>
   );
 };
 

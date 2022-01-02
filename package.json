@@ -2,7 +2,7 @@
   "private": true,
   "name": "proxy-doggo-handler",
   "description": "Proxy integration and switching tool",
-  "version": "0.5.9",
+  "version": "0.6.0",
   "author": "Naoki Yamamoto",
   "main": "app/background.js",
   "scripts": {
@@ -15,7 +15,11 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "@material-ui/icons": "^4.11.2",
+    "@emotion/react": "^11.7.1",
+    "@emotion/server": "^11.4.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.5",
+    "@mui/material": "^5.2.6",
     "about-window": "^1.15.2",
     "ajv": "^8.8.2",
     "electron-log": "^4.4.4",
@@ -27,7 +31,6 @@
     "react-hook-form": "^7.22.5"
   },
   "devDependencies": {
-    "@material-ui/core": "^4.12.3",
     "@types/node": "^16.11.6",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",

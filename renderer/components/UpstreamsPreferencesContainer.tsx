@@ -8,10 +8,12 @@ import {
   TableBody,
   Tooltip,
   Box,
+  Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import DogBreadsIcon from "./DogBreadsIcon";
 import DeleteDialog from "./upstreamSettingDialogs/DeleteDialog";
 import AddOrEditDialog from "./upstreamSettingDialogs/AddOrEditDialog";
@@ -135,10 +137,10 @@ const UpstreamsPreferencesContainer: React.FC = () => {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell></TableCell>
+            <TableCell> {/* icon */} </TableCell>
             <TableCell align="center">Name</TableCell>
             <TableCell align="center">Host</TableCell>
-            <TableCell align="center">Authentication</TableCell>
+            <TableCell align="center">Port</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -147,15 +149,34 @@ const UpstreamsPreferencesContainer: React.FC = () => {
               <TableCell align="center">
                 <DogBreadsIcon iconId={upstream.icon} style="lineal" />
               </TableCell>
-              <TableCell>{upstream.name}</TableCell>
-              <TableCell>{upstream.connectionSetting?.host ?? ""}</TableCell>
-              <TableCell align="center">
-                {upstream.connectionSetting?.credentials != null ? "Yes" : ""}
+              <TableCell>
+                <Typography noWrap>{upstream.name}</Typography>
               </TableCell>
-
+              <TableCell>
+                <Box display="flex" alignItems="center">
+                  <BadgeOutlinedIcon
+                    fontSize="small"
+                    sx={{
+                      visibility: upstream.connectionSetting?.credentials
+                        ? "visible"
+                        : "hidden",
+                      mr: (theme) => theme.spacing(1),
+                    }}
+                  />
+                  <Typography noWrap>
+                    {upstream.connectionSetting?.host ?? ""}
+                  </Typography>
+                </Box>
+              </TableCell>
+              <TableCell align="right">
+                <Typography noWrap>
+                  {upstream.connectionSetting?.port ?? ""}
+                </Typography>
+              </TableCell>
               <TableCell>
                 <Tooltip title="編集">
                   <EditIcon
+                    color="primary"
                     onClick={() => {
                       handleEdit(index);
                     }}
@@ -167,6 +188,7 @@ const UpstreamsPreferencesContainer: React.FC = () => {
                 <TableCell>
                   <Tooltip title="削除">
                     <DeleteIcon
+                      color="primary"
                       onClick={() => {
                         handleDelete(index);
                       }}

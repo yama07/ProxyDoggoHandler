@@ -103,11 +103,15 @@ export const updateTray = () => {
   const proxyMenuItems = upstreamsPreference.upstreams.map(
     (proxy, index) =>
       new MenuItem({
+        id: String(index),
         label: proxy.name,
         type: "radio",
         checked: upstreamsPreference.selectedIndex == index,
         icon: getIcon(proxy.icon, generalPreference.menuIconStyle),
-        id: String(index),
+        toolTip:
+          proxy.connectionSetting == null
+            ? "Direct Access"
+            : `${proxy.connectionSetting.host}:${proxy.connectionSetting.port}`,
         click: (item, window, event) => {
           log.debug("Click tray menu:", item.id, item.label);
           handler.selectUpstream(Number(item.id));

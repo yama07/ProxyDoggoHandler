@@ -134,20 +134,16 @@ const GeneralPreferencesContainer: React.FC = () => {
                     >
                       <Box
                         sx={{
-                          background: (theme) =>
-                            iconStyle.includes("inverse")
-                              ? theme.palette.primary.main
-                              : null,
-                          px: (theme) =>
-                            theme.spacing(
-                              iconStyle.includes("inverse") ? 2 : 0
-                            ),
-                          py: (theme) =>
-                            theme.spacing(
-                              iconStyle.includes("inverse") ? 0.4 : 0
-                            ),
+                          ...(iconStyle.includes("inverse")
+                            ? {
+                                borderRadius: "10%",
+                                background: (theme) =>
+                                  theme.palette.primary.main,
+                                px: (theme) => theme.spacing(2),
+                                py: (theme) => theme.spacing(0.4),
+                              }
+                            : {}),
                           m: "auto",
-                          borderRadius: "10%",
                         }}
                       >
                         <DogBreadsIcon iconId="001-dog" style={iconStyle} />
@@ -190,20 +186,16 @@ const GeneralPreferencesContainer: React.FC = () => {
                     >
                       <Box
                         sx={{
-                          background: (theme) =>
-                            iconStyle.includes("inverse")
-                              ? theme.palette.primary.main
-                              : null,
-                          px: (theme) =>
-                            theme.spacing(
-                              iconStyle.includes("inverse") ? 2 : 0
-                            ),
-                          py: (theme) =>
-                            theme.spacing(
-                              iconStyle.includes("inverse") ? 0.4 : 0
-                            ),
+                          ...(iconStyle.includes("inverse")
+                            ? {
+                                borderRadius: "10%",
+                                background: (theme) =>
+                                  theme.palette.primary.main,
+                                px: (theme) => theme.spacing(2),
+                                py: (theme) => theme.spacing(0.4),
+                              }
+                            : {}),
                           m: "auto",
-                          borderRadius: "10%",
                         }}
                       >
                         <DogBreadsIcon iconId="001-dog" style={iconStyle} />

@@ -5,11 +5,16 @@ import {
   capitalize,
   FormControl,
   FormLabel,
-  Radio,
-  RadioGroup,
   Grid,
+  ToggleButtonGroup,
+  ToggleButton,
+  Box,
+  Tooltip,
 } from "@mui/material";
-import { DogIconStyles, DogIconStyleType } from "./DogBreadsIcon";
+import DogBreadsIcon, {
+  DogIconStyles,
+  DogIconStyleType,
+} from "./DogBreadsIcon";
 
 const toDogIconStyle = (
   value: any,
@@ -99,48 +104,115 @@ const GeneralPreferencesContainer: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">トレイアイコンのスタイル:</FormLabel>
-            <RadioGroup
-              row
+        <Grid item xs={12} sx={{ mb: (theme) => theme.spacing(2) }}>
+          <FormControl component="fieldset" fullWidth>
+            <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
+            <ToggleButtonGroup
               value={trayIconStyle}
-              onChange={(event) => {
-                setTrayIconStyle(toDogIconStyle(event.target.value));
+              exclusive
+              fullWidth
+              color="primary"
+              size="small"
+              onChange={(event, value) => {
+                setTrayIconStyle(toDogIconStyle(value));
               }}
             >
               {availableDogIconStyles.map((iconStyle) => (
-                <FormControlLabel
+                <ToggleButton
                   key={iconStyle}
                   value={iconStyle}
-                  control={<Radio color="primary" />}
-                  label={getIconStyleLabel(iconStyle)}
-                />
+                  sx={{ p: (theme) => theme.spacing(0) }}
+                >
+                  <Tooltip title={getIconStyleLabel(iconStyle)}>
+                    <Box
+                      display="flex"
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        p: (theme) => theme.spacing(0.6),
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          background: (theme) =>
+                            iconStyle.includes("inverse")
+                              ? theme.palette.primary.main
+                              : null,
+                          px: (theme) =>
+                            theme.spacing(
+                              iconStyle.includes("inverse") ? 2 : 0
+                            ),
+                          py: (theme) =>
+                            theme.spacing(
+                              iconStyle.includes("inverse") ? 0.4 : 0
+                            ),
+                          m: "auto",
+                          borderRadius: "10%",
+                        }}
+                      >
+                        <DogBreadsIcon iconId="001-dog" style={iconStyle} />
+                      </Box>{" "}
+                    </Box>
+                  </Tooltip>
+                </ToggleButton>
               ))}
-            </RadioGroup>
+            </ToggleButtonGroup>
           </FormControl>
         </Grid>
+
         <Grid item xs={12}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">
-              メニューアイコンのスタイル:
-            </FormLabel>
-            <RadioGroup
-              row
+          <FormControl component="fieldset" fullWidth>
+            <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
+            <ToggleButtonGroup
               value={menuIconStyle}
-              onChange={(event) => {
-                setMenuIconStyle(toDogIconStyle(event.target.value));
+              exclusive
+              fullWidth
+              color="primary"
+              size="small"
+              onChange={(event, value) => {
+                setMenuIconStyle(toDogIconStyle(value));
               }}
             >
               {availableDogIconStyles.map((iconStyle) => (
-                <FormControlLabel
+                <ToggleButton
                   key={iconStyle}
                   value={iconStyle}
-                  control={<Radio color="primary" />}
-                  label={getIconStyleLabel(iconStyle)}
-                />
+                  sx={{ p: (theme) => theme.spacing(0) }}
+                >
+                  <Tooltip title={getIconStyleLabel(iconStyle)}>
+                    <Box
+                      display="flex"
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        p: (theme) => theme.spacing(0.6),
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          background: (theme) =>
+                            iconStyle.includes("inverse")
+                              ? theme.palette.primary.main
+                              : null,
+                          px: (theme) =>
+                            theme.spacing(
+                              iconStyle.includes("inverse") ? 2 : 0
+                            ),
+                          py: (theme) =>
+                            theme.spacing(
+                              iconStyle.includes("inverse") ? 0.4 : 0
+                            ),
+                          m: "auto",
+                          borderRadius: "10%",
+                        }}
+                      >
+                        <DogBreadsIcon iconId="001-dog" style={iconStyle} />
+                      </Box>{" "}
+                    </Box>
+                  </Tooltip>
+                </ToggleButton>
               ))}
-            </RadioGroup>
+            </ToggleButtonGroup>
           </FormControl>
         </Grid>
       </Grid>

@@ -59,7 +59,7 @@ const ProxyPreferencesContainer: React.FC = () => {
               InputProps={{ inputProps: { min: 0, max: 65535 } }}
               fullWidth
               value={proxyPreferences.port}
-              label="Port where the proxy server will listen"
+              label="リクエストを受け付けるポート番号"
               onChange={(e) => {
                 setProxyPreferences((prev) => {
                   return {
@@ -87,7 +87,7 @@ const ProxyPreferencesContainer: React.FC = () => {
                   color="primary"
                 />
               }
-              label="Verbose logging mode"
+              label="冗長ロギングを有効化する"
             />
           </Grid>
 

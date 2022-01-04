@@ -26,26 +26,21 @@ const getIconStyleLabel = (style: DogIconStyleType): string =>
   capitalize(style).replace("_inverse", " (white)");
 
 const GeneralPreferencesContainer: React.FC = () => {
-  const [isOpenAtStartup, setIsOpenAtStartup] = React.useState(false);
-  const [isLaunchProxyServerAtStartup, setIsLaunchProxyServerAtStartup] =
-    React.useState(true);
-  const [trayIconStyle, setTrayIconStyle] =
-    React.useState<DogIconStyleType>("lineal");
-  const [menuIconStyle, setMenuIconStyle] =
-    React.useState<DogIconStyleType>("lineal");
+  const [generalPreferences, setGeneralPreferences] =
+    React.useState<GeneralPreferenceType>({
+      isOpenAtStartup: true,
+      isLaunchProxyServerAtStartup: false,
+      trayIconStyle: "lineal",
+      menuIconStyle: "lineal",
+    });
+
   const [availableDogIconStyles, setAvailableDogIconStyles] = React.useState(
     DogIconStyles.slice()
   );
 
   React.useEffect(() => {
     (async () => {
-      const generalPreference = await window.store.getGeneralPreference();
-      setIsOpenAtStartup(generalPreference.isOpenAtStartup);
-      setIsLaunchProxyServerAtStartup(
-        generalPreference.isLaunchProxyServerAtStartup
-      );
-      setTrayIconStyle(toDogIconStyle(generalPreference.trayIconStyle));
-      setMenuIconStyle(toDogIconStyle(generalPreference.menuIconStyle));
+      setGeneralPreferences(await window.store.getGeneralPreference());
 
       if (await window.system.isMacos()) {
         // macの場合はアイコンの色が自動で切り替わるため、反転スタイルは不要
@@ -56,20 +51,16 @@ const GeneralPreferencesContainer: React.FC = () => {
     })();
   }, []);
 
-  React.useEffect(() => {
-    const params: GeneralPreferenceType = {
-      isOpenAtStartup: isOpenAtStartup,
-      isLaunchProxyServerAtStartup: isLaunchProxyServerAtStartup,
-      trayIconStyle: trayIconStyle,
-      menuIconStyle: menuIconStyle,
-    };
-    window.store.setGeneralPreference(params);
-  }, [
-    isOpenAtStartup,
-    isLaunchProxyServerAtStartup,
-    trayIconStyle,
-    menuIconStyle,
-  ]);
+  const onChangeHandler = React.useCallback(
+    (preferences: Partial<GeneralPreferenceType>) => {
+      setGeneralPreferences((prev) => {
+        const newPreferences = { ...prev, ...preferences };
+        window.store.setGeneralPreference(newPreferences);
+        return newPreferences;
+      });
+    },
+    []
+  );
 
   return (
     <form noValidate autoComplete="off">
@@ -78,9 +69,9 @@ const GeneralPreferencesContainer: React.FC = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={isOpenAtStartup}
+                checked={generalPreferences.isOpenAtStartup}
                 onClick={(e: object) => {
-                  setIsOpenAtStartup(e["target"]["checked"]);
+                  onChangeHandler({ isOpenAtStartup: e["target"]["checked"] });
                 }}
                 color="primary"
               />
@@ -93,9 +84,11 @@ const GeneralPreferencesContainer: React.FC = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={isLaunchProxyServerAtStartup}
+                checked={generalPreferences.isLaunchProxyServerAtStartup}
                 onClick={(e: object) => {
-                  setIsLaunchProxyServerAtStartup(e["target"]["checked"]);
+                  onChangeHandler({
+                    isLaunchProxyServerAtStartup: e["target"]["checked"],
+                  });
                 }}
                 color="primary"
               />
@@ -108,13 +101,13 @@ const GeneralPreferencesContainer: React.FC = () => {
           <FormControl component="fieldset" fullWidth>
             <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
             <ToggleButtonGroup
-              value={trayIconStyle}
+              value={generalPreferences.trayIconStyle}
               exclusive
               fullWidth
               color="primary"
               size="small"
               onChange={(event, value) => {
-                setTrayIconStyle(toDogIconStyle(value));
+                onChangeHandler({ trayIconStyle: toDogIconStyle(value) });
               }}
             >
               {availableDogIconStyles.map((iconStyle) => (
@@ -160,13 +153,13 @@ const GeneralPreferencesContainer: React.FC = () => {
           <FormControl component="fieldset" fullWidth>
             <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
             <ToggleButtonGroup
-              value={menuIconStyle}
+              value={generalPreferences.menuIconStyle}
               exclusive
               fullWidth
               color="primary"
               size="small"
               onChange={(event, value) => {
-                setMenuIconStyle(toDogIconStyle(value));
+                onChangeHandler({ menuIconStyle: toDogIconStyle(value) });
               }}
             >
               {availableDogIconStyles.map((iconStyle) => (

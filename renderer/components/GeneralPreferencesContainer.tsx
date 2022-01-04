@@ -151,7 +151,7 @@ const GeneralPreferencesContainer: React.FC = () => {
 
         <Grid item xs={12}>
           <FormControl component="fieldset" fullWidth>
-            <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
+            <FormLabel component="legend">メニューアイコンのスタイル</FormLabel>
             <ToggleButtonGroup
               value={generalPreferences.menuIconStyle}
               exclusive

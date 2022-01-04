@@ -1,7 +1,7 @@
-import { Tray, Menu, MenuItem, nativeImage, NativeImage } from "electron";
+import { Tray, Menu, MenuItem } from "electron";
 import log from "electron-log";
 import { is } from "electron-util";
-import path from "path";
+import { getAppIcon, getIcon, getStatusIcon } from "./icon";
 
 type Accessor = {
   generalPreference: () => GeneralPreferenceType;
@@ -22,31 +22,6 @@ let tray: Tray | undefined;
 let handler: Handler;
 let accessor: Accessor;
 
-const getIcon = (iconId: string, style: string): NativeImage =>
-  nativeImage.createFromPath(
-    path.join(
-      ...(is.development
-        ? [__dirname, "..", "renderer", "public"]
-        : [__dirname]),
-      "images",
-      "tray-icons",
-      style,
-      iconId + ".png"
-    )
-  );
-
-const getStatusIcon = (status: "active" | "inactive"): NativeImage =>
-  nativeImage.createFromPath(
-    path.join(
-      ...(is.development
-        ? [__dirname, "..", "renderer", "public"]
-        : [__dirname]),
-      "images",
-      "status-icons",
-      status + ".png"
-    )
-  );
-
 export const initializeTray = (param: {
   accessor: Accessor;
   handler: Handler;
@@ -55,7 +30,7 @@ export const initializeTray = (param: {
   handler = param.handler;
 
   const generalPreference = accessor.generalPreference();
-  const icon = getIcon("dog-house", generalPreference.trayIconStyle);
+  const icon = getAppIcon(generalPreference.trayIconStyle);
   tray = new Tray(icon);
   tray.addListener("click", () => {
     tray.popUpContextMenu();
@@ -72,12 +47,12 @@ export const updateTray = () => {
     accessor.isProxyServerRunning()
       ? {
           label: `Running on ${accessor.proxyServerEndpoint()}`,
-          icon: getStatusIcon("active"),
+          icon: getStatusIcon("active", generalPreference.menuIconStyle),
           enabled: false,
         }
       : {
           label: "Stopped",
-          icon: getStatusIcon("inactive"),
+          icon: getStatusIcon("inactive", generalPreference.menuIconStyle),
           enabled: false,
         }
   );
@@ -143,15 +118,12 @@ export const updateTray = () => {
   ]);
   tray.setContextMenu(contextMenu);
 
-  const icon = getIcon(
-    accessor.isProxyServerRunning()
-      ? upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon
-      : "dog-house",
-    generalPreference.trayIconStyle
-  );
-  icon.setTemplateImage(
-    is.macos && ["lineal", "fill"].includes(generalPreference.trayIconStyle)
-  );
+  const icon = accessor.isProxyServerRunning()
+    ? getIcon(
+        upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon,
+        generalPreference.trayIconStyle
+      )
+    : getAppIcon(generalPreference.trayIconStyle);
   tray.setImage(icon);
 
   log.info("System tray is updated.");

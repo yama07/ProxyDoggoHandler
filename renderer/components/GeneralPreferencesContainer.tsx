@@ -26,6 +26,8 @@ const getIconStyleLabel = (style: DogIconStyleType): string =>
   capitalize(style).replace("_inverse", " (white)");
 
 const GeneralPreferencesContainer: React.FC = () => {
+  const [isReady, setIsReady] = React.useState(false);
+
   const [generalPreferences, setGeneralPreferences] =
     React.useState<GeneralPreferenceType>({
       isOpenAtStartup: true,
@@ -48,6 +50,8 @@ const GeneralPreferencesContainer: React.FC = () => {
           DogIconStyles.filter((v) => !v.includes("_inverse"))
         );
       }
+
+      setIsReady(true);
     })();
   }, []);
 
@@ -63,7 +67,7 @@ const GeneralPreferencesContainer: React.FC = () => {
   );
 
   return (
-    <form noValidate autoComplete="off">
+    <form noValidate autoComplete="off" hidden={!isReady}>
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <FormControlLabel

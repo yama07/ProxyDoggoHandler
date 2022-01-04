@@ -13,27 +13,32 @@ import ProxyUsageCard from "./ProxyUsageCard";
 const DEFAULT_PROXY_SERVER_PORT = 8080;
 
 const ProxyPreferencesContainer: React.FC = () => {
-  const [port, setPort] = React.useState(DEFAULT_PROXY_SERVER_PORT);
-  const [verbose, setVerbose] = React.useState(false);
+  const [isReady, setIsReady] = React.useState(false);
+
+  const [proxyPreferences, setProxyPreferences] =
+    React.useState<ProxyPreferenceType>({
+      port: DEFAULT_PROXY_SERVER_PORT,
+      verbose: false,
+    });
+
   const [examplePort, setExamplePort] = React.useState(
     DEFAULT_PROXY_SERVER_PORT
   );
 
   React.useEffect(() => {
-    const proxyPreferencePromise = window.store.getProxyPreference();
-    proxyPreferencePromise.then((proxyPreference: ProxyPreferenceType) => {
-      setPort(proxyPreference.port);
-      setVerbose(proxyPreference.verbose);
-      setExamplePort(proxyPreference.port);
-    });
+    (async () => {
+      const preferences = await window.store.getProxyPreference();
+      setProxyPreferences(preferences);
+      setExamplePort(preferences.port);
+
+      setIsReady(true);
+    })();
   }, []);
 
-  const handleChange = React.useCallback(() => {
-    const params: ProxyPreferenceType = { port: port, verbose: verbose };
-    window.store.setProxyPreference(params);
-
-    setExamplePort(port);
-  }, [port, verbose]);
+  const handleApply = React.useCallback(() => {
+    window.store.setProxyPreference(proxyPreferences);
+    setExamplePort(proxyPreferences.port);
+  }, [proxyPreferences]);
 
   return (
     <Box
@@ -42,6 +47,7 @@ const ProxyPreferencesContainer: React.FC = () => {
         position: "relative",
         height: "100%",
       }}
+      visibility={isReady ? "inherit" : "hidden"}
     >
       <form noValidate autoComplete="off">
         <Grid container spacing={1}>
@@ -52,10 +58,15 @@ const ProxyPreferencesContainer: React.FC = () => {
               InputLabelProps={{ shrink: true }}
               InputProps={{ inputProps: { min: 0, max: 65535 } }}
               fullWidth
-              value={port}
+              value={proxyPreferences.port}
               label="Port where the proxy server will listen"
               onChange={(e) => {
-                setPort(parseInt(e.target.value) || DEFAULT_PROXY_SERVER_PORT);
+                setProxyPreferences((prev) => {
+                  return {
+                    ...prev,
+                    port: parseInt(e.target.value) || DEFAULT_PROXY_SERVER_PORT,
+                  };
+                });
               }}
             />
           </Grid>
@@ -64,9 +75,14 @@ const ProxyPreferencesContainer: React.FC = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={verbose}
+                  checked={proxyPreferences.verbose}
                   onClick={(e: object) => {
-                    setVerbose(e["target"]["checked"]);
+                    setProxyPreferences((prev) => {
+                      return {
+                        ...prev,
+                        verbose: e["target"]["checked"],
+                      };
+                    });
                   }}
                   color="primary"
                 />
@@ -95,7 +111,7 @@ const ProxyPreferencesContainer: React.FC = () => {
             variant="contained"
             color="primary"
             onClick={() => {
-              handleChange();
+              handleApply();
             }}
           >
             {"Apply & Restart"}

@@ -50,7 +50,7 @@ const AppDrawer: React.FC = () => {
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: {
           width: (theme) => theme.spacing(24),
-          pt: (theme) => theme.spacing(10),
+          pt: (theme) => theme.spacing(8),
           boxSizing: "border-box",
         },
       }}

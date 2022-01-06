@@ -1,4 +1,4 @@
-# Proxy Doggo Handler
+<p align="center"><img src="img/app-logo.png" alt="Proxy Doggo Handler"></p>
 
 Proxy integration and switching tool
 

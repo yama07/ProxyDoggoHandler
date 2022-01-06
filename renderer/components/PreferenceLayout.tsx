@@ -17,7 +17,7 @@ const PreferenceLayout: React.FC = ({ children }) => {
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, pt: (theme) => theme.spacing(10) }}
+        sx={{ flexGrow: 1, pt: (theme) => theme.spacing(8) }}
       >
         <Box sx={{ p: 4, height: "100%" }}>{children}</Box>
       </Box>

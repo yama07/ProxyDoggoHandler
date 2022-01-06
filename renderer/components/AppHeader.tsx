@@ -1,5 +1,6 @@
 import React from "react";
-import { AppBar, styled, Toolbar, Typography } from "@mui/material";
+import { AppBar, styled, Toolbar } from "@mui/material";
+import { Box } from "@mui/system";
 
 const DraggableAppBar = styled(AppBar)({
   WebkitAppRegion: "drag",
@@ -15,19 +16,28 @@ const AppHeader: React.FC = () => {
     >
       <Toolbar
         sx={{
-          height: (theme) => theme.spacing(10),
+          height: (theme) => theme.spacing(8),
           verticalAlign: "middle",
         }}
       >
-        <Typography
-          variant="h6"
+        <Box
           sx={{
             flexGrow: 1,
-            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100%",
           }}
         >
-          Proxy Doggo Handler
-        </Typography>
+          <img
+            src="/images/app-logo_inverse.png"
+            alt="app-log"
+            draggable={false}
+            height="40%"
+            max-height="50px"
+          />
+        </Box>
       </Toolbar>
     </DraggableAppBar>
   );

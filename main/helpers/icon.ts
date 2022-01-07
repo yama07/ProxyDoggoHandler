@@ -7,9 +7,11 @@ const imagesPaths: string[] = [
   "images",
 ];
 
+const iconFileSuffix = is.windows ? ".ico" : ".png";
+
 export const getIcon = (iconId: string, style: string): NativeImage => {
   const icon = nativeImage.createFromPath(
-    path.join(...imagesPaths, "tray-icons", style, iconId + ".png")
+    path.join(...imagesPaths, "tray-icons", style, iconId + iconFileSuffix)
   );
   // カラーの場合はtemplateにしない
   icon.setTemplateImage(!["linealColor", "flatColor"].includes(style));
@@ -22,7 +24,7 @@ export const getAppIcon = (style: string): NativeImage => {
     ? "dog-house_inverse"
     : "dog-house";
   const icon = nativeImage.createFromPath(
-    path.join(...imagesPaths, "app-icons", imgBaseName + ".png")
+    path.join(...imagesPaths, "app-icons", imgBaseName + iconFileSuffix)
   );
   icon.setTemplateImage(true);
   return icon;
@@ -37,7 +39,7 @@ export const getStatusIcon = (
     ? `${status}_inverse`
     : status;
   const icon = nativeImage.createFromPath(
-    path.join(...imagesPaths, "status-icons", imgBaseName + ".png")
+    path.join(...imagesPaths, "status-icons", imgBaseName + iconFileSuffix)
   );
   icon.setTemplateImage(true);
   return icon;

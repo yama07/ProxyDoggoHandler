@@ -3,9 +3,9 @@ import { Icon } from "@mui/material";
 
 export const DogIconStyles = [
   "lineal",
-  "lineal_inverse",
+  "lineal-w",
   "fill",
-  "fill_inverse",
+  "fill-w",
   "linealColor",
   "flatColor",
 ] as const;

@@ -23,7 +23,7 @@ const toDogIconStyle = (
   DogIconStyles.find((style) => style == value) ?? defaultStyle;
 
 const getIconStyleLabel = (style: DogIconStyleType): string =>
-  capitalize(style).replace("_inverse", " (white)");
+  capitalize(style).replace("-w", " (white)");
 
 const GeneralPreferencesContainer: React.FC = () => {
   const [isReady, setIsReady] = React.useState(false);
@@ -47,7 +47,7 @@ const GeneralPreferencesContainer: React.FC = () => {
       if (await window.system.isMacos()) {
         // macの場合はアイコンの色が自動で切り替わるため、反転スタイルは不要
         setAvailableDogIconStyles(
-          DogIconStyles.filter((v) => !v.includes("_inverse"))
+          DogIconStyles.filter((v) => !v.endsWith("-w"))
         );
       }
 
@@ -131,7 +131,7 @@ const GeneralPreferencesContainer: React.FC = () => {
                     >
                       <Box
                         sx={{
-                          ...(iconStyle.includes("inverse")
+                          ...(iconStyle.endsWith("-w")
                             ? {
                                 borderRadius: "10%",
                                 background: (theme) =>
@@ -183,7 +183,7 @@ const GeneralPreferencesContainer: React.FC = () => {
                     >
                       <Box
                         sx={{
-                          ...(iconStyle.includes("inverse")
+                          ...(iconStyle.endsWith("-w")
                             ? {
                                 borderRadius: "10%",
                                 background: (theme) =>

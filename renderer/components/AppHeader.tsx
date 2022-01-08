@@ -31,7 +31,7 @@ const AppHeader: React.FC = () => {
           }}
         >
           <img
-            src="/images/app-logo_inverse.png"
+            src="/images/app-logo-w.png"
             alt="app-log"
             draggable={false}
             height="40%"

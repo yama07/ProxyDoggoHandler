@@ -16,7 +16,7 @@ export const DogIconIds = [...Array(50)].map(
 );
 
 const getIconPath = (iconId: string, style: DogIconStyleType): string =>
-  `/images/tray-icons/${style}/${iconId}@3x.png`;
+  `/images/tray-icons/dog-breads/${style}/${iconId}@3x.png`;
 
 type Props = {
   iconId: string;

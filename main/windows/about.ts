@@ -1,6 +1,7 @@
 import { default as _openAboutWindow } from "about-window";
 import { BrowserWindow } from "electron";
 import path from "path";
+import { getAppIconPath } from "../helpers/icon";
 
 let aboutWindow: BrowserWindow | undefined;
 
@@ -12,7 +13,7 @@ export const openAboutWindow = () => {
   }
 
   aboutWindow = _openAboutWindow({
-    icon_path: path.join(__dirname, "images", "app-icon.png"),
+    icon_path: getAppIconPath(),
     product_name: "Proxy Doggo Handler",
     copyright: "Copyright © 2021 Naoki Yamamoto",
     description:

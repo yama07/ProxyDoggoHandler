@@ -1,7 +1,11 @@
 import { Tray, Menu, MenuItem } from "electron";
 import log from "electron-log";
 import { is } from "electron-util";
-import { getAppIcon, getIcon, getStatusIcon } from "./icon";
+import {
+  getAppTrayIcon,
+  getDogBreadsTrayIcon,
+  getStatusTrayIcon,
+} from "./icon";
 
 type Accessor = {
   generalPreference: () => GeneralPreferenceType;
@@ -30,7 +34,7 @@ export const initializeTray = (param: {
   handler = param.handler;
 
   const generalPreference = accessor.generalPreference();
-  const icon = getAppIcon(generalPreference.trayIconStyle);
+  const icon = getAppTrayIcon(generalPreference.trayIconStyle);
   tray = new Tray(icon);
   tray.addListener("click", () => {
     tray.popUpContextMenu();
@@ -47,12 +51,12 @@ export const updateTray = () => {
     accessor.isProxyServerRunning()
       ? {
           label: `Running on ${accessor.proxyServerEndpoint()}`,
-          icon: getStatusIcon("active", generalPreference.menuIconStyle),
+          icon: getStatusTrayIcon("active", generalPreference.menuIconStyle),
           enabled: false,
         }
       : {
           label: "Stopped",
-          icon: getStatusIcon("inactive", generalPreference.menuIconStyle),
+          icon: getStatusTrayIcon("inactive", generalPreference.menuIconStyle),
           enabled: false,
         }
   );
@@ -82,7 +86,7 @@ export const updateTray = () => {
         label: proxy.name,
         type: "radio",
         checked: upstreamsPreference.selectedIndex == index,
-        icon: getIcon(proxy.icon, generalPreference.menuIconStyle),
+        icon: getDogBreadsTrayIcon(proxy.icon, generalPreference.menuIconStyle),
         toolTip:
           proxy.connectionSetting == null
             ? "Direct Access"
@@ -119,11 +123,11 @@ export const updateTray = () => {
   tray.setContextMenu(contextMenu);
 
   const icon = accessor.isProxyServerRunning()
-    ? getIcon(
+    ? getDogBreadsTrayIcon(
         upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon,
         generalPreference.trayIconStyle
       )
-    : getAppIcon(generalPreference.trayIconStyle);
+    : getAppTrayIcon(generalPreference.trayIconStyle);
   tray.setImage(icon);
 
   log.info("System tray is updated.");

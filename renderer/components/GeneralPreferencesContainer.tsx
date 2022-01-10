@@ -15,6 +15,7 @@ import DogBreadsIcon, {
   DogIconStyles,
   DogIconStyleType,
 } from "./DogBreadsIcon";
+import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
 
 const toDogIconStyle = (
   value: any,
@@ -36,24 +37,19 @@ const GeneralPreferencesContainer: React.FC = () => {
       menuIconStyle: "lineal",
     });
 
-  const [availableDogIconStyles, setAvailableDogIconStyles] = React.useState(
-    DogIconStyles.slice()
-  );
+  const { isMacos } = React.useContext(systemPropertiesContext);
 
   React.useEffect(() => {
     (async () => {
       setGeneralPreferences(await window.store.getGeneralPreference());
-
-      if (await window.system.isMacos()) {
-        // macの場合はアイコンの色が自動で切り替わるため、反転スタイルは不要
-        setAvailableDogIconStyles(
-          DogIconStyles.filter((v) => !v.endsWith("-w"))
-        );
-      }
-
       setIsReady(true);
     })();
   }, []);
+
+  // macの場合はアイコンの色が自動で切り替わるため、白色スタイルは不要
+  const availableDogIconStyles = isMacos
+    ? DogIconStyles.filter((v) => !v.endsWith("-w"))
+    : DogIconStyles.slice();
 
   const onChangeHandler = React.useCallback(
     (preferences: Partial<GeneralPreferenceType>) => {

@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { theme } from "../lib/theme";
+import { SystemPropertiesProvider } from "../contexts/SystemPropertiesContext";
 
 const _app = function (props: AppProps) {
   const { Component, pageProps } = props;
@@ -24,8 +25,10 @@ const _app = function (props: AppProps) {
         />
       </Head>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
+        <SystemPropertiesProvider>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </SystemPropertiesProvider>
       </ThemeProvider>
     </React.Fragment>
   );

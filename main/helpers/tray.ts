@@ -56,7 +56,7 @@ export const updateTray = () => {
           enabled: false,
         }
       : {
-          label: "Stopped",
+          label: "Not Running",
           icon: getStatusMenuIcon("inactive", generalPreference.menuIconStyle),
           enabled: false,
         }

@@ -98,12 +98,11 @@ const GeneralPreferencesContainer: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} sx={{ mb: (theme) => theme.spacing(2) }}>
-          <FormControl component="fieldset" fullWidth>
+          <FormControl component="fieldset">
             <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
             <ToggleButtonGroup
               value={generalPreferences.trayIconStyle}
               exclusive
-              fullWidth
               color="primary"
               size="small"
               onChange={(event, value) => {
@@ -122,25 +121,24 @@ const GeneralPreferencesContainer: React.FC = () => {
                       sx={{
                         width: "100%",
                         height: "100%",
-                        p: (theme) => theme.spacing(0.6),
+                        px: (theme) => theme.spacing(2),
+                        py: (theme) => theme.spacing(0.6),
                       }}
                     >
                       <Box
                         sx={{
-                          ...(iconStyle.endsWith("-w")
-                            ? {
-                                borderRadius: "10%",
-                                background: (theme) =>
-                                  theme.palette.primary.main,
-                                px: (theme) => theme.spacing(2),
-                                py: (theme) => theme.spacing(0.4),
-                              }
-                            : {}),
+                          borderRadius: "10%",
+                          background: (theme) =>
+                            iconStyle.endsWith("-w")
+                              ? theme.palette.primary.main
+                              : null,
+                          px: (theme) => theme.spacing(2),
+                          py: (theme) => theme.spacing(0.4),
                           m: "auto",
                         }}
                       >
                         <DogBreadsIcon iconId="001-dog" style={iconStyle} />
-                      </Box>{" "}
+                      </Box>
                     </Box>
                   </Tooltip>
                 </ToggleButton>
@@ -150,12 +148,11 @@ const GeneralPreferencesContainer: React.FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <FormControl component="fieldset" fullWidth>
+          <FormControl component="fieldset">
             <FormLabel component="legend">メニューアイコンのスタイル</FormLabel>
             <ToggleButtonGroup
               value={generalPreferences.menuIconStyle}
               exclusive
-              fullWidth
               color="primary"
               size="small"
               onChange={(event, value) => {
@@ -174,25 +171,24 @@ const GeneralPreferencesContainer: React.FC = () => {
                       sx={{
                         width: "100%",
                         height: "100%",
-                        p: (theme) => theme.spacing(0.6),
+                        px: (theme) => theme.spacing(2),
+                        py: (theme) => theme.spacing(0.6),
                       }}
                     >
                       <Box
                         sx={{
-                          ...(iconStyle.endsWith("-w")
-                            ? {
-                                borderRadius: "10%",
-                                background: (theme) =>
-                                  theme.palette.primary.main,
-                                px: (theme) => theme.spacing(2),
-                                py: (theme) => theme.spacing(0.4),
-                              }
-                            : {}),
+                          borderRadius: "10%",
+                          background: (theme) =>
+                            iconStyle.endsWith("-w")
+                              ? theme.palette.primary.main
+                              : null,
+                          px: (theme) => theme.spacing(2),
+                          py: (theme) => theme.spacing(0.4),
                           m: "auto",
                         }}
                       >
                         <DogBreadsIcon iconId="001-dog" style={iconStyle} />
-                      </Box>{" "}
+                      </Box>
                     </Box>
                   </Tooltip>
                 </ToggleButton>

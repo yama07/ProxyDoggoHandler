@@ -3,8 +3,9 @@ import log from "electron-log";
 import { is } from "electron-util";
 import {
   getAppTrayIcon,
+  getDogBreadsMenuIcon,
   getDogBreadsTrayIcon,
-  getStatusTrayIcon,
+  getStatusMenuIcon,
 } from "./icon";
 
 type Accessor = {
@@ -51,12 +52,12 @@ export const updateTray = () => {
     accessor.isProxyServerRunning()
       ? {
           label: `Running on ${accessor.proxyServerEndpoint()}`,
-          icon: getStatusTrayIcon("active", generalPreference.menuIconStyle),
+          icon: getStatusMenuIcon("active", generalPreference.menuIconStyle),
           enabled: false,
         }
       : {
           label: "Stopped",
-          icon: getStatusTrayIcon("inactive", generalPreference.menuIconStyle),
+          icon: getStatusMenuIcon("inactive", generalPreference.menuIconStyle),
           enabled: false,
         }
   );
@@ -86,7 +87,7 @@ export const updateTray = () => {
         label: proxy.name,
         type: "radio",
         checked: upstreamsPreference.selectedIndex == index,
-        icon: getDogBreadsTrayIcon(proxy.icon, generalPreference.menuIconStyle),
+        icon: getDogBreadsMenuIcon(proxy.icon, generalPreference.menuIconStyle),
         toolTip:
           proxy.connectionSetting == null
             ? "Direct Access"

@@ -7,20 +7,32 @@ const imagesPaths: string[] = [
   "images",
 ];
 
-const iconFileSuffix = is.windows ? ".ico" : ".png";
+const trayIconFileSuffix = is.windows ? ".ico" : ".png";
+
+const dogBreadsIconPaths: string[] = [
+  ...imagesPaths,
+  "tray-icons",
+  "dog-breads",
+];
 
 export const getDogBreadsTrayIcon = (
   iconId: string,
   style: string
 ): NativeImage => {
   const icon = nativeImage.createFromPath(
-    path.join(
-      ...imagesPaths,
-      "tray-icons",
-      "dog-breads",
-      style,
-      iconId + iconFileSuffix
-    )
+    path.join(...dogBreadsIconPaths, style, iconId + trayIconFileSuffix)
+  );
+  // カラーの場合はtemplateにしない
+  icon.setTemplateImage(!["linealColor", "flatColor"].includes(style));
+  return icon;
+};
+
+export const getDogBreadsMenuIcon = (
+  iconId: string,
+  style: string
+): NativeImage => {
+  const icon = nativeImage.createFromPath(
+    path.join(...dogBreadsIconPaths, style, iconId + ".png")
   );
   // カラーの場合はtemplateにしない
   icon.setTemplateImage(!["linealColor", "flatColor"].includes(style));
@@ -33,13 +45,18 @@ export const getAppTrayIcon = (style: string): NativeImage => {
     ? "dog-house-w"
     : "dog-house";
   const icon = nativeImage.createFromPath(
-    path.join(...imagesPaths, "tray-icons", "app", imgBaseName + iconFileSuffix)
+    path.join(
+      ...imagesPaths,
+      "tray-icons",
+      "app",
+      imgBaseName + trayIconFileSuffix
+    )
   );
   icon.setTemplateImage(true);
   return icon;
 };
 
-export const getStatusTrayIcon = (
+export const getStatusMenuIcon = (
   status: "active" | "inactive",
   style: string
 ): NativeImage => {
@@ -52,7 +69,7 @@ export const getStatusTrayIcon = (
       ...imagesPaths,
       "tray-icons",
       "status",
-      imgBaseName + iconFileSuffix
+      imgBaseName + trayIconFileSuffix
     )
   );
   icon.setTemplateImage(true);

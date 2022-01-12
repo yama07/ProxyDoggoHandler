@@ -65,12 +65,7 @@ export const getStatusMenuIcon = (
     ? `${status}-w`
     : status;
   const icon = nativeImage.createFromPath(
-    path.join(
-      ...imagesPaths,
-      "tray-icons",
-      "status",
-      imgBaseName + trayIconFileSuffix
-    )
+    path.join(...imagesPaths, "tray-icons", "status", imgBaseName + ".png")
   );
   icon.setTemplateImage(true);
   return icon;

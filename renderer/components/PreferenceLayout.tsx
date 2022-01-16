@@ -2,8 +2,12 @@ import React from "react";
 import { Box, CssBaseline } from "@mui/material";
 import AppDrawer from "./AppDrawer";
 import AppHeader from "./AppHeader";
+import WindowControl from "./WindowControl";
+import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
 
 const PreferenceLayout: React.FC = ({ children }) => {
+  const { isMacos } = React.useContext(systemPropertiesContext);
+
   return (
     <Box
       component="nav"
@@ -12,6 +16,17 @@ const PreferenceLayout: React.FC = ({ children }) => {
       <CssBaseline />
 
       <AppHeader />
+
+      {!isMacos && (
+        <WindowControl
+          sx={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+          }}
+        />
+      )}
 
       <AppDrawer />
 

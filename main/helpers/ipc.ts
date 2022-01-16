@@ -1,6 +1,15 @@
 import { ipcMain } from "electron";
 import { is } from "electron-util";
 import {
+  closePrefsWindow,
+  isMaximizedPrefsWindow,
+  maximizePrefsWindow,
+  minimizePrefsWindow,
+  onPrefsWindowMaximize,
+  onPrefsWindowUnmaximize,
+  unmaximizePrefsWindow,
+} from "../windows/preferences";
+import {
   getGeneralPreference,
   setGeneralPreference,
   getProxyPreference,
@@ -8,10 +17,35 @@ import {
   getUpstreamsPreference,
   setUpstreamsPreference,
 } from "./preference-accessor";
-import { updateTray } from "./tray";
 
 export const initializeIpc = () => {
   ipcMain.handle("system.isMacos", (event): boolean => is.macos);
+
+  ipcMain.handle("system.closePrefsWindow", (event) => closePrefsWindow());
+
+  ipcMain.handle("system.maximizePrefsWindow", (event) =>
+    maximizePrefsWindow()
+  );
+
+  ipcMain.handle("system.unmaximizePrefsWindow", (event) =>
+    unmaximizePrefsWindow()
+  );
+
+  ipcMain.handle("system.minimizePrefsWindow", (event) =>
+    minimizePrefsWindow()
+  );
+
+  ipcMain.handle("system.isMaximizedPrefsWindow", (event): boolean =>
+    isMaximizedPrefsWindow()
+  );
+
+  onPrefsWindowMaximize((window) =>
+    window.webContents.send("system.onPrefsWindowMaximize")
+  );
+
+  onPrefsWindowUnmaximize((window) =>
+    window.webContents.send("system.onPrefsWindowUnmaximize")
+  );
 
   ipcMain.handle(
     "store.getGeneralPreference",
@@ -51,8 +85,4 @@ export const initializeIpc = () => {
       setUpstreamsPreference(preference);
     }
   );
-
-  ipcMain.handle("app.updateTray", (event) => {
-    updateTray();
-  });
 };

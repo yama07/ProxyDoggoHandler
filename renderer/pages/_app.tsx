@@ -5,6 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { theme } from "../lib/theme";
 import { SystemPropertiesProvider } from "../contexts/SystemPropertiesContext";
+import { WindowControlProvider } from "../contexts/WindowControlContext";
 
 const _app = function (props: AppProps) {
   const { Component, pageProps } = props;
@@ -26,8 +27,10 @@ const _app = function (props: AppProps) {
       </Head>
       <ThemeProvider theme={theme}>
         <SystemPropertiesProvider>
-          <CssBaseline />
-          <Component {...pageProps} />
+          <WindowControlProvider>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </WindowControlProvider>
         </SystemPropertiesProvider>
       </ThemeProvider>
     </React.Fragment>

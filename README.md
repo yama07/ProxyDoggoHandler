@@ -10,10 +10,16 @@
 
 <h4 align="center">Proxy integration and switching tool. For Mac, Windows.</h4>
 
+<p align="center">
+  <a href="https://github.com/yama07/ProxyDoggoHandler"><img src="https://img.shields.io/github/workflow/status/yama07/ProxyDoggoHandler/Build%20and%20release" alt="GitHub Workflow Status"></a>
+  <a href="https://github.com/yama07/ProxyDoggoHandler/releases"><img src="https://img.shields.io/github/v/release/yama07/ProxyDoggoHandler" alt="GitHub release (latest SemVer)"></a>
+  <a href="https://github.com/yama07/ProxyDoggoHandler/blob/master/LICENSE"><img src="https://img.shields.io/github/license/yama07/ProxyDoggoHandler" alt="GitHub"></a>
+</p>
+
 ## About
 
-プロキシサーバの統合管理・切り替えツールです。
-タスクトレイに常駐し、プロキシサーバの中継サーバを立ち上げます。
+プロキシの統合管理・切り替えツールです。
+タスクトレイに常駐し、プロキシの中継サーバを立ち上げます。
 
 <p align="center">
   <img src="img/about-app.png" alt="about" align="center">

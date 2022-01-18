@@ -1,18 +1,24 @@
 import React from "react";
-import { AppBar, styled, Toolbar } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, BoxProps, styled, Toolbar, Typography } from "@mui/material";
 
-const DraggableAppBar = styled(AppBar)({
+const DraggableBox = styled(Box)({
   WebkitAppRegion: "drag",
 });
 
-const AppHeader: React.FC = () => {
+const AppHeader: React.FC<BoxProps> = (props: BoxProps) => {
+  const { sx, ...other } = props;
   return (
-    <DraggableAppBar
-      position="fixed"
+    <DraggableBox
       sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 1,
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        background: (theme) => theme.palette.primary.main,
+        color: (theme) => theme.palette.primary.contrastText,
+        ...sx,
       }}
+      {...other}
     >
       <Toolbar
         sx={{
@@ -26,20 +32,21 @@ const AppHeader: React.FC = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            gap: (theme) => theme.spacing(1),
             height: "100%",
             width: "100%",
           }}
         >
           <img
-            src="/images/app-logo-w.png"
+            src="/images/app-icon-w.png"
             alt="app-log"
             draggable={false}
-            height="40%"
-            max-height="50px"
+            height="50%"
           />
+          <Typography variant="h6">Proxy Doggo Handler</Typography>
         </Box>
       </Toolbar>
-    </DraggableAppBar>
+    </DraggableBox>
   );
 };
 

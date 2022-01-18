@@ -12,8 +12,18 @@ const WindowControl: React.FC<BoxProps> = (props: BoxProps) => {
   const { minimize, maximize, restore, close, isMaximized } =
     React.useContext(windowControlContext);
 
+  const { sx, ...other } = props;
+
   return (
-    <Box {...props}>
+    <Box
+      sx={{
+        position: "absolute",
+        top: 0,
+        right: 0,
+        ...sx,
+      }}
+      {...other}
+    >
       <Button
         variant="contained"
         disableRipple

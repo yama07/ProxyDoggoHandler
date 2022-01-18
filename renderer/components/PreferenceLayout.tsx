@@ -15,17 +15,10 @@ const PreferenceLayout: React.FC = ({ children }) => {
     >
       <CssBaseline />
 
-      <AppHeader />
+      <AppHeader sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} />
 
       {!isMacos && (
-        <WindowControl
-          sx={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            zIndex: (theme) => theme.zIndex.drawer + 1,
-          }}
-        />
+        <WindowControl sx={{ zIndex: (theme) => theme.zIndex.drawer + 2 }} />
       )}
 
       <AppDrawer />

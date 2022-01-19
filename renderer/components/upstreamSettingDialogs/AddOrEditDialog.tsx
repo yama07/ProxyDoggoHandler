@@ -85,7 +85,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 render={({ field }) => (
                   <FormControl variant="standard" sx={{ display: "flex" }}>
                     <InputLabel id="icon-select-label">Icon</InputLabel>
-                    <Select {...field}>
+                    <Select {...field} MenuProps={{ sx: { maxHeight: "90%" } }}>
                       {DogIconIds.map((iconId) => (
                         <MenuItem value={iconId} key={iconId}>
                           <DogBreadsIcon iconId={iconId} style="lineal" />

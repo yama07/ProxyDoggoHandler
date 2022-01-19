@@ -1,14 +1,19 @@
 import React from "react";
-import { Box, BoxProps, styled, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  AppBarProps,
+  Box,
+  styled,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 
-const DraggableBox = styled(Box)({
-  WebkitAppRegion: "drag",
-});
+const DraggableAppBar = styled(AppBar)({ WebkitAppRegion: "drag" });
 
-const AppHeader: React.FC<BoxProps> = (props: BoxProps) => {
+const AppHeader: React.FC<AppBarProps> = (props: AppBarProps) => {
   const { sx, ...other } = props;
   return (
-    <DraggableBox
+    <DraggableAppBar
       sx={{
         position: "fixed",
         top: 0,
@@ -46,7 +51,7 @@ const AppHeader: React.FC<BoxProps> = (props: BoxProps) => {
           <Typography variant="h6">Proxy Doggo Handler</Typography>
         </Box>
       </Toolbar>
-    </DraggableBox>
+    </DraggableAppBar>
   );
 };
 

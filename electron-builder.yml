@@ -1,4 +1,4 @@
-appId: jp.yama07.proxy-doggo-handler
+appId: jp.yama07.ProxyDoggoHandler
 productName: Proxy Doggo Handler
 copyright: Copyright © 2021 Naoki Yamamoto
 directories:
@@ -11,7 +11,12 @@ files:
       - app
 publish: null
 artifactName: ${productName}.${ext}
+afterSign: "./scripts/notarize.js"
 mac:
   target: dmg
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: "resources/entitlements.plist"
+  entitlementsInherit: "resources/entitlements.plist"
 win:
   target: portable

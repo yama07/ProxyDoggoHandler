@@ -30,7 +30,26 @@ jobs:
       - name: Install modules
         run: npm ci
 
+      - name: Import apple codesign cert
+        uses: apple-actions/import-codesign-certs@v1
+        if: matrix.os == 'macos-latest'
+        with:
+          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+          p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+
+      - name: Store app-specific password in keychain
+        if: matrix.os == 'macos-latest'
+        env:
+          APPLEID: ${{ secrets.APPLEID }}
+          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
+        run: |
+          xcrun altool --store-password-in-keychain-item "AC_PASSWORD" -u $APPLEID -p $APPLEIDPASS
+
       - name: Build
+        env:
+          APPLEID: ${{ secrets.APPLEID }}
+          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
+          ASC_PROVIDER: ${{ secrets.ASC_PROVIDER }}
         run: npm run ${{ matrix.build_script }}
 
       - name: Upload artifacts

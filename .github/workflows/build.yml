@@ -73,7 +73,7 @@ jobs:
           path: dist/
 
   release:
-    needs: [build_on_mac, build_on_windows]
+    needs: [build_on_macos, build_on_windows]
 
     runs-on: ubuntu-latest
 

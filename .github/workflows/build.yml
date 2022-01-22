@@ -6,16 +6,14 @@ on:
       - "v*"
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  build_on_macos:
+    runs-on: macos-latest
 
-    strategy:
-      matrix:
-        include:
-          - os: macos-latest
-            build_script: build:mac
-          - os: windows-latest
-            build_script: build:win64
+    env:
+      ENABLE_NOTARIZE: enable
+      APPLEID: ${{ secrets.APPLEID }}
+      APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
+      ASC_PROVIDER: ${{ secrets.ASC_PROVIDER }}
 
     steps:
       - name: Check out Git repository
@@ -32,34 +30,50 @@ jobs:
 
       - name: Import apple codesign cert
         uses: apple-actions/import-codesign-certs@v1
-        if: matrix.os == 'macos-latest'
         with:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
 
       - name: Store app-specific password in keychain
-        if: matrix.os == 'macos-latest'
-        env:
-          APPLEID: ${{ secrets.APPLEID }}
-          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
         run: |
           xcrun altool --store-password-in-keychain-item "AC_PASSWORD" -u $APPLEID -p $APPLEIDPASS
 
       - name: Build
-        env:
-          APPLEID: ${{ secrets.APPLEID }}
-          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
-          ASC_PROVIDER: ${{ secrets.ASC_PROVIDER }}
-        run: npm run ${{ matrix.build_script }}
+        run: npm run build:mac
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.os }}
+          name: macos-build-artifacts
+          path: dist/
+
+  build_on_windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js v16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: npm
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Build
+        run: npm run build:win64
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-build-artifact
           path: dist/
 
   release:
-    needs: build
+    needs: [build_on_mac, build_on_windows]
 
     runs-on: ubuntu-latest
 
@@ -78,7 +92,7 @@ jobs:
         uses: actions/download-artifact@v2
         id: download_mac
         with:
-          name: macos-latest
+          name: macos-build-artifacts
           path: macos/
 
       - name: Upload macos Release Asset
@@ -95,7 +109,7 @@ jobs:
         uses: actions/download-artifact@v2
         id: download_win
         with:
-          name: windows-latest
+          name: windows-build-artifact
           path: windows/
 
       - name: Upload windows Release Asset

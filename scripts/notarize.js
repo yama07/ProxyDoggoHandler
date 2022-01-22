@@ -4,7 +4,13 @@ const { notarize } = require("electron-notarize");
 
 exports.default = async function notarizing(context) {
   const { electronPlatformName, appOutDir } = context;
-  if (electronPlatformName !== "darwin") {
+
+  // macOSではない、あるいはENABLE_NOTARIZEフラグが
+  // 有効ではない場合は公証を行わない
+  if (
+    electronPlatformName !== "darwin" ||
+    process.env.ENABLE_NOTARIZE === undefined
+  ) {
     return;
   }
 

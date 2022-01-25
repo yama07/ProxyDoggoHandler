@@ -1,6 +1,6 @@
 appId: jp.yama07.ProxyDoggoHandler
 productName: Proxy Doggo Handler
-copyright: Copyright © 2021 Naoki Yamamoto
+copyright: Copyright © 2022 Naoki Yamamoto
 directories:
   output: dist
   buildResources: resources

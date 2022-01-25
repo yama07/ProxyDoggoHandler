@@ -15,7 +15,7 @@ export const openAboutWindow = () => {
   aboutWindow = _openAboutWindow({
     icon_path: getAppIconPath(),
     product_name: "Proxy Doggo Handler",
-    copyright: "Copyright © 2021 Naoki Yamamoto",
+    copyright: "Copyright © 2022 Naoki Yamamoto",
     description:
       '<div>Icons made by <a href="https://www.flaticon.com/authors/vitaly-gorbachev" title="Vitaly Gorbachev">Vitaly Gorbachev</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>',
     use_inner_html: true,

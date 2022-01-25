@@ -21,31 +21,63 @@
 プロキシの統合管理・切り替えツールです。
 タスクトレイに常駐し、プロキシの中継サーバを立ち上げます。
 
+<p align="center" display="flex">
+  <img src="img/screenshot-mac-tray.png" alt="screenshot-mac-tray" width="340">
+  <img src="img/screenshot-win-tray.png" alt="screenshot-win-tray" width="340">
+</p>
+
+各ツールのプロキシ設定に中継サーバを指定しておくことで、環境に応じたプロキシ設定の書き換えが不要になります。
+中継サーバのアクセス先として、"認証なしプロキシ"、"認証プロキシ"、"直接アクセス"を登録することができ、タスクトレイのメニューから切り替えることができます。
+
+また、認証プロキシに対する認証処理は中継サーバが代行するため、認証プロキシ非対応のアプリケーションを利用できるようになります。
+
 <p align="center">
   <img src="img/about-app.png" alt="about" align="center">
 </p>
 
-各ツールのプロキシ設定を中継サーバにしておくことで、接続環境に応じたプロキシ設定の書き換えが不要になります。
-また、認証プロキシに対する認証処理を中継サーバが代行するため、認証プロキシ非対応のアプリケーションを利用できるようになります。
-
 ## Install
 
-🐶 Comming soon... 🐶
+### Mac
+
+[Releases ページ](https://github.com/yama07/ProxyDoggoHandler/releases)から`ProxyDoggoHandler-macos.dmg`をダウンロードし、アプリケーションフォルダなどにインストールしてください。
+
+Intel(x64)マシン用にビルドしたアプリケーションファイルのため、実行には Rosetta 2 のインストールが必要です。
+Apple Silicon(arm64)マシン用のアプリケーションファイルが必要な場合は、Apple Silicon Mac 上でソースコードからビルドしてください。
+
+### Windows
+
+[Releases ページ](https://github.com/yama07/ProxyDoggoHandler/releases)から`ProxyDoggoHandler-win-portable.exe`ファイルをダウンロードし、適切なフォルダに格納してください。
+
+コード署名を行なっていないため、exe ファイルを実行した際に SmartScreen の**セキュリティ警告が表示される**ことがあります。
+不安に感じる場合は、自身のマシン上でソースコードからビルドすることをお勧めします。
 
 ## Uninstall
 
-🐶 Comming soon... 🐶
+### Mac
+
+アプリケーションフォルダから Proxy Doggo Handler.app ファイルを削除してください。
+
+また、以下のディレクトリにユーザデータやログが保存されるため、不要な場合は削除してください。
+
+- `~/Library/Application Support/proxy-doggo-handler`
+- `~/Library/Logs/proxy-doggo-handler`
+
+### Windows
+
+ProxyDoggoHandler-win-portable.exe ファイルを削除してください。
+
+また、以下のフォルダにユーザデータやログが保存されるため、不要な場合は削除してください。
+
+- `%USERPROFILE%\AppData\Roaming\proxy-doggo-handler`  
+  (e.g. `C:\Users\yama07\AppData\Roaming\proxy-doggo-handler`)
 
 ## Screenshot
 
-<p align="center">
-  <img src="img/screenshot-mac-tray.png" alt="screenshot" align="center">
-</p>
-
-<p align="center">
-  <img src="img/screenshot-mac-general-preference.png" alt="screenshot" width="512" align="center">
-  <img src="img/screenshot-mac-proxy-preference.png" alt="screenshot" width="512" align="center">
-  <img src="img/screenshot-mac-upstreams-preference.png" alt="screenshot" width="512" align="center">
+<p align="center" display="flex">
+  <img src="img/screenshot-mac-general-preference.png" alt="screenshot-mac-general-preferenc" width="340">
+  <img src="img/screenshot-mac-proxy-preference.png" alt="screenshot-mac-proxy-preference" width="340">
+  <img src="img/screenshot-mac-upstreams-preference.png" alt="screenshot-mac-upstreams-preference" width="340">
+  <img src="img/screenshot-mac-upstreams-preference-add.png" alt="screenshot-mac-upstreams-preference-addshot" width="340">
 </p>
 
 ## Development
@@ -67,13 +99,14 @@ $ npm run dev
 ### Build
 
 ```sh
-## for macOS
-$ npm run build:mac
+$ npm run build
 
-## for Windows
+## or
+$ npm run build:all
+$ npm run build:win32
 $ npm run build:win64
-### or
-$ npm run build:win632
+$ npm run build:macIntel
+$ npm run build:macArm
 ```
 
 ## Thanks

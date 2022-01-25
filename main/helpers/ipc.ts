@@ -7,6 +7,7 @@ import {
   minimizePrefsWindow,
   onPrefsWindowMaximize,
   onPrefsWindowUnmaximize,
+  preferencesWindow,
   unmaximizePrefsWindow,
 } from "../windows/preferences";
 import {
@@ -16,7 +17,12 @@ import {
   setProxyPreference,
   getUpstreamsPreference,
   setUpstreamsPreference,
+  onGeneralPreferenceDidChange,
+  onProxyPreferenceDidChange,
+  onUpstreamsPreferenceDidChange,
 } from "./preference-accessor";
+
+const unsubscribeFunctions: (() => void)[] = [];
 
 export const initializeIpc = () => {
   ipcMain.handle("system.isMacos", (event): boolean => is.macos);
@@ -61,6 +67,16 @@ export const initializeIpc = () => {
     }
   );
 
+  unsubscribeFunctions.push(
+    onGeneralPreferenceDidChange((newValue, oldValue) => {
+      preferencesWindow?.webContents.send(
+        "store.onGeneralPreferenceDidChange",
+        newValue,
+        oldValue
+      );
+    })
+  );
+
   ipcMain.handle("store.getProxyPreference", (event): ProxyPreferenceType => {
     return getProxyPreference();
   });
@@ -70,6 +86,16 @@ export const initializeIpc = () => {
     (event, preference: ProxyPreferenceType) => {
       setProxyPreference(preference);
     }
+  );
+
+  unsubscribeFunctions.push(
+    onProxyPreferenceDidChange((newValue, oldValue) => {
+      preferencesWindow?.webContents.send(
+        "store.onProxyPreferenceDidChange",
+        newValue,
+        oldValue
+      );
+    })
   );
 
   ipcMain.handle(
@@ -85,4 +111,24 @@ export const initializeIpc = () => {
       setUpstreamsPreference(preference);
     }
   );
+
+  unsubscribeFunctions.push(
+    onUpstreamsPreferenceDidChange((newValue, oldValue) => {
+      preferencesWindow?.webContents.send(
+        "store.onUpstreamsPreferenceDidChange",
+        newValue,
+        oldValue
+      );
+    })
+  );
+};
+
+export const finalizeIpc = () => {
+  onPrefsWindowMaximize(undefined);
+  onPrefsWindowUnmaximize(undefined);
+
+  while (unsubscribeFunctions.length) {
+    const unsubscribeFunc = unsubscribeFunctions.pop();
+    unsubscribeFunc();
+  }
 };

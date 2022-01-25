@@ -20,7 +20,7 @@ import {
   setUpstreamsPreference,
 } from "./helpers/preference-accessor";
 import { initializeTray, updateTray } from "./helpers/tray";
-import { initializeIpc } from "./helpers/ipc";
+import { finalizeIpc, initializeIpc } from "./helpers/ipc";
 import log from "electron-log";
 import { is } from "electron-util";
 import { openAboutWindow } from "./windows/about";
@@ -70,6 +70,8 @@ app.on("window-all-closed", () => {
 
 app.on("quit", () => {
   log.info(`Shutdown with PID ${process.pid}`);
+
+  finalizeIpc();
   unsubscribeFunctions.map((unsubscribe) => {
     unsubscribe();
   });

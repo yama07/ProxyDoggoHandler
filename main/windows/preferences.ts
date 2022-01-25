@@ -4,7 +4,7 @@ import { is } from "electron-util";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 
-let preferencesWindow: BrowserWindow | undefined;
+export let preferencesWindow: BrowserWindow | undefined;
 let onPrefsWindowMaximizeListener: (window: BrowserWindow) => void | undefined;
 let onPrefsWindowUnmaximizeListener: (
   window: BrowserWindow

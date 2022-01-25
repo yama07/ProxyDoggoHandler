@@ -8,6 +8,7 @@ declare global {
 
 export interface ISystem {
   isMacos: () => Promise<boolean>;
+
   closePrefsWindow: () => void;
   maximizePrefsWindow: () => void;
   unmaximizePrefsWindow: () => void;
@@ -20,8 +21,31 @@ export interface ISystem {
 export interface IStore {
   getGeneralPreference: () => Promise<GeneralPreferenceType>;
   setGeneralPreference: (preference: GeneralPreferenceType) => void;
+  onGeneralPreferenceDidChange: (
+    callback: (
+      newValue: GeneralPreferenceType,
+      oldValue: GeneralPreferenceType
+    ) => void
+  ) => void;
+  removeOnGeneralPreferenceDidChangeListeners: () => void;
+
   getProxyPreference: () => Promise<ProxyPreferenceType>;
   setProxyPreference: (preference: ProxyPreferenceType) => void;
+  onProxyPreferenceDidChange: (
+    callback: (
+      newValue: ProxyPreferenceType,
+      oldValue: ProxyPreferenceType
+    ) => void
+  ) => void;
+  removeOnProxyPreferenceDidChangeListeners: () => void;
+
   getUpstreamsPreference: () => Promise<UpstreamsPreferenceType>;
   setUpstreamsPreference: (preference: UpstreamsPreferenceType) => void;
+  onUpstreamsPreferenceDidChange: (
+    callback: (
+      newValue: UpstreamsPreferenceType,
+      oldValue: UpstreamsPreferenceType
+    ) => void
+  ) => void;
+  removeOnUpstreamsPreferenceDidChangeListeners: () => void;
 }

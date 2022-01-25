@@ -6,6 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { theme } from "../lib/theme";
 import { SystemPropertiesProvider } from "../contexts/SystemPropertiesContext";
 import { WindowControlProvider } from "../contexts/WindowControlContext";
+import { PreferenceProvider } from "../contexts";
 
 const _app = function (props: AppProps) {
   const { Component, pageProps } = props;
@@ -28,8 +29,10 @@ const _app = function (props: AppProps) {
       <ThemeProvider theme={theme}>
         <SystemPropertiesProvider>
           <WindowControlProvider>
-            <CssBaseline />
-            <Component {...pageProps} />
+            <PreferenceProvider>
+              <CssBaseline />
+              <Component {...pageProps} />
+            </PreferenceProvider>
           </WindowControlProvider>
         </SystemPropertiesProvider>
       </ThemeProvider>

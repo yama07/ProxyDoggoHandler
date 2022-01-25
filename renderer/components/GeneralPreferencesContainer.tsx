@@ -16,6 +16,10 @@ import DogBreadsIcon, {
   DogIconStyleType,
 } from "./DogBreadsIcon";
 import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
+import {
+  generalPreferenceContext,
+  setGeneralPreferenceContext,
+} from "../contexts/GeneralPreferenceContext";
 
 const toDogIconStyle = (
   value: any,
@@ -27,24 +31,9 @@ const getIconStyleLabel = (style: DogIconStyleType): string =>
   capitalize(style).replace("-w", " (white)");
 
 const GeneralPreferencesContainer: React.FC = () => {
-  const [isReady, setIsReady] = React.useState(false);
-
-  const [generalPreferences, setGeneralPreferences] =
-    React.useState<GeneralPreferenceType>({
-      isOpenAtStartup: true,
-      isLaunchProxyServerAtStartup: false,
-      trayIconStyle: "lineal",
-      menuIconStyle: "lineal",
-    });
-
   const { isMacos } = React.useContext(systemPropertiesContext);
-
-  React.useEffect(() => {
-    (async () => {
-      setGeneralPreferences(await window.store.getGeneralPreference());
-      setIsReady(true);
-    })();
-  }, []);
+  const generalPreferences = React.useContext(generalPreferenceContext);
+  const setGeneralPreferences = React.useContext(setGeneralPreferenceContext);
 
   // macの場合はアイコンの色が自動で切り替わるため、白色スタイルは不要
   const availableDogIconStyles = isMacos
@@ -59,11 +48,11 @@ const GeneralPreferencesContainer: React.FC = () => {
         return newPreferences;
       });
     },
-    []
+    [setGeneralPreferences]
   );
 
   return (
-    <form noValidate autoComplete="off" hidden={!isReady}>
+    <form noValidate autoComplete="off">
       <Grid container spacing={1}>
         <Grid item xs={12}>
           <FormControlLabel

@@ -8,37 +8,32 @@ import {
   Grid,
   Box,
 } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 import ProxyUsageCard from "./ProxyUsageCard";
-
-const DEFAULT_PROXY_SERVER_PORT = 8080;
+import {
+  proxyPreferenceContext,
+  setProxyPreferenceContext,
+} from "../contexts/ProxyPreferenceContext";
 
 const ProxyPreferencesContainer: React.FC = () => {
-  const [isReady, setIsReady] = React.useState(false);
+  const proxyPreferences = React.useContext(proxyPreferenceContext);
+  const setProxyPreferences = React.useContext(setProxyPreferenceContext);
 
-  const [proxyPreferences, setProxyPreferences] =
-    React.useState<ProxyPreferenceType>({
-      port: DEFAULT_PROXY_SERVER_PORT,
-      verbose: false,
-    });
+  const [examplePort, setExamplePort] = React.useState(proxyPreferences.port);
 
-  const [examplePort, setExamplePort] = React.useState(
-    DEFAULT_PROXY_SERVER_PORT
+  const { handleSubmit, control } = useForm<ProxyPreferenceType>({
+    criteriaMode: "all",
+    shouldUseNativeValidation: false,
+    defaultValues: proxyPreferences,
+  });
+
+  const onApply = React.useCallback(
+    (formData: ProxyPreferenceType) => {
+      setProxyPreferences(formData);
+      setExamplePort(formData.port);
+    },
+    [setProxyPreferences]
   );
-
-  React.useEffect(() => {
-    (async () => {
-      const preferences = await window.store.getProxyPreference();
-      setProxyPreferences(preferences);
-      setExamplePort(preferences.port);
-
-      setIsReady(true);
-    })();
-  }, []);
-
-  const handleApply = React.useCallback(() => {
-    window.store.setProxyPreference(proxyPreferences);
-    setExamplePort(proxyPreferences.port);
-  }, [proxyPreferences]);
 
   return (
     <Box
@@ -47,47 +42,61 @@ const ProxyPreferencesContainer: React.FC = () => {
         position: "relative",
         height: "100%",
       }}
-      visibility={isReady ? "inherit" : "hidden"}
     >
-      <form noValidate autoComplete="off">
+      <form noValidate autoComplete="off" onSubmit={handleSubmit(onApply)}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <TextField
-              type="number"
-              variant="standard"
-              InputLabelProps={{ shrink: true }}
-              InputProps={{ inputProps: { min: 0, max: 65535 } }}
-              fullWidth
-              value={proxyPreferences.port}
-              label="リクエストを受け付けるポート番号"
-              onChange={(e) => {
-                setProxyPreferences((prev) => {
-                  return {
-                    ...prev,
-                    port: parseInt(e.target.value) || DEFAULT_PROXY_SERVER_PORT,
-                  };
-                });
+            <Controller
+              control={control}
+              name="port"
+              rules={{
+                required: "このフィールドを入力してください。",
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: "数字を入力してください。",
+                },
+                min: {
+                  value: 0,
+                  message: "値は0以上にする必要があります。",
+                },
+                max: {
+                  value: 65535,
+                  message: "値は65535以下にする必要があります。",
+                },
               }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  variant="standard"
+                  margin="dense"
+                  label="リクエストを受け付けるポート番号"
+                  type="number"
+                  InputLabelProps={{ shrink: true }}
+                  InputProps={{ inputProps: { min: 0, max: 65535 } }}
+                  error={error != null}
+                  helperText={error != null ? error["message"] : null}
+                  fullWidth
+                />
+              )}
             />
           </Grid>
 
           <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={proxyPreferences.verbose}
-                  onClick={(e: object) => {
-                    setProxyPreferences((prev) => {
-                      return {
-                        ...prev,
-                        verbose: e["target"]["checked"],
-                      };
-                    });
-                  }}
-                  color="primary"
+            <Controller
+              control={control}
+              name="verbose"
+              render={({ field }) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      {...field}
+                      checked={field.value}
+                      color="primary"
+                    />
+                  }
+                  label="冗長ロギングを有効化する"
                 />
-              }
-              label="冗長ロギングを有効化する"
+              )}
             />
           </Grid>
 
@@ -95,29 +104,27 @@ const ProxyPreferencesContainer: React.FC = () => {
             <ProxyUsageCard port={examplePort} />
           </Grid>
         </Grid>
-      </form>
 
-      <Box
-        sx={{
-          position: "absolute",
-          width: "100%",
-          bottom: (theme) => theme.spacing(0),
-        }}
-      >
-        <Divider sx={{ marginBottom: (theme) => theme.spacing(2) }} />
-        <Box sx={{ float: "right", mr: (theme) => theme.spacing(2) }}>
-          <Button
-            sx={{ textTransform: "none" }}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              handleApply();
-            }}
-          >
-            {"Apply & Restart"}
-          </Button>
+        <Box
+          sx={{
+            position: "absolute",
+            width: "100%",
+            bottom: (theme) => theme.spacing(0),
+          }}
+        >
+          <Divider sx={{ marginBottom: (theme) => theme.spacing(2) }} />
+          <Box sx={{ float: "right", mr: (theme) => theme.spacing(2) }}>
+            <Button
+              sx={{ textTransform: "none" }}
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              {"Apply & Restart"}
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      </form>
     </Box>
   );
 };

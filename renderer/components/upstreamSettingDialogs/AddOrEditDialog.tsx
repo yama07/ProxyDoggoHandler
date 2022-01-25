@@ -75,7 +75,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
 
   return (
     <Dialog open onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)} className="form" noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <DialogContent sx={{ p: (theme) => theme.spacing(4) }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={2}>

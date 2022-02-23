@@ -1,5 +1,5 @@
-import React from "react";
 import { Icon } from "@mui/material";
+import React from "react";
 
 export const DogIconStyles = [
   "lineal",

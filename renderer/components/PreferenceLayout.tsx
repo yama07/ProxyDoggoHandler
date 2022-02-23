@@ -1,9 +1,10 @@
-import React from "react";
 import { Box, CssBaseline } from "@mui/material";
+import React from "react";
+
+import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
 import AppDrawer from "./AppDrawer";
 import AppHeader from "./AppHeader";
 import WindowControl from "./WindowControl";
-import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
 
 const PreferenceLayout: React.FC = ({ children }) => {
   const { isMacos } = React.useContext(systemPropertiesContext);

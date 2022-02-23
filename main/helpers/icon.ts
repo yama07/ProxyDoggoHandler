@@ -1,4 +1,4 @@
-import { nativeImage, NativeImage } from "electron";
+import { NativeImage, nativeImage } from "electron";
 import { is } from "electron-util";
 import path from "path";
 

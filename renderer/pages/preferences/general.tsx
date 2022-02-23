@@ -1,6 +1,7 @@
 import React from "react";
-import PreferenceLayout from "../../components/PreferenceLayout";
+
 import GeneralPreferencesContainer from "../../components/GeneralPreferencesContainer";
+import PreferenceLayout from "../../components/PreferenceLayout";
 
 const General = function () {
   return (

@@ -1,12 +1,12 @@
+import { Pets, Traffic, Tune } from "@mui/icons-material";
 import {
-  Drawer,
   Box,
+  Drawer,
   List,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListItemButton,
 } from "@mui/material";
-import { Tune, Pets, Traffic } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 

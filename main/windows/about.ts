@@ -1,6 +1,7 @@
 import { default as _openAboutWindow } from "about-window";
 import { BrowserWindow } from "electron";
 import path from "path";
+
 import { getAppIconPath } from "../helpers/icon";
 
 let aboutWindow: BrowserWindow | undefined;

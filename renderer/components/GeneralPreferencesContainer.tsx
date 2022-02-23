@@ -1,25 +1,26 @@
-import React from "react";
 import {
-  FormControlLabel,
+  Box,
   Checkbox,
-  capitalize,
   FormControl,
+  FormControlLabel,
   FormLabel,
   Grid,
-  ToggleButtonGroup,
   ToggleButton,
-  Box,
+  ToggleButtonGroup,
   Tooltip,
+  capitalize,
 } from "@mui/material";
-import DogBreadsIcon, {
-  DogIconStyles,
-  DogIconStyleType,
-} from "./DogBreadsIcon";
-import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
+import React from "react";
+
 import {
   generalPreferenceContext,
   setGeneralPreferenceContext,
 } from "../contexts/GeneralPreferenceContext";
+import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
+import DogBreadsIcon, {
+  DogIconStyleType,
+  DogIconStyles,
+} from "./DogBreadsIcon";
 
 const toDogIconStyle = (
   value: any,

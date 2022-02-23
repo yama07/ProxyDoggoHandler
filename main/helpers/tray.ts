@@ -1,6 +1,7 @@
-import { Tray, Menu, MenuItem } from "electron";
+import { Menu, MenuItem, Tray } from "electron";
 import log from "electron-log";
 import { is } from "electron-util";
+
 import {
   getAppTrayIcon,
   getDogBreadsMenuIcon,

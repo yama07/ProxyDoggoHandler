@@ -1,19 +1,20 @@
-import React from "react";
 import {
-  TextField,
-  FormControlLabel,
-  Button,
-  Divider,
-  Checkbox,
-  Grid,
   Box,
+  Button,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Grid,
+  TextField,
 } from "@mui/material";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import ProxyUsageCard from "./ProxyUsageCard";
+
 import {
   proxyPreferenceContext,
   setProxyPreferenceContext,
 } from "../contexts/ProxyPreferenceContext";
+import ProxyUsageCard from "./ProxyUsageCard";
 
 const ProxyPreferencesContainer: React.FC = () => {
   const proxyPreferences = React.useContext(proxyPreferenceContext);

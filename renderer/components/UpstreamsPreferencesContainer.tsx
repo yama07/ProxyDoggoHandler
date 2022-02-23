@@ -1,26 +1,27 @@
-import React from "react";
-import {
-  Button,
-  TableHead,
-  Table,
-  TableRow,
-  TableCell,
-  TableBody,
-  Tooltip,
-  Box,
-  Typography,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
-import DogBreadsIcon from "./DogBreadsIcon";
-import DeleteDialog from "./upstreamSettingDialogs/DeleteDialog";
-import AddOrEditDialog from "./upstreamSettingDialogs/AddOrEditDialog";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import React from "react";
+
 import {
   setUpstreamsPreferenceContext,
   upstreamsPreferenceContext,
 } from "../contexts/UpstreamsPreferencesContext";
+import DogBreadsIcon from "./DogBreadsIcon";
+import AddOrEditDialog from "./upstreamSettingDialogs/AddOrEditDialog";
+import DeleteDialog from "./upstreamSettingDialogs/DeleteDialog";
 
 const UpstreamsPreferencesContainer: React.FC = () => {
   const upstreamsPreference = React.useContext(upstreamsPreferenceContext);

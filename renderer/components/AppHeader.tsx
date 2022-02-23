@@ -1,12 +1,12 @@
-import React from "react";
 import {
   AppBar,
   AppBarProps,
   Box,
-  styled,
   Toolbar,
   Typography,
+  styled,
 } from "@mui/material";
+import React from "react";
 
 const DraggableAppBar = styled(AppBar)({ WebkitAppRegion: "drag" });
 

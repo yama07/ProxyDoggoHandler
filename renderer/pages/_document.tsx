@@ -1,8 +1,9 @@
 /* eslint-disable require-jsdoc */
-import React from "react";
-import Document, { Html, Head, Main, NextScript } from "next/document";
 import createCache from "@emotion/cache";
 import createEmotionServer from "@emotion/server/create-instance";
+import Document, { Head, Html, Main, NextScript } from "next/document";
+import React from "react";
+
 import { theme } from "../lib/theme";
 
 export default class MyDocument extends Document {

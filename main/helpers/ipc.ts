@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import { is } from "electron-util";
+
 import {
   closePrefsWindow,
   isMaximizedPrefsWindow,
@@ -12,14 +13,14 @@ import {
 } from "../windows/preferences";
 import {
   getGeneralPreference,
-  setGeneralPreference,
   getProxyPreference,
-  setProxyPreference,
   getUpstreamsPreference,
-  setUpstreamsPreference,
   onGeneralPreferenceDidChange,
   onProxyPreferenceDidChange,
   onUpstreamsPreferenceDidChange,
+  setGeneralPreference,
+  setProxyPreference,
+  setUpstreamsPreference,
 } from "./preference-accessor";
 
 const unsubscribeFunctions: (() => void)[] = [];

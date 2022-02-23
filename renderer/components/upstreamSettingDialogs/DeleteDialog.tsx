@@ -1,12 +1,12 @@
-import React from "react";
 import {
-  DialogTitle,
-  DialogContentText,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
+import React from "react";
 
 type Props = {
   upstream: UpstreamType;

@@ -1,20 +1,21 @@
-import React from "react";
 import {
-  Grid,
-  Checkbox,
-  FormControlLabel,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Button,
-  TextField,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
 } from "@mui/material";
-import DogBreadsIcon, { DogIconIds } from "../DogBreadsIcon";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
+
+import DogBreadsIcon, { DogIconIds } from "../DogBreadsIcon";
 
 type Props = {
   oldUpstream?: UpstreamType;

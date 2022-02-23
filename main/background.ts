@@ -1,29 +1,30 @@
-import { app, Menu } from "electron";
+import { Menu, app } from "electron";
+import log from "electron-log";
 import serve from "electron-serve";
-import { openPrefsWindow } from "./windows/preferences";
-import {
-  listenProxyPort,
-  closePorxyPort,
-  updateUpstreamProxyUrl,
-  initializeProxyServer,
-  onProxyStatusDidChange,
-  isProxyServerRunning,
-  getProxyServerEndpoint,
-} from "./helpers/proxy-chain-wrapper";
+import { is } from "electron-util";
+
+import { finalizeIpc, initializeIpc } from "./helpers/ipc";
 import {
   getGeneralPreference,
   getProxyPreference,
-  onUpstreamsPreferenceDidChange,
-  onProxyPreferenceDidChange,
-  onGeneralPreferenceDidChange,
   getUpstreamsPreference,
+  onGeneralPreferenceDidChange,
+  onProxyPreferenceDidChange,
+  onUpstreamsPreferenceDidChange,
   setUpstreamsPreference,
 } from "./helpers/preference-accessor";
+import {
+  closePorxyPort,
+  getProxyServerEndpoint,
+  initializeProxyServer,
+  isProxyServerRunning,
+  listenProxyPort,
+  onProxyStatusDidChange,
+  updateUpstreamProxyUrl,
+} from "./helpers/proxy-chain-wrapper";
 import { initializeTray, updateTray } from "./helpers/tray";
-import { finalizeIpc, initializeIpc } from "./helpers/ipc";
-import log from "electron-log";
-import { is } from "electron-util";
 import { openAboutWindow } from "./windows/about";
+import { openPrefsWindow } from "./windows/preferences";
 
 // DevelopmentとProductionでユーザデータの格納先を分ける
 if (is.development) {

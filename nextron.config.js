@@ -6,5 +6,4 @@ module.exports = {
         preload: "./preload/preload.ts",
       },
     }),
-  swcMinify: false,
 };

@@ -13,7 +13,8 @@
     "build:win64": "nextron build --win --x64",
     "build:macIntel": "nextron build --mac --x64",
     "build:macArm": "nextron build --mac --arm64",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "test:renderer": "jest -c ./test/renderer/jest.config.js"
   },
   "dependencies": {
     "@emotion/react": "^11.8.1",
@@ -31,6 +32,8 @@
     "react-hook-form": "^7.27.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.4",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/node": "^16.11.6",
     "@types/react": "^17.0.39",
@@ -44,6 +47,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-next": "12.1.0",
     "eslint-config-prettier": "^8.4.0",
+    "jest": "^27.5.1",
     "next": "^12.1.0",
     "nextron": "^7.2.0",
     "prettier": "^2.5.1",

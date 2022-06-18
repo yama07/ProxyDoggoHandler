@@ -6,7 +6,11 @@ export const upstreamsPreferenceContext =
 export const setUpstreamsPreferenceContext =
   React.createContext<Dispatch<SetStateAction<UpstreamsPreferenceType>>>(null);
 
-export const UpstreamsPreferenceProvider: React.FC = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+export const UpstreamsPreferenceProvider: React.FC<Props> = ({ children }) => {
   const [upstreamsPreference, setUpstreamsPreference] =
     React.useState<UpstreamsPreferenceType>({
       selectedIndex: 0,

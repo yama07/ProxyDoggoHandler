@@ -6,7 +6,11 @@ export const generalPreferenceContext =
 export const setGeneralPreferenceContext =
   React.createContext<Dispatch<SetStateAction<GeneralPreferenceType>>>(null);
 
-export const GeneralPreferenceProvider: React.FC = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+export const GeneralPreferenceProvider: React.FC<Props> = ({ children }) => {
   const [generalPreference, setGeneralPreference] =
     React.useState<GeneralPreferenceType>({
       isOpenAtStartup: true,

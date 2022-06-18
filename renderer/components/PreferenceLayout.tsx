@@ -6,7 +6,11 @@ import AppDrawer from "./AppDrawer";
 import AppHeader from "./AppHeader";
 import WindowControl from "./WindowControl";
 
-const PreferenceLayout: React.FC = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+const PreferenceLayout: React.FC<Props> = ({ children }) => {
   const { isMacos } = React.useContext(systemPropertiesContext);
 
   return (

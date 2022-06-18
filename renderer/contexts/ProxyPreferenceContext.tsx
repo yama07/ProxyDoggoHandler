@@ -6,7 +6,11 @@ export const proxyPreferenceContext =
 export const setProxyPreferenceContext =
   React.createContext<Dispatch<SetStateAction<ProxyPreferenceType>>>(null);
 
-export const ProxyPreferenceProvider: React.FC = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+export const ProxyPreferenceProvider: React.FC<Props> = ({ children }) => {
   const [proxyPreference, setProxyPreference] =
     React.useState<ProxyPreferenceType>({ port: 8080, verbose: false });
 

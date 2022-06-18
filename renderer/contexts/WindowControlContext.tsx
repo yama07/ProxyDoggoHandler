@@ -11,7 +11,11 @@ export type WindowControlProperties = {
 export const windowControlContext =
   React.createContext<WindowControlProperties>(null);
 
-export const WindowControlProvider: React.FC = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+export const WindowControlProvider: React.FC<Props> = ({ children }) => {
   const [isMaximized, setIsMaximized] = React.useState(false);
 
   React.useEffect(() => {

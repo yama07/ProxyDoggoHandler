@@ -2,7 +2,11 @@ import { GeneralPreferenceProvider } from "./GeneralPreferenceContext";
 import { ProxyPreferenceProvider } from "./ProxyPreferenceContext";
 import { UpstreamsPreferenceProvider } from "./UpstreamsPreferencesContext";
 
-export const PreferenceProvider: React.FC = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+export const PreferenceProvider: React.FC<Props> = ({ children }) => {
   return (
     <GeneralPreferenceProvider>
       <ProxyPreferenceProvider>

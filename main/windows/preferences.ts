@@ -4,7 +4,8 @@ import { is } from "electron-util";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 
-export let preferencesWindow: BrowserWindow | undefined;
+let preferencesWindow: BrowserWindow | undefined;
+
 let onPrefsWindowMaximizeListener: (window: BrowserWindow) => void | undefined;
 let onPrefsWindowUnmaximizeListener: (
   window: BrowserWindow
@@ -63,6 +64,13 @@ export const openPrefsWindow = async () => {
       onPrefsWindowUnmaximizeListener(preferencesWindow);
     }
   });
+};
+
+export const sendMessage = (channel: string, ...args: any[]) => {
+  if (!preferencesWindow || preferencesWindow.isDestroyed()) {
+    return;
+  }
+  preferencesWindow?.webContents.send(channel, ...args);
 };
 
 export const closePrefsWindow = () => preferencesWindow?.close();

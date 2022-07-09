@@ -8,7 +8,7 @@ import {
   minimizePrefsWindow,
   onPrefsWindowMaximize,
   onPrefsWindowUnmaximize,
-  preferencesWindow,
+  sendMessage,
   unmaximizePrefsWindow,
 } from "../windows/preferences";
 import {
@@ -70,11 +70,7 @@ export const initializeIpc = () => {
 
   unsubscribeFunctions.push(
     onGeneralPreferenceDidChange((newValue, oldValue) => {
-      preferencesWindow?.webContents.send(
-        "store.onGeneralPreferenceDidChange",
-        newValue,
-        oldValue
-      );
+      sendMessage("store.onGeneralPreferenceDidChange", newValue, oldValue);
     })
   );
 
@@ -91,11 +87,7 @@ export const initializeIpc = () => {
 
   unsubscribeFunctions.push(
     onProxyPreferenceDidChange((newValue, oldValue) => {
-      preferencesWindow?.webContents.send(
-        "store.onProxyPreferenceDidChange",
-        newValue,
-        oldValue
-      );
+      sendMessage("store.onProxyPreferenceDidChange", newValue, oldValue);
     })
   );
 
@@ -115,11 +107,7 @@ export const initializeIpc = () => {
 
   unsubscribeFunctions.push(
     onUpstreamsPreferenceDidChange((newValue, oldValue) => {
-      preferencesWindow?.webContents.send(
-        "store.onUpstreamsPreferenceDidChange",
-        newValue,
-        oldValue
-      );
+      sendMessage("store.onUpstreamsPreferenceDidChange", newValue, oldValue);
     })
   );
 };

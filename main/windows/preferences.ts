@@ -35,8 +35,8 @@ export const openPrefsWindow = async () => {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
       contextIsolation: true,
+      sandbox: true,
       preload: path.join(__dirname, "preload.js"),
-      sandbox: false,
     },
   };
   preferencesWindow = new BrowserWindow(browserOptions);

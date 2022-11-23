@@ -1,9 +1,17 @@
+const path = require("path");
+const { merge } = require("webpack-merge");
+
 module.exports = {
-  webpack: (config) =>
-    Object.assign(config, {
-      entry: {
-        background: "./main/background.ts",
-        preload: "./preload/preload.ts",
+  webpack: (config, env) => {
+    const preload = merge(config, {
+      target: "electron-preload",
+      output: {
+        libraryTarget: "commonjs",
+        filename: "preload.js",
       },
-    }),
+      entry: path.join(process.cwd(), "preload", "preload.ts"),
+    });
+
+    return [config, preload];
+  },
 };

@@ -11,6 +11,9 @@ export const DogIconStyles = [
 ] as const;
 export type DogIconStyleType = typeof DogIconStyles[number];
 
+export const toDogIconStyleType = (value: any): DogIconStyleType | undefined =>
+  DogIconStyles.find((style) => style == value);
+
 export const DogIconIds = [...Array(50)].map(
   (_, index) => ("000" + (index + 1)).slice(-3) + "-dog"
 );

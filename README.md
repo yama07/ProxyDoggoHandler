@@ -8,6 +8,8 @@
   <br>
 </h1>
 
+<h2 align="center">🐶</h2>
+
 <h4 align="center">Proxy integration and switching tool. For Mac, Windows.</h4>
 
 <p align="center">

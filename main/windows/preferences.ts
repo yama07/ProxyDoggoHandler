@@ -38,6 +38,7 @@ export const openPrefsWindow = async () => {
       sandbox: true,
       preload: path.join(__dirname, "preload.js"),
     },
+    show: false,
   };
   preferencesWindow = new BrowserWindow(browserOptions);
 
@@ -52,6 +53,9 @@ export const openPrefsWindow = async () => {
   } else {
     await preferencesWindow.loadURL("app://./preferences/general");
   }
+
+  // レンダリングの準備完了後にウィンドウを表示する
+  preferencesWindow.once("ready-to-show", () => preferencesWindow.show());
 
   preferencesWindow.on("maximize", () => {
     log.debug("Prefs window is on maximize");

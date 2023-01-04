@@ -39,7 +39,7 @@ jobs:
           xcrun altool --store-password-in-keychain-item "AC_PASSWORD" -u $APPLEID -p $APPLEIDPASS
 
       - name: Build
-        run: npm run build:macIntel
+        run: npm run build:mac:x64
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
@@ -64,7 +64,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build:win64
+        run: npm run build:win:x64
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2

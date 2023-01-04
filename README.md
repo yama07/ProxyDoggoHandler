@@ -8,9 +8,9 @@
   <br>
 </h1>
 
-<h2 align="center">🐶</h2>
-
 <h4 align="center">Proxy integration and switching tool. For Mac, Windows.</h4>
+
+<p align="center">🐶</p>
 
 <p align="center">
   <a href="https://github.com/yama07/ProxyDoggoHandler"><img src="https://img.shields.io/github/workflow/status/yama07/ProxyDoggoHandler/Build%20and%20release" alt="GitHub Workflow Status"></a>
@@ -105,10 +105,11 @@ $ npm run build
 
 ## or
 $ npm run build:all
-$ npm run build:win32
-$ npm run build:win64
-$ npm run build:macIntel
-$ npm run build:macArm
+$ npm run build:win:ia32
+$ npm run build:win:x64
+$ npm run build:mac:x64
+$ npm run build:mac:arm64
+$ npm run build:mac:universal
 ```
 
 ## Thanks

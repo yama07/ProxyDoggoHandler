@@ -3,7 +3,7 @@ import { Server, redactUrl } from "proxy-chain";
 
 type ProxyServerStatus = "stopped" | "running";
 
-let server: any = undefined;
+let server: Server | undefined = undefined;
 let upstreamProxyUrl: string | undefined = undefined;
 let status: ProxyServerStatus = "stopped";
 let onStatusChangeCallback: ((status: ProxyServerStatus) => void) | undefined;

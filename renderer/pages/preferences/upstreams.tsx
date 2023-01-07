@@ -1,7 +1,7 @@
 import React from "react";
 
-import PreferenceLayout from "../../components/PreferenceLayout";
-import UpstreamsPreferencesContainer from "../../components/UpstreamsPreferencesContainer";
+import PreferenceLayout from "~/components/PreferenceLayout";
+import UpstreamsPreferencesContainer from "~/components/UpstreamsPreferencesContainer";
 
 const Upstreams = function () {
   return (

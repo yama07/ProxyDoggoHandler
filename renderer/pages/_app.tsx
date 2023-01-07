@@ -4,10 +4,10 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import React from "react";
 
-import { PreferenceProvider } from "../contexts";
-import { SystemPropertiesProvider } from "../contexts/SystemPropertiesContext";
-import { WindowControlProvider } from "../contexts/WindowControlContext";
-import { theme } from "../lib/theme";
+import { PreferenceProvider } from "~/contexts";
+import { SystemPropertiesProvider } from "~/contexts/SystemPropertiesContext";
+import { WindowControlProvider } from "~/contexts/WindowControlContext";
+import { theme } from "~/lib/theme";
 
 const _app = function (props: AppProps) {
   const { Component, pageProps } = props;

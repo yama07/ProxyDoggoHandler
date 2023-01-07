@@ -7,7 +7,8 @@ import {
 } from "@mui/material";
 import React from "react";
 
-import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
+import { systemPropertiesContext } from "~/contexts/SystemPropertiesContext";
+
 import DogBreadsIcon, {
   DogIconStyleType,
   DogIconStyles,

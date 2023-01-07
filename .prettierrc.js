@@ -1,6 +1,6 @@
 module.exports = {
   tabWidth: 2,
-  importOrder: ["^[./]"],
+  importOrder: ["^~/(.*)$", "^[./]"],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
 };

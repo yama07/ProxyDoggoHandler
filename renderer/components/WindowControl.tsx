@@ -1,7 +1,8 @@
 import { Box, BoxProps, Button, styled } from "@mui/material";
 import React from "react";
 
-import { windowControlContext } from "../contexts/WindowControlContext";
+import { windowControlContext } from "~/contexts/WindowControlContext";
+
 import {
   CloseIcon,
   MaximizeIcon,

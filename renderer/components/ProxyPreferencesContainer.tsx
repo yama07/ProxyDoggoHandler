@@ -13,7 +13,8 @@ import { Controller, useForm } from "react-hook-form";
 import {
   proxyPreferenceContext,
   setProxyPreferenceContext,
-} from "../contexts/ProxyPreferenceContext";
+} from "~/contexts/ProxyPreferenceContext";
+
 import ProxyUsageCard from "./ProxyUsageCard";
 
 const ProxyPreferencesContainer: React.FC = () => {

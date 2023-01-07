@@ -1,7 +1,8 @@
 import { Box, CssBaseline } from "@mui/material";
 import React from "react";
 
-import { systemPropertiesContext } from "../contexts/SystemPropertiesContext";
+import { systemPropertiesContext } from "~/contexts/SystemPropertiesContext";
+
 import AppDrawer from "./AppDrawer";
 import AppHeader from "./AppHeader";
 import WindowControl from "./WindowControl";

@@ -18,7 +18,8 @@ import React from "react";
 import {
   setUpstreamsPreferenceContext,
   upstreamsPreferenceContext,
-} from "../contexts/UpstreamsPreferencesContext";
+} from "~/contexts/UpstreamsPreferencesContext";
+
 import DogBreadsIcon from "./DogBreadsIcon";
 import AddOrEditDialog from "./upstreamSettingDialogs/AddOrEditDialog";
 import DeleteDialog from "./upstreamSettingDialogs/DeleteDialog";

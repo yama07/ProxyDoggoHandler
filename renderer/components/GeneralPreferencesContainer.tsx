@@ -10,8 +10,9 @@ import React from "react";
 import {
   generalPreferenceContext,
   setGeneralPreferenceContext,
-} from "../contexts/GeneralPreferenceContext";
-import { upstreamsPreferenceContext } from "../contexts/UpstreamsPreferencesContext";
+} from "~/contexts/GeneralPreferenceContext";
+import { upstreamsPreferenceContext } from "~/contexts/UpstreamsPreferencesContext";
+
 import { toDogIconStyleType } from "./DogBreadsIcon";
 import TrayIconStyleToggleButtonGroup from "./TrayIconStyleToggleButtonGroup";
 

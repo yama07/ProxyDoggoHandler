@@ -44,7 +44,7 @@
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
     "electron": "^22.0.0",
-    "electron-builder": "^23.6.0",
+    "electron-builder": "^24.2.0",
     "eslint": "8.31.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-next": "13.1.1",

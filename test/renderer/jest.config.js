@@ -1,7 +1,7 @@
 const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
-  dir: "<rootDir>/renderer",
+  dir: "renderer",
 });
 
 const customJestConfig = {

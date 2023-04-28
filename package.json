@@ -19,6 +19,7 @@
     "test:renderer": "jest -c ./test/renderer/jest.config.js"
   },
   "dependencies": {
+    "@emotion/cache": "^11.10.8",
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.5",

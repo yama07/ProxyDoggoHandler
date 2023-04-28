@@ -1,3 +1,4 @@
+import { CacheProvider, EmotionCache } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import type { AppProps } from "next/app";
@@ -7,10 +8,17 @@ import React from "react";
 import { PreferenceProvider } from "~/contexts";
 import { SystemPropertiesProvider } from "~/contexts/SystemPropertiesContext";
 import { WindowControlProvider } from "~/contexts/WindowControlContext";
+import createEmotionCache from "~/lib/create-emotion-cache";
 import { theme } from "~/lib/theme";
 
-const _app = function (props: AppProps) {
-  const { Component, pageProps } = props;
+const clientSideEmotionCache = createEmotionCache();
+
+type MyAppProps = AppProps & {
+  emotionCache?: EmotionCache;
+};
+
+const _app = function (props: MyAppProps) {
+  const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
 
   React.useEffect(() => {
     const jssStyles = document.querySelector("#jss-server-side");
@@ -20,13 +28,14 @@ const _app = function (props: AppProps) {
   }, []);
 
   return (
-    <React.Fragment>
+    <CacheProvider value={emotionCache}>
       <Head>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
+
       <ThemeProvider theme={theme}>
         <SystemPropertiesProvider>
           <WindowControlProvider>
@@ -37,7 +46,7 @@ const _app = function (props: AppProps) {
           </WindowControlProvider>
         </SystemPropertiesProvider>
       </ThemeProvider>
-    </React.Fragment>
+    </CacheProvider>
   );
 };
 

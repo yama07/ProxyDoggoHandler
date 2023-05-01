@@ -4,6 +4,8 @@ import { is } from "electron-util";
 import windowStateKeeper from "electron-window-state";
 import path from "path";
 
+const PREFERENCES_PAGE_PATH = "/preferences/general";
+
 let preferencesWindow: BrowserWindow | undefined;
 
 let onPrefsWindowMaximizeListener: (window: BrowserWindow) => void | undefined;
@@ -44,16 +46,6 @@ export const openPrefsWindow = async () => {
 
   windowState.manage(preferencesWindow);
 
-  if (is.development) {
-    const port = process.argv[2];
-    await preferencesWindow.loadURL(
-      `http://localhost:${port}/preferences/general`
-    );
-    preferencesWindow.webContents.openDevTools({ mode: "detach" });
-  } else {
-    await preferencesWindow.loadURL("app://./preferences/general");
-  }
-
   // レンダリングの準備完了後にウィンドウを表示する
   preferencesWindow.once("ready-to-show", () => preferencesWindow.show());
 
@@ -69,6 +61,16 @@ export const openPrefsWindow = async () => {
       onPrefsWindowUnmaximizeListener(preferencesWindow);
     }
   });
+
+  if (is.development) {
+    const port = process.argv[2];
+    await preferencesWindow.loadURL(
+      `http://localhost:${port}${PREFERENCES_PAGE_PATH}`
+    );
+    preferencesWindow.webContents.openDevTools({ mode: "detach" });
+  } else {
+    await preferencesWindow.loadURL("app://.${PREFERENCES_PAGE_PATH}");
+  }
 };
 
 export const sendMessage = (channel: string, ...args: any[]) => {

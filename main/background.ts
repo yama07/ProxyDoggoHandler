@@ -62,7 +62,12 @@ if (!is.development) serve({ directory: "app" });
 
 (async () => {
   await app.whenReady();
+
   setup();
+
+  if (getGeneralPreference().isOpenAtStartup) {
+    await openPrefsWindow();
+  }
 })();
 
 app.on("window-all-closed", () => {
@@ -137,7 +142,7 @@ const setup = () => {
         newPreference.selectedIndex = index;
         setUpstreamsPreference(newPreference);
       },
-      clickPrefsWindowMenu: openPrefsWindow,
+      clickPrefsWindowMenu: async () => await openPrefsWindow(),
       clickAboutWindow: openAboutWindow,
     },
   });
@@ -152,10 +157,6 @@ const setup = () => {
   const generalPreference = getGeneralPreference();
   if (generalPreference.isLaunchProxyServerAtStartup) {
     listenProxyPort();
-  }
-
-  if (generalPreference.isOpenAtStartup) {
-    openPrefsWindow();
   }
 
   updateTray();

@@ -10,7 +10,7 @@ import {
   onPrefsWindowUnmaximize,
   sendMessage,
   unmaximizePrefsWindow,
-} from "../windows/preferences";
+} from "../windows/preferences-window";
 import {
   getGeneralPreference,
   getProxyPreference,
@@ -21,7 +21,7 @@ import {
   setGeneralPreference,
   setProxyPreference,
   setUpstreamsPreference,
-} from "./preference-accessor";
+} from "./preferences";
 
 const unsubscribeFunctions: (() => void)[] = [];
 

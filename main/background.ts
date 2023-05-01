@@ -12,7 +12,7 @@ import {
   onProxyPreferenceDidChange,
   onUpstreamsPreferenceDidChange,
   setUpstreamsPreference,
-} from "./helpers/preference-accessor";
+} from "./helpers/preferences";
 import {
   closePorxyPort,
   getProxyServerEndpoint,
@@ -21,10 +21,10 @@ import {
   listenProxyPort,
   onProxyStatusDidChange,
   updateUpstreamProxyUrl,
-} from "./helpers/proxy-chain-wrapper";
+} from "./helpers/proxy";
 import { initializeTray, updateTray } from "./helpers/tray";
-import { openAboutWindow } from "./windows/about";
-import { openPrefsWindow } from "./windows/preferences";
+import { openAboutWindow } from "./windows/about-window";
+import { openPrefsWindow } from "./windows/preferences-window";
 
 // DevelopmentとProductionでユーザデータの格納先を分ける
 if (is.development) {

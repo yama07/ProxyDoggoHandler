@@ -1,7 +1,9 @@
-import { Box, CssBaseline } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 
+import { PreferenceProvider } from "~/contexts";
 import { systemPropertiesContext } from "~/contexts/SystemPropertiesContext";
+import { WindowControlProvider } from "~/contexts/WindowControlContext";
 
 import AppDrawer from "./AppDrawer";
 import AppHeader from "./AppHeader";
@@ -19,12 +21,12 @@ const PreferenceLayout: React.FC<Props> = ({ children }) => {
       component="nav"
       sx={{ display: "flex", WebkitUserSelect: "none", height: "100vh" }}
     >
-      <CssBaseline />
-
       <AppHeader sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} />
 
       {!isMacos && (
-        <WindowControl sx={{ zIndex: (theme) => theme.zIndex.drawer + 2 }} />
+        <WindowControlProvider>
+          <WindowControl sx={{ zIndex: (theme) => theme.zIndex.drawer + 2 }} />
+        </WindowControlProvider>
       )}
 
       <AppDrawer />
@@ -33,7 +35,9 @@ const PreferenceLayout: React.FC<Props> = ({ children }) => {
         component="main"
         sx={{ flexGrow: 1, pt: (theme) => theme.spacing(8) }}
       >
-        <Box sx={{ p: 4, height: "100%" }}>{children}</Box>
+        <Box sx={{ p: 4, height: "100%" }}>
+          <PreferenceProvider>{children}</PreferenceProvider>
+        </Box>
       </Box>
     </Box>
   );

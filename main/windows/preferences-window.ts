@@ -69,7 +69,7 @@ export const openPrefsWindow = async () => {
     );
     preferencesWindow.webContents.openDevTools({ mode: "detach" });
   } else {
-    await preferencesWindow.loadURL("app://.${PREFERENCES_PAGE_PATH}");
+    await preferencesWindow.loadURL(`app://.${PREFERENCES_PAGE_PATH}`);
   }
 };
 

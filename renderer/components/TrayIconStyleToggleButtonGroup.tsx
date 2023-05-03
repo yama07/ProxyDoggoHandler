@@ -7,8 +7,6 @@ import {
 } from "@mui/material";
 import React from "react";
 
-import { systemPropertiesContext } from "~/contexts/SystemPropertiesContext";
-
 import DogBreadsIcon, {
   DogIconStyleType,
   DogIconStyles,
@@ -18,22 +16,21 @@ const getIconStyleLabel = (style: string): string =>
   capitalize(style).replace("-w", " (white)");
 
 type Props = {
+  includeWhite: boolean;
   iconId: string;
   value: DogIconStyleType;
   onChange: (value: DogIconStyleType) => void;
 };
 
 const TrayIconStyleToggleButtonGroup: React.FC<Props> = ({
+  includeWhite,
   iconId,
   value,
   onChange,
 }) => {
-  const { isMacos } = React.useContext(systemPropertiesContext);
-
-  // macの場合はアイコンの色が自動で切り替わるため、白色スタイルは不要
-  const availableDogIconStyles = isMacos
-    ? DogIconStyles.filter((v) => !v.endsWith("-w"))
-    : DogIconStyles.slice();
+  const availableDogIconStyles = includeWhite
+    ? DogIconStyles.slice()
+    : DogIconStyles.filter((v) => !v.endsWith("-w"));
 
   return (
     <ToggleButtonGroup

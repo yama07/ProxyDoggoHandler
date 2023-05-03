@@ -13,9 +13,11 @@ import {
   generalPreferenceContext,
   setGeneralPreferenceContext,
 } from "~/contexts/GeneralPreferenceContext";
+import { systemPropertiesContext } from "~/contexts/SystemPropertiesContext";
 import { upstreamsPreferenceContext } from "~/contexts/UpstreamsPreferencesContext";
 
 const General: React.FC = () => {
+  const { isMacos } = React.useContext(systemPropertiesContext);
   const generalPreferences = React.useContext(generalPreferenceContext);
   const setGeneralPreferences = React.useContext(setGeneralPreferenceContext);
   const upstreamsPreferens = React.useContext(upstreamsPreferenceContext);
@@ -32,6 +34,9 @@ const General: React.FC = () => {
     },
     [setGeneralPreferences]
   );
+
+  // macの場合はアイコンの色が自動で切り替わるため、白色スタイルのアイコンは不要
+  const includeWhite = !isMacos;
 
   return (
     <form noValidate autoComplete="off">
@@ -72,6 +77,7 @@ const General: React.FC = () => {
           <FormControl component="fieldset">
             <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
             <TrayIconStyleToggleButtonGroup
+              includeWhite={includeWhite}
               iconId={selectedUpstream.icon}
               value={
                 toDogIconStyleType(generalPreferences.trayIconStyle) ?? "lineal"
@@ -87,6 +93,7 @@ const General: React.FC = () => {
           <FormControl component="fieldset">
             <FormLabel component="legend">メニューアイコンのスタイル</FormLabel>
             <TrayIconStyleToggleButtonGroup
+              includeWhite={includeWhite}
               iconId={selectedUpstream.icon}
               value={
                 toDogIconStyleType(generalPreferences.menuIconStyle) ?? "lineal"

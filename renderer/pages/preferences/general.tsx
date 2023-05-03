@@ -13,11 +13,11 @@ import {
   generalPreferenceContext,
   setGeneralPreferenceContext,
 } from "~/contexts/GeneralPreferenceContext";
-import { systemPropertiesContext } from "~/contexts/SystemPropertiesContext";
 import { upstreamsPreferenceContext } from "~/contexts/UpstreamsPreferencesContext";
+import { useSystemProperties } from "~/hooks/useSystemProperties";
 
 const General: React.FC = () => {
-  const { isMacos } = React.useContext(systemPropertiesContext);
+  const { isMacos } = useSystemProperties();
   const generalPreferences = React.useContext(generalPreferenceContext);
   const setGeneralPreferences = React.useContext(setGeneralPreferenceContext);
   const upstreamsPreferens = React.useContext(upstreamsPreferenceContext);
@@ -37,6 +37,11 @@ const General: React.FC = () => {
 
   // macの場合はアイコンの色が自動で切り替わるため、白色スタイルのアイコンは不要
   const includeWhite = !isMacos;
+
+  // 設定読み込みが完了するまでは、何も表示しない
+  if (isMacos === undefined) {
+    return <></>;
+  }
 
   return (
     <form noValidate autoComplete="off">

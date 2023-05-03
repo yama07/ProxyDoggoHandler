@@ -6,7 +6,6 @@ import Head from "next/head";
 import React from "react";
 
 import PreferenceLayout from "~/components/PreferenceLayout";
-import { SystemPropertiesProvider } from "~/contexts/SystemPropertiesContext";
 import createEmotionCache from "~/lib/create-emotion-cache";
 import { theme } from "~/lib/theme";
 
@@ -38,11 +37,9 @@ const _app = function (props: MyAppProps) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <SystemPropertiesProvider>
-          <PreferenceLayout>
-            <Component {...pageProps} />
-          </PreferenceLayout>
-        </SystemPropertiesProvider>
+        <PreferenceLayout>
+          <Component {...pageProps} />
+        </PreferenceLayout>
       </ThemeProvider>
     </CacheProvider>
   );

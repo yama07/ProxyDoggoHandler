@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 
 import { PreferenceProvider } from "~/contexts";
-import { systemPropertiesContext } from "~/contexts/SystemPropertiesContext";
+import { useSystemProperties } from "~/hooks/useSystemProperties";
 
 import AppDrawer from "./AppDrawer";
 import AppHeader from "./AppHeader";
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const PreferenceLayout: React.FC<Props> = ({ children }) => {
-  const { isMacos } = React.useContext(systemPropertiesContext);
+  const { isMacos } = useSystemProperties();
 
   return (
     <Box
@@ -22,7 +22,7 @@ const PreferenceLayout: React.FC<Props> = ({ children }) => {
     >
       <AppHeader sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} />
 
-      {!isMacos && (
+      {isMacos !== undefined && !isMacos && (
         <WindowControl sx={{ zIndex: (theme) => theme.zIndex.drawer + 2 }} />
       )}
 

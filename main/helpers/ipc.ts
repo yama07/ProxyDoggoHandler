@@ -28,30 +28,30 @@ const unsubscribeFunctions: (() => void)[] = [];
 export const initializeIpc = () => {
   ipcMain.handle("system.isMacos", (event): boolean => is.macos);
 
-  ipcMain.handle("system.closePrefsWindow", (event) => closePrefsWindow());
+  ipcMain.handle("prefsWindow.closePrefsWindow", (event) => closePrefsWindow());
 
-  ipcMain.handle("system.maximizePrefsWindow", (event) =>
+  ipcMain.handle("prefsWindow.maximizePrefsWindow", (event) =>
     maximizePrefsWindow()
   );
 
-  ipcMain.handle("system.unmaximizePrefsWindow", (event) =>
+  ipcMain.handle("prefsWindow.unmaximizePrefsWindow", (event) =>
     unmaximizePrefsWindow()
   );
 
-  ipcMain.handle("system.minimizePrefsWindow", (event) =>
+  ipcMain.handle("prefsWindow.minimizePrefsWindow", (event) =>
     minimizePrefsWindow()
   );
 
-  ipcMain.handle("system.isMaximizedPrefsWindow", (event): boolean =>
+  ipcMain.handle("prefsWindow.isMaximizedPrefsWindow", (event): boolean =>
     isMaximizedPrefsWindow()
   );
 
   onPrefsWindowMaximize((window) =>
-    window.webContents.send("system.onPrefsWindowMaximize")
+    window.webContents.send("prefsWindow.onPrefsWindowMaximize")
   );
 
   onPrefsWindowUnmaximize((window) =>
-    window.webContents.send("system.onPrefsWindowUnmaximize")
+    window.webContents.send("prefsWindow.onPrefsWindowUnmaximize")
   );
 
   ipcMain.handle(

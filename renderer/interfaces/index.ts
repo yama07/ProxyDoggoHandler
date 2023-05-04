@@ -2,13 +2,16 @@ declare global {
   // eslint-disable-next-line no-unused-vars
   interface Window {
     system: ISystem;
+    prefsWindow: IPrefsWindow;
     store: IStore;
   }
 }
 
 export interface ISystem {
   isMacos: () => Promise<boolean>;
+}
 
+export interface IPrefsWindow {
   closePrefsWindow: () => void;
   maximizePrefsWindow: () => void;
   unmaximizePrefsWindow: () => void;

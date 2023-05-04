@@ -2,18 +2,24 @@ import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("system", {
   isMacos: (): Promise<boolean> => ipcRenderer.invoke("system.isMacos"),
-  closePrefsWindow: () => ipcRenderer.invoke("system.closePrefsWindow"),
-  maximizePrefsWindow: () => ipcRenderer.invoke("system.maximizePrefsWindow"),
-  unmaximizePrefsWindow: () =>
-    ipcRenderer.invoke("system.unmaximizePrefsWindow"),
-  minimizePrefsWindow: () => ipcRenderer.invoke("system.minimizePrefsWindow"),
-  isMaximizedPrefsWindow: (): Promise<boolean> =>
-    ipcRenderer.invoke("system.isMaximizedPrefsWindow"),
-  onPrefsWindowMaximize: (callback: () => void) =>
-    ipcRenderer.on("system.onPrefsWindowMaximize", () => callback()),
-  onPrefsWindowUnmaximize: (callback: () => void) =>
-    ipcRenderer.on("system.onPrefsWindowUnmaximize", () => callback()),
 });
+
+contextBridge.exposeInMainWorld("prefsWindow", {
+  closePrefsWindow: () => ipcRenderer.invoke("prefsWindow.closePrefsWindow"),
+  maximizePrefsWindow: () =>
+    ipcRenderer.invoke("prefsWindow.maximizePrefsWindow"),
+  unmaximizePrefsWindow: () =>
+    ipcRenderer.invoke("prefsWindow.unmaximizePrefsWindow"),
+  minimizePrefsWindow: () =>
+    ipcRenderer.invoke("prefsWindow.minimizePrefsWindow"),
+  isMaximizedPrefsWindow: (): Promise<boolean> =>
+    ipcRenderer.invoke("prefsWindow.isMaximizedPrefsWindow"),
+  onPrefsWindowMaximize: (callback: () => void) =>
+    ipcRenderer.on("prefsWindow.onPrefsWindowMaximize", () => callback()),
+  onPrefsWindowUnmaximize: (callback: () => void) =>
+    ipcRenderer.on("prefsWindow.onPrefsWindowUnmaximize", () => callback()),
+});
+
 contextBridge.exposeInMainWorld("store", {
   getGeneralPreference: (): Promise<GeneralPreferenceType> =>
     ipcRenderer.invoke("store.getGeneralPreference"),

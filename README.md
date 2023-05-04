@@ -13,7 +13,7 @@
 <p align="center">🐶</p>
 
 <p align="center">
-  <a href="https://github.com/yama07/ProxyDoggoHandler"><img src="https://img.shields.io/github/workflow/status/yama07/ProxyDoggoHandler/Build%20and%20release" alt="GitHub Workflow Status"></a>
+  <a href="https://github.com/yama07/ProxyDoggoHandler"><img src="https://img.shields.io/github/actions/workflow/status/yama07/ProxyDoggoHandler/build.yml" alt="GitHub Workflow Status"></a>
   <a href="https://github.com/yama07/ProxyDoggoHandler/releases"><img src="https://img.shields.io/github/v/release/yama07/ProxyDoggoHandler" alt="GitHub release (latest SemVer)"></a>
   <a href="https://github.com/yama07/ProxyDoggoHandler/blob/master/LICENSE"><img src="https://img.shields.io/github/license/yama07/ProxyDoggoHandler" alt="GitHub"></a>
 </p>

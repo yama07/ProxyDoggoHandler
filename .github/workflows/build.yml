@@ -19,10 +19,10 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Use Node.js v16.x
+      - name: Use Node.js v18.x
         uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: npm
 
       - name: Install modules

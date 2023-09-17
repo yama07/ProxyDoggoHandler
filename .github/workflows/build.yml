@@ -13,7 +13,7 @@ jobs:
       ENABLE_NOTARIZE: enable
       APPLEID: ${{ secrets.APPLEID }}
       APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
-      ASC_PROVIDER: ${{ secrets.ASC_PROVIDER }}
+      TEAMID: ${{ secrets.TEAMID }}
 
     steps:
       - name: Check out Git repository

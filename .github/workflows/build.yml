@@ -36,7 +36,7 @@ jobs:
 
       - name: Store app-specific password in keychain
         run: |
-          xcrun altool --store-password-in-keychain-item "AC_PASSWORD" -u $APPLEID -p $APPLEIDPASS
+          security add-generic-password -a $APPLEID -w $APPLEIDPASS -s "AC_PASSWORD"
 
       - name: Build
         run: npm run build:mac:x64

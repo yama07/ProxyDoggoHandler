@@ -9,12 +9,6 @@ jobs:
   build_on_macos:
     runs-on: macos-latest
 
-    env:
-      ENABLE_NOTARIZE: enable
-      APPLEID: ${{ secrets.APPLEID }}
-      APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
-      TEAMID: ${{ secrets.TEAMID }}
-
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -36,6 +30,11 @@ jobs:
 
       - name: Build
         run: npm run build:mac:x64
+        env:
+          ENABLE_NOTARIZE: enable
+          APPLEID: ${{ secrets.APPLEID }}
+          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
+          TEAMID: ${{ secrets.TEAMID }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -74,16 +73,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-
       - name: Download macos artifacts
         uses: actions/download-artifact@v3
         id: download_mac
@@ -91,15 +80,9 @@ jobs:
           name: macos-build-artifacts
           path: macos/
 
-      - name: Upload macos Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.download_mac.outputs.download-path }}/Proxy Doggo Handler.dmg
-          asset_name: ProxyDoggoHandler-macos.dmg
-          asset_content_type: application/x-apple-diskimage
+      - name: Rename macos Release Asset
+        run: |
+          mv "${{ steps.download_mac.outputs.download-path }}/Proxy Doggo Handler.dmg" ProxyDoggoHandler-macos.dmg
 
       - name: Download windows artifacts
         uses: actions/download-artifact@v3
@@ -108,12 +91,14 @@ jobs:
           name: windows-build-artifact
           path: windows/
 
-      - name: Upload windows Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Rename windows Release Asset
+        run: |
+          mv "${{ steps.download_win.outputs.download-path }}/Proxy Doggo Handler.exe" ProxyDoggoHandler-win-portable.exe
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.download_win.outputs.download-path }}/Proxy Doggo Handler.exe
-          asset_name: ProxyDoggoHandler-win-portable.exe
-          asset_content_type: application/octet-stream
+          draft: true
+          files: |
+            ProxyDoggoHandler-macos.dmg
+            ProxyDoggoHandler-win-portable.exe

@@ -1,5 +1,13 @@
+# dependencies
 node_modules
+
+# logs
 *.log
+
+# next.js
 .next
-app
+next-env.d.ts
+
+# build
+/app
 dist

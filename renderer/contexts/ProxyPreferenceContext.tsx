@@ -1,44 +1,48 @@
-import React, { Dispatch, SetStateAction } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
-export const proxyPreferenceContext =
-  React.createContext<ProxyPreferenceType>(null);
+export const proxyPreferenceContext = createContext<ProxyPreferenceType>(null);
 
 export const setProxyPreferenceContext =
-  React.createContext<Dispatch<SetStateAction<ProxyPreferenceType>>>(null);
+  createContext<Dispatch<SetStateAction<ProxyPreferenceType>>>(null);
 
 type Props = {
   children: React.ReactNode;
 };
 
 export const ProxyPreferenceProvider: React.FC<Props> = ({ children }) => {
-  const [proxyPreference, setProxyPreference] =
-    React.useState<ProxyPreferenceType>({ port: 8080, verbose: false });
+  const [proxyPreference, setProxyPreference] = useState<ProxyPreferenceType>({
+    port: 8080,
+    verbose: false,
+  });
 
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => setProxyPreference(await window.store.getProxyPreference()))();
 
-    window.store.onProxyPreferenceDidChange((newValue, oldValue) =>
-      setProxyPreference(newValue)
-    );
+    window.store.onProxyPreferenceDidChange((newValue, oldValue) => setProxyPreference(newValue));
 
     return () => {
       window.store.removeOnProxyPreferenceDidChangeListeners();
     };
   }, []);
 
-  const setProxyPreferenceWrapper = React.useCallback(
+  const setProxyPreferenceWrapper = useCallback(
     (
       newPreference:
         | ProxyPreferenceType
-        | ((prevPreference: ProxyPreferenceType) => ProxyPreferenceType)
+        | ((prevPreference: ProxyPreferenceType) => ProxyPreferenceType),
     ) => {
       const _newPreference =
-        newPreference instanceof Function
-          ? newPreference(proxyPreference)
-          : newPreference;
+        newPreference instanceof Function ? newPreference(proxyPreference) : newPreference;
       window.store.setProxyPreference(_newPreference);
     },
-    [proxyPreference]
+    [proxyPreference],
   );
 
   return (

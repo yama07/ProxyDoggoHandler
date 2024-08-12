@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import React from "react";
 
 import { PreferenceProvider } from "~/contexts";
 import { useSystemProperties } from "~/hooks/useSystemProperties";
@@ -16,10 +15,7 @@ const PreferenceLayout: React.FC<Props> = ({ children }) => {
   const { isMacos } = useSystemProperties();
 
   return (
-    <Box
-      component="nav"
-      sx={{ display: "flex", WebkitUserSelect: "none", height: "100vh" }}
-    >
+    <Box component="nav" sx={{ display: "flex", WebkitUserSelect: "none", height: "100vh" }}>
       <AppHeader sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} />
 
       {isMacos !== undefined && !isMacos && (
@@ -28,10 +24,7 @@ const PreferenceLayout: React.FC<Props> = ({ children }) => {
 
       <AppDrawer />
 
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, pt: (theme) => theme.spacing(8) }}
-      >
+      <Box component="main" sx={{ flexGrow: 1, pt: (theme) => theme.spacing(8) }}>
         <Box sx={{ p: 4, height: "100%" }}>
           <PreferenceProvider>{children}</PreferenceProvider>
         </Box>

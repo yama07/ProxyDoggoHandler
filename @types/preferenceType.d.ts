@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 type PreferenceType = {
   general: GeneralPreferenceType;
   proxy: ProxyPreferenceType;

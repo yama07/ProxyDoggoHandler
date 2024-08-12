@@ -1,12 +1,4 @@
-import {
-  AppBar,
-  AppBarProps,
-  Box,
-  Toolbar,
-  Typography,
-  styled,
-} from "@mui/material";
-import React from "react";
+import { AppBar, type AppBarProps, Box, Toolbar, Typography, styled } from "@mui/material";
 
 const DraggableAppBar = styled(AppBar)({ WebkitAppRegion: "drag" });
 
@@ -42,12 +34,7 @@ const AppHeader: React.FC<AppBarProps> = (props: AppBarProps) => {
             width: "100%",
           }}
         >
-          <img
-            src="/images/app-icon-w.png"
-            alt="app-log"
-            draggable={false}
-            height="50%"
-          />
+          <img src="/images/app-icon-w.png" alt="app-log" draggable={false} height="50%" />
           <Typography variant="h6">Proxy Doggo Handler</Typography>
         </Box>
       </Toolbar>

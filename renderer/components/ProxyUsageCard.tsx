@@ -1,5 +1,4 @@
 import { Box, Card, CardContent, Paper, Typography } from "@mui/material";
-import React from "react";
 
 type Props = {
   host?: string;
@@ -55,6 +54,7 @@ const ProxyUsageCard: React.FC<Props> = ({ host = "localhost", port }) => {
           }}
         >
           {[bashZshCmd, psCmd].map((cmd, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <Box key={index}>
               <Typography sx={{ fontSize: 14 }} color="textSecondary">
                 {cmd.name}

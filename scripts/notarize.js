@@ -7,10 +7,7 @@ exports.default = async function notarizing(context) {
 
   // macOSではない、あるいはENABLE_NOTARIZEフラグが
   // 有効ではない場合は公証を行わない
-  if (
-    electronPlatformName !== "darwin" ||
-    process.env.ENABLE_NOTARIZE === undefined
-  ) {
+  if (electronPlatformName !== "darwin" || process.env.ENABLE_NOTARIZE === undefined) {
     return;
   }
 

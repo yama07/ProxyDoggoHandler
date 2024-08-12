@@ -12,7 +12,7 @@ import {
 type Accessor = {
   generalPreference: () => GeneralPreferenceType;
   upstreamsPreference: () => UpstreamsPreferenceType;
-  proxyServerEndpoint: () => String | undefined;
+  proxyServerEndpoint: () => string | undefined;
   isProxyServerRunning: () => boolean;
 };
 
@@ -60,7 +60,7 @@ export const updateTray = () => {
           label: "Not Running",
           icon: getStatusMenuIcon("inactive", generalPreference.menuIconStyle),
           enabled: false,
-        }
+        },
   );
 
   const proxyServerControlItem = new MenuItem(
@@ -78,7 +78,7 @@ export const updateTray = () => {
             log.debug("Click tray menu:", item.label);
             handler.startProxyServer();
           },
-        }
+        },
   );
 
   const proxyMenuItems = upstreamsPreference.upstreams.map(
@@ -87,7 +87,7 @@ export const updateTray = () => {
         id: String(index),
         label: proxy.name,
         type: "radio",
-        checked: upstreamsPreference.selectedIndex == index,
+        checked: upstreamsPreference.selectedIndex === index,
         icon: getDogBreadsMenuIcon(proxy.icon, generalPreference.menuIconStyle),
         toolTip:
           proxy.connectionSetting == null
@@ -97,7 +97,7 @@ export const updateTray = () => {
           log.debug("Click tray menu:", item.id, item.label);
           handler.selectUpstream(Number(item.id));
         },
-      })
+      }),
   );
 
   const contextMenu = Menu.buildFromTemplate([
@@ -127,7 +127,7 @@ export const updateTray = () => {
   const icon = accessor.isProxyServerRunning()
     ? getDogBreadsTrayIcon(
         upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon,
-        generalPreference.trayIconStyle
+        generalPreference.trayIconStyle,
       )
     : getAppTrayIcon(generalPreference.trayIconStyle);
   tray.setImage(icon);

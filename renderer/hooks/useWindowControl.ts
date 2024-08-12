@@ -1,15 +1,12 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
 export const useWindowControl = () => {
-  const [isMaximized, setIsMaximized] = React.useState<boolean | undefined>(
-    undefined
-  );
+  const [isMaximized, setIsMaximized] = useState<boolean | undefined>(undefined);
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.prefsWindow.onPrefsWindowMaximize(() => setIsMaximized(true));
     window.prefsWindow.onPrefsWindowUnmaximize(() => setIsMaximized(false));
-    (async () =>
-      setIsMaximized(await window.prefsWindow.isMaximizedPrefsWindow()))();
+    (async () => setIsMaximized(await window.prefsWindow.isMaximizedPrefsWindow()))();
 
     return () => {
       window.prefsWindow.onPrefsWindowMaximize(undefined);

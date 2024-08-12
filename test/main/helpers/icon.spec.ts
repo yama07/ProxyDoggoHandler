@@ -1,10 +1,10 @@
+import { sep } from "node:path";
+import { describe, expect, jest, test } from "@jest/globals";
 import { nativeImage } from "electron";
-import { sep } from "path";
 
 import { getDogBreadsTrayIcon } from "../../../main/helpers/icon";
 
 jest.mock("electron-util", () => ({ is: {} }));
-const electronUtilMock = jest.requireMock("electron-util");
 
 jest.mock("electron", () => ({
   nativeImage: {
@@ -16,6 +16,7 @@ jest.mock("electron", () => ({
 
 describe("getDogBreadsTrayIcon", () => {
   test("linealのwindows用トレイアイコンが得られる", () => {
+    const electronUtilMock = jest.requireMock("electron-util") as { is: object };
     electronUtilMock.is = {
       development: true,
       windows: true,
@@ -25,11 +26,7 @@ describe("getDogBreadsTrayIcon", () => {
 
     expect(icon).not.toBeNull();
     expect((nativeImage.createFromPath as jest.Mock).mock.calls[0][0]).toMatch(
-      new RegExp(
-        ["images", "tray-icons", "dog-breads", "lineal", "001-dog.png"].join(
-          sep
-        ) + "$"
-      )
+      new RegExp(`${["images", "tray-icons", "dog-breads", "lineal", "001-dog.png"].join(sep)}$`),
     );
     expect(icon.setTemplateImage).toBeCalledWith(true);
   });

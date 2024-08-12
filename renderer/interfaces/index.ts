@@ -1,5 +1,4 @@
 declare global {
-  // eslint-disable-next-line no-unused-vars
   interface Window {
     system: ISystem;
     prefsWindow: IPrefsWindow;
@@ -25,30 +24,21 @@ export interface IStore {
   getGeneralPreference: () => Promise<GeneralPreferenceType>;
   setGeneralPreference: (preference: GeneralPreferenceType) => void;
   onGeneralPreferenceDidChange: (
-    callback: (
-      newValue: GeneralPreferenceType,
-      oldValue: GeneralPreferenceType
-    ) => void
+    callback: (newValue: GeneralPreferenceType, oldValue: GeneralPreferenceType) => void,
   ) => void;
   removeOnGeneralPreferenceDidChangeListeners: () => void;
 
   getProxyPreference: () => Promise<ProxyPreferenceType>;
   setProxyPreference: (preference: ProxyPreferenceType) => void;
   onProxyPreferenceDidChange: (
-    callback: (
-      newValue: ProxyPreferenceType,
-      oldValue: ProxyPreferenceType
-    ) => void
+    callback: (newValue: ProxyPreferenceType, oldValue: ProxyPreferenceType) => void,
   ) => void;
   removeOnProxyPreferenceDidChangeListeners: () => void;
 
   getUpstreamsPreference: () => Promise<UpstreamsPreferenceType>;
   setUpstreamsPreference: (preference: UpstreamsPreferenceType) => void;
   onUpstreamsPreferenceDidChange: (
-    callback: (
-      newValue: UpstreamsPreferenceType,
-      oldValue: UpstreamsPreferenceType
-    ) => void
+    callback: (newValue: UpstreamsPreferenceType, oldValue: UpstreamsPreferenceType) => void,
   ) => void;
   removeOnUpstreamsPreferenceDidChangeListeners: () => void;
 }

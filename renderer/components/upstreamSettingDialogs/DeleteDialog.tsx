@@ -6,7 +6,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import React from "react";
 
 type Props = {
   upstream: UpstreamType;
@@ -14,11 +13,7 @@ type Props = {
   onConfirm: () => void;
 };
 
-const DeleteDialog: React.FC<Props> = ({
-  upstream,
-  onDismiss,
-  onConfirm,
-}: Props) => {
+const DeleteDialog: React.FC<Props> = ({ upstream, onDismiss, onConfirm }: Props) => {
   const handleClose = () => {
     onDismiss();
   };

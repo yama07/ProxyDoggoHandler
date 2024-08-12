@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
 type SystemProperties = {
   isMacos?: Awaited<ReturnType<typeof window.system.isMacos>>;
@@ -7,14 +7,13 @@ type SystemProperties = {
 let cache: SystemProperties | undefined;
 
 export const useSystemProperties = (): SystemProperties => {
-  const [systemProperties, setSystemProperties] =
-    React.useState<SystemProperties>(
-      cache ?? {
-        isMacos: undefined,
-      }
-    );
+  const [systemProperties, setSystemProperties] = useState<SystemProperties>(
+    cache ?? {
+      isMacos: undefined,
+    },
+  );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!cache) {
       (async () => {
         cache = { isMacos: await window.system.isMacos() };

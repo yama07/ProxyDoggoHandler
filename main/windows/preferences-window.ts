@@ -1,17 +1,15 @@
-import { BrowserWindow, BrowserWindowConstructorOptions } from "electron";
+import path from "node:path";
+import { BrowserWindow, type BrowserWindowConstructorOptions } from "electron";
 import log from "electron-log";
 import { is } from "electron-util";
 import windowStateKeeper from "electron-window-state";
-import path from "path";
 
 const PREFERENCES_PAGE_PATH = "/preferences/general";
 
 let preferencesWindow: BrowserWindow | undefined;
 
-let onPrefsWindowMaximizeListener: (window: BrowserWindow) => void | undefined;
-let onPrefsWindowUnmaximizeListener: (
-  window: BrowserWindow
-) => void | undefined;
+let onPrefsWindowMaximizeListener: ((window: BrowserWindow) => void) | undefined;
+let onPrefsWindowUnmaximizeListener: ((window: BrowserWindow) => void) | undefined;
 
 export const openPrefsWindow = async () => {
   if (preferencesWindow && !preferencesWindow.isDestroyed()) {
@@ -51,34 +49,28 @@ export const openPrefsWindow = async () => {
 
   preferencesWindow.on("maximize", () => {
     log.debug("Prefs window is on maximize");
-    if (onPrefsWindowMaximizeListener != undefined) {
+    if (onPrefsWindowMaximizeListener !== undefined) {
       onPrefsWindowMaximizeListener(preferencesWindow);
     }
   });
   preferencesWindow.on("unmaximize", () => {
     log.debug("Prefs window is on unmaximize");
-    if (onPrefsWindowUnmaximizeListener != undefined) {
+    if (onPrefsWindowUnmaximizeListener !== undefined) {
       onPrefsWindowUnmaximizeListener(preferencesWindow);
     }
   });
 
   if (is.development) {
     const port = process.argv[2];
-    await preferencesWindow.loadURL(
-      `http://localhost:${port}${PREFERENCES_PAGE_PATH}`
-    );
+    await preferencesWindow.loadURL(`http://localhost:${port}${PREFERENCES_PAGE_PATH}`);
     preferencesWindow.webContents.openDevTools({ mode: "detach" });
   } else {
     await preferencesWindow.loadURL(`app://.${PREFERENCES_PAGE_PATH}`);
   }
 };
 
-export const sendMessage = (channel: string, ...args: any[]) => {
-  if (!preferencesWindow || preferencesWindow.isDestroyed()) {
-    return;
-  }
-  preferencesWindow?.webContents.send(channel, ...args);
-};
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const sendMessage = (channel: string, ...args: any[]) => {};
 
 export const closePrefsWindow = () => preferencesWindow?.close();
 
@@ -90,10 +82,10 @@ export const minimizePrefsWindow = () => preferencesWindow?.minimize();
 
 export const isMaximizedPrefsWindow = () => preferencesWindow?.isMaximized();
 
-export const onPrefsWindowMaximize = (
-  listener: typeof onPrefsWindowMaximizeListener
-) => (onPrefsWindowMaximizeListener = listener);
+export const onPrefsWindowMaximize = (listener: typeof onPrefsWindowMaximizeListener) => {
+  onPrefsWindowMaximizeListener = listener;
+};
 
-export const onPrefsWindowUnmaximize = (
-  listener: typeof onPrefsWindowUnmaximizeListener
-) => (onPrefsWindowUnmaximizeListener = listener);
+export const onPrefsWindowUnmaximize = (listener: typeof onPrefsWindowUnmaximizeListener) => {
+  onPrefsWindowUnmaximizeListener = listener;
+};

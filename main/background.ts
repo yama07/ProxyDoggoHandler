@@ -93,8 +93,8 @@ const setup = () => {
   unsubscribeFunctions = [
     onGeneralPreferenceDidChange((newValue, oldValue) => {
       if (
-        newValue.menuIconStyle != oldValue.menuIconStyle ||
-        newValue.trayIconStyle != oldValue.trayIconStyle
+        newValue.menuIconStyle !== oldValue.menuIconStyle ||
+        newValue.trayIconStyle !== oldValue.trayIconStyle
       ) {
         // アイコンスタイルが変更されたらアップデートする
         updateTray();
@@ -104,14 +104,14 @@ const setup = () => {
       closePorxyPort();
       initializeProxyServer(newValue);
       listenProxyPort();
-      if (newValue.port != oldValue.port) {
+      if (newValue.port !== oldValue.port) {
         updateTray();
       }
     }),
     onUpstreamsPreferenceDidChange((newValue, oldValue) => {
       const newSelectedUpstream = newValue.upstreams[newValue.selectedIndex];
       const oldSelectedUpstream = oldValue.upstreams[oldValue.selectedIndex];
-      if (newSelectedUpstream != oldSelectedUpstream) {
+      if (newSelectedUpstream !== oldSelectedUpstream) {
         // Proxyサーバのアップストリームを切り替え
         updateUpstreamProxyUrl(newSelectedUpstream.connectionSetting);
       }

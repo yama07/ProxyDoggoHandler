@@ -1,6 +1,6 @@
+import path from "node:path";
 import { default as _openAboutWindow } from "about-window";
-import { BrowserWindow } from "electron";
-import path from "path";
+import type { BrowserWindow } from "electron";
 
 import { getAppIconPath } from "../helpers/icon";
 

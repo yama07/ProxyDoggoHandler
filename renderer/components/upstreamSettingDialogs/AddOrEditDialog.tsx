@@ -12,7 +12,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import React from "react";
+import { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import DogBreadsIcon, { DogIconIds } from "../DogBreadsIcon";
@@ -26,8 +26,7 @@ type Props = {
 const AddOrEditDialog: React.FC<Props> = (props: Props) => {
   // 設定自体は与えられているが、接続情報が設定されていない場合は、
   // ダイレクトアクセスの設定とみなす
-  const isDirectAccessSetting: boolean =
-    props.oldUpstream && !props.oldUpstream.connectionSetting;
+  const isDirectAccessSetting: boolean = props.oldUpstream && !props.oldUpstream.connectionSetting;
 
   const oldConnectionSetting = props.oldUpstream?.connectionSetting;
   const oldCredentials = oldConnectionSetting?.credentials;
@@ -38,9 +37,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
     defaultValues: {
       iconId: props.oldUpstream?.icon ?? "001-dog",
       name: props.oldUpstream?.name ?? "",
-      host: isDirectAccessSetting
-        ? "Direct access (no proxy)"
-        : oldConnectionSetting?.host ?? "",
+      host: isDirectAccessSetting ? "Direct access (no proxy)" : oldConnectionSetting?.host ?? "",
       port: isDirectAccessSetting ? 0 : oldConnectionSetting?.port ?? 80,
       needsAuth: oldCredentials != null,
       user: oldCredentials?.user ?? "",
@@ -49,11 +46,11 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
   });
   const needsAuth = watch("needsAuth");
 
-  const onClose = React.useCallback(() => {
+  const onClose = useCallback(() => {
     props.onDismiss();
   }, [props]);
 
-  const onSubmit = React.useCallback(
+  const onSubmit = useCallback(
     (formData) => {
       const newUpstream: UpstreamType = {
         icon: formData.iconId,
@@ -71,7 +68,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
       props.onConfirm(newUpstream);
       props.onDismiss();
     },
-    [isDirectAccessSetting, props]
+    [isDirectAccessSetting, props],
   );
 
   return (
@@ -102,13 +99,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 control={control}
                 name="name"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    variant="standard"
-                    margin="dense"
-                    label="Name"
-                    fullWidth
-                  />
+                  <TextField {...field} variant="standard" margin="dense" label="Name" fullWidth />
                 )}
               />
             </Grid>
@@ -117,9 +108,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 control={control}
                 name="host"
                 rules={
-                  isDirectAccessSetting
-                    ? {}
-                    : { required: "このフィールドを入力してください。" }
+                  isDirectAccessSetting ? {} : { required: "このフィールドを入力してください。" }
                 }
                 render={({ field, fieldState: { error } }) => (
                   <TextField
@@ -129,7 +118,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     label="Host"
                     placeholder="example.com"
                     error={error != null}
-                    helperText={error != null ? error["message"] : null}
+                    helperText={error != null ? error.message : null}
                     fullWidth
                     required={!isDirectAccessSetting}
                     disabled={isDirectAccessSetting}
@@ -169,7 +158,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     type="number"
                     InputProps={{ inputProps: { min: 0, max: 65535 } }}
                     error={error != null}
-                    helperText={error != null ? error["message"] : null}
+                    helperText={error != null ? error.message : null}
                     fullWidth
                     required={!isDirectAccessSetting}
                     disabled={isDirectAccessSetting}
@@ -211,7 +200,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                         label="Login"
                         placeholder="alex@example.com"
                         error={error != null}
-                        helperText={error != null ? error["message"] : null}
+                        helperText={error != null ? error.message : null}
                         fullWidth
                         required
                       />
@@ -232,7 +221,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                         type="password"
                         placeholder="P@ssw0rd"
                         error={error != null}
-                        helperText={error != null ? error["message"] : null}
+                        helperText={error != null ? error.message : null}
                         fullWidth
                         required
                       />

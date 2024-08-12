@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from "@mui/material";
+import { SvgIcon, type SvgIconProps } from "@mui/material";
 
 export const MinimizeIcon = (props: SvgIconProps) => (
   <SvgIcon {...props}>
@@ -8,15 +8,7 @@ export const MinimizeIcon = (props: SvgIconProps) => (
 
 export const MaximizeIcon = (props: SvgIconProps) => (
   <SvgIcon {...props}>
-    <rect
-      x="1"
-      y="1"
-      width="22"
-      height="22"
-      strokeWidth="2"
-      fill="none"
-      stroke="white"
-    />
+    <rect x="1" y="1" width="22" height="22" strokeWidth="2" fill="none" stroke="white" />
   </SvgIcon>
 );
 
@@ -28,15 +20,7 @@ export const RestoreIcon = (props: SvgIconProps) => (
       d="M6 2H22V18H20V20H22H24V18V2V0H22H6H4V2V4H6V2Z"
       fill="white"
     />
-    <rect
-      x="1"
-      y="5"
-      width="18"
-      height="18"
-      strokeWidth="2"
-      fill="none"
-      stroke="white"
-    />
+    <rect x="1" y="5" width="18" height="18" strokeWidth="2" fill="none" stroke="white" />
   </SvgIcon>
 );
 

@@ -1,13 +1,5 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  Grid,
-  TextField,
-} from "@mui/material";
-import React from "react";
+import { Box, Button, Checkbox, Divider, FormControlLabel, Grid, TextField } from "@mui/material";
+import { useCallback, useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import ProxyUsageCard from "~/components/ProxyUsageCard";
@@ -16,11 +8,12 @@ import {
   setProxyPreferenceContext,
 } from "~/contexts/ProxyPreferenceContext";
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 const Proxy: React.FC = () => {
-  const proxyPreferences = React.useContext(proxyPreferenceContext);
-  const setProxyPreferences = React.useContext(setProxyPreferenceContext);
+  const proxyPreferences = useContext(proxyPreferenceContext);
+  const setProxyPreferences = useContext(setProxyPreferenceContext);
 
-  const [examplePort, setExamplePort] = React.useState(proxyPreferences.port);
+  const [examplePort, setExamplePort] = useState(proxyPreferences.port);
 
   const { handleSubmit, control } = useForm<ProxyPreferenceType>({
     criteriaMode: "all",
@@ -28,12 +21,12 @@ const Proxy: React.FC = () => {
     defaultValues: proxyPreferences,
   });
 
-  const onApply = React.useCallback(
+  const onApply = useCallback(
     (formData: ProxyPreferenceType) => {
       setProxyPreferences(formData);
       setExamplePort(formData.port);
     },
-    [setProxyPreferences]
+    [setProxyPreferences],
   );
 
   return (
@@ -75,7 +68,7 @@ const Proxy: React.FC = () => {
                   InputLabelProps={{ shrink: true }}
                   InputProps={{ inputProps: { min: 0, max: 65535 } }}
                   error={error != null}
-                  helperText={error != null ? error["message"] : null}
+                  helperText={error != null ? error.message : null}
                   fullWidth
                 />
               )}
@@ -88,13 +81,7 @@ const Proxy: React.FC = () => {
               name="verbose"
               render={({ field }) => (
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      {...field}
-                      checked={field.value}
-                      color="primary"
-                    />
-                  }
+                  control={<Checkbox {...field} checked={field.value} color="primary" />}
                   label="冗長ロギングを有効化する"
                 />
               )}

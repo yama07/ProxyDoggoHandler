@@ -1,19 +1,8 @@
-import {
-  Box,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
-  capitalize,
-} from "@mui/material";
-import React from "react";
+import { Box, ToggleButton, ToggleButtonGroup, Tooltip, capitalize } from "@mui/material";
 
-import DogBreadsIcon, {
-  DogIconStyleType,
-  DogIconStyles,
-} from "./DogBreadsIcon";
+import DogBreadsIcon, { type DogIconStyleType, DogIconStyles } from "./DogBreadsIcon";
 
-const getIconStyleLabel = (style: string): string =>
-  capitalize(style).replace("-w", " (white)");
+const getIconStyleLabel = (style: string): string => capitalize(style).replace("-w", " (white)");
 
 type Props = {
   includeWhite: boolean;
@@ -41,11 +30,7 @@ const TrayIconStyleToggleButtonGroup: React.FC<Props> = ({
       onChange={(event, value) => onChange(value)}
     >
       {availableDogIconStyles.map((iconStyle) => (
-        <ToggleButton
-          key={iconStyle}
-          value={iconStyle}
-          sx={{ p: (theme) => theme.spacing(0) }}
-        >
+        <ToggleButton key={iconStyle} value={iconStyle} sx={{ p: (theme) => theme.spacing(0) }}>
           <Tooltip title={getIconStyleLabel(iconStyle)}>
             <Box
               display="flex"
@@ -60,9 +45,7 @@ const TrayIconStyleToggleButtonGroup: React.FC<Props> = ({
                 sx={{
                   borderRadius: "10%",
                   background: (theme) =>
-                    iconStyle.endsWith("-w")
-                      ? theme.palette.primary.main
-                      : null,
+                    iconStyle.endsWith("-w") ? theme.palette.primary.main : null,
                   px: (theme) => theme.spacing(2),
                   py: (theme) => theme.spacing(0.4),
                   m: "auto",

@@ -4,12 +4,7 @@ import AddOrEditDialog from "../../../../renderer/components/upstreamSettingDial
 
 describe("AddOrEditDialogコンポーネント", () => {
   test("要素が存在している", () => {
-    render(
-      <AddOrEditDialog
-        onConfirm={(newUpstream) => () => {}}
-        onDismiss={() => {}}
-      />
-    );
+    render(<AddOrEditDialog onConfirm={(newUpstream) => () => {}} onDismiss={() => {}} />);
 
     screen.getByText("Icon");
     screen.getByText("Name");

@@ -35,7 +35,7 @@ export const listenProxyPort = () => {
   server?.listen(() => {
     log.info(`Proxy server is listening on port ${server.port}.`);
     status = "running";
-    onStatusChangeCallback && onStatusChangeCallback("running");
+    onStatusChangeCallback?.("running");
   });
 };
 
@@ -45,14 +45,14 @@ export const closePorxyPort = async () => {
   await server?.close(true);
   log.info("Proxy server was closed.");
   status = "stopped";
-  onStatusChangeCallback && onStatusChangeCallback("stopped");
+  onStatusChangeCallback?.("stopped");
 };
 
 export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
   log.debug("Upstream URl update params:", params);
 
   if (params) {
-    let credential: string = "";
+    let credential = "";
     if (params.credentials) {
       const user = encodeURI(params.credentials.user);
       const password = encodeURI(params.credentials.password);
@@ -65,20 +65,16 @@ export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
   log.debug("New upstream proxy URL:", upstreamProxyUrl);
   log.info(
     `Upstream proxy URL is updated to "${
-      upstreamProxyUrl
-        ? redactUrl(upstreamProxyUrl, "****")
-        : "None (direct access mode)"
-    }".`
+      upstreamProxyUrl ? redactUrl(upstreamProxyUrl, "****") : "None (direct access mode)"
+    }".`,
   );
 };
 
 export const getProxyServerEndpoint = (): string | undefined =>
   server ? `http://localhost:${server.port}` : undefined;
 
-export const isProxyServerRunning = (): boolean => status == "running";
+export const isProxyServerRunning = (): boolean => status === "running";
 
-export const onProxyStatusDidChange = (
-  callback: (status: ProxyServerStatus) => void
-) => {
+export const onProxyStatusDidChange = (callback: (status: ProxyServerStatus) => void) => {
   onStatusChangeCallback = callback;
 };

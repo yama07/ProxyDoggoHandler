@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React from "react";
+import { useCallback, useContext, useState } from "react";
 
 import DogBreadsIcon from "~/components/DogBreadsIcon";
 import AddOrEditDialog from "~/components/upstreamSettingDialogs/AddOrEditDialog";
@@ -24,25 +24,23 @@ import {
 } from "~/contexts/UpstreamsPreferencesContext";
 
 const Upstreams: React.FC = () => {
-  const upstreamsPreference = React.useContext(upstreamsPreferenceContext);
-  const setUpstreamsPreference = React.useContext(
-    setUpstreamsPreferenceContext
-  );
+  const upstreamsPreference = useContext(upstreamsPreferenceContext);
+  const setUpstreamsPreference = useContext(setUpstreamsPreferenceContext);
 
-  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const updateUpstreamsPreference = React.useCallback(
+  const updateUpstreamsPreference = useCallback(
     (preference: UpstreamsPreferenceType) => setUpstreamsPreference(preference),
-    [setUpstreamsPreference]
+    [setUpstreamsPreference],
   );
 
   // 追加ダイアログのハンドリング
   const openAddDialog = () => setIsAddDialogOpen(true);
   const closeAddDialog = () => setIsAddDialogOpen(false);
-  const addSetting = React.useCallback(
+  const addSetting = useCallback(
     (newSetting: UpstreamType) => {
       const newSelectedIndex = upstreamsPreference.selectedIndex;
       const newUpstreams = upstreamsPreference.upstreams.concat(newSetting);
@@ -52,17 +50,17 @@ const Upstreams: React.FC = () => {
         upstreams: newUpstreams,
       });
     },
-    [updateUpstreamsPreference, upstreamsPreference]
+    [updateUpstreamsPreference, upstreamsPreference],
   );
 
   // 編集ダイアログのハンドリング
   const openEditDialog = () => setIsEditDialogOpen(true);
   const closeEditDialog = () => setIsEditDialogOpen(false);
-  const handleEditButton = React.useCallback((index: number) => {
+  const handleEditButton = (index: number) => {
     setSelectedIndex(index);
     openEditDialog();
-  }, []);
-  const editSetting = React.useCallback(
+  };
+  const editSetting = useCallback(
     (index: number, newSetting) => {
       const newSelectedIndex = upstreamsPreference.selectedIndex;
       const newUpstreams = upstreamsPreference.upstreams.slice();
@@ -73,28 +71,28 @@ const Upstreams: React.FC = () => {
         upstreams: newUpstreams,
       });
     },
-    [updateUpstreamsPreference, upstreamsPreference]
+    [updateUpstreamsPreference, upstreamsPreference],
   );
 
   // 削除ダイアログのハンドリング
   const openDeleteDialog = () => setIsDeleteDialogOpen(true);
   const closeDeleteDialog = () => setIsDeleteDialogOpen(false);
-  const handleDeleteButton = React.useCallback((index: number) => {
+  const handleDeleteButton = (index: number) => {
     setSelectedIndex(index);
     openDeleteDialog();
-  }, []);
-  const deleteSetting = React.useCallback(
+  };
+  const deleteSetting = useCallback(
     (index: number) => {
       const newIndex: number = ((deletedIndex, selectedIndex) => {
         // 選択されている設定を消す場合は、0番目の設定に変更
         // それ以外の場合は、選択されている設定が変わらないようにする
-        if (deletedIndex == selectedIndex) {
+        if (deletedIndex === selectedIndex) {
           return 0;
-        } else if (deletedIndex < selectedIndex) {
-          return selectedIndex - 1;
-        } else {
-          return selectedIndex;
         }
+        if (deletedIndex < selectedIndex) {
+          return selectedIndex - 1;
+        }
+        return selectedIndex;
       })(index, upstreamsPreference.selectedIndex);
       const newUpstreams = [
         ...upstreamsPreference.upstreams.slice(0, index),
@@ -106,7 +104,7 @@ const Upstreams: React.FC = () => {
         upstreams: newUpstreams,
       });
     },
-    [updateUpstreamsPreference, upstreamsPreference]
+    [updateUpstreamsPreference, upstreamsPreference],
   );
 
   return (
@@ -134,6 +132,7 @@ const Upstreams: React.FC = () => {
         </TableHead>
         <TableBody>
           {upstreamsPreference.upstreams.map((upstream, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <TableRow key={index}>
               <TableCell align="center">
                 <DogBreadsIcon iconId={upstream.icon} style="lineal" />
@@ -146,21 +145,15 @@ const Upstreams: React.FC = () => {
                   <BadgeOutlinedIcon
                     fontSize="small"
                     sx={{
-                      visibility: upstream.connectionSetting?.credentials
-                        ? "visible"
-                        : "hidden",
+                      visibility: upstream.connectionSetting?.credentials ? "visible" : "hidden",
                       mr: (theme) => theme.spacing(1),
                     }}
                   />
-                  <Typography noWrap>
-                    {upstream.connectionSetting?.host ?? ""}
-                  </Typography>
+                  <Typography noWrap>{upstream.connectionSetting?.host ?? ""}</Typography>
                 </Box>
               </TableCell>
               <TableCell align="right">
-                <Typography noWrap>
-                  {upstream.connectionSetting?.port ?? ""}
-                </Typography>
+                <Typography noWrap>{upstream.connectionSetting?.port ?? ""}</Typography>
               </TableCell>
               <TableCell>
                 <Tooltip title="編集">
@@ -190,9 +183,7 @@ const Upstreams: React.FC = () => {
         </TableBody>
       </Table>
 
-      {isAddDialogOpen && (
-        <AddOrEditDialog onDismiss={closeAddDialog} onConfirm={addSetting} />
-      )}
+      {isAddDialogOpen && <AddOrEditDialog onDismiss={closeAddDialog} onConfirm={addSetting} />}
 
       {isEditDialogOpen && (
         <AddOrEditDialog

@@ -6,12 +6,9 @@ contextBridge.exposeInMainWorld("system", {
 
 contextBridge.exposeInMainWorld("prefsWindow", {
   closePrefsWindow: () => ipcRenderer.invoke("prefsWindow.closePrefsWindow"),
-  maximizePrefsWindow: () =>
-    ipcRenderer.invoke("prefsWindow.maximizePrefsWindow"),
-  unmaximizePrefsWindow: () =>
-    ipcRenderer.invoke("prefsWindow.unmaximizePrefsWindow"),
-  minimizePrefsWindow: () =>
-    ipcRenderer.invoke("prefsWindow.minimizePrefsWindow"),
+  maximizePrefsWindow: () => ipcRenderer.invoke("prefsWindow.maximizePrefsWindow"),
+  unmaximizePrefsWindow: () => ipcRenderer.invoke("prefsWindow.unmaximizePrefsWindow"),
+  minimizePrefsWindow: () => ipcRenderer.invoke("prefsWindow.minimizePrefsWindow"),
   isMaximizedPrefsWindow: (): Promise<boolean> =>
     ipcRenderer.invoke("prefsWindow.isMaximizedPrefsWindow"),
   onPrefsWindowMaximize: (callback: () => void) =>
@@ -26,14 +23,10 @@ contextBridge.exposeInMainWorld("store", {
   setGeneralPreference: (preference: GeneralPreferenceType) =>
     ipcRenderer.invoke("store.setGeneralPreference", preference),
   onGeneralPreferenceDidChange: (
-    callback: (
-      newValue: GeneralPreferenceType,
-      oldValuee: GeneralPreferenceType
-    ) => void
+    callback: (newValue: GeneralPreferenceType, oldValuee: GeneralPreferenceType) => void,
   ) =>
-    ipcRenderer.on(
-      "store.onGeneralPreferenceDidChange",
-      (event, newValue, oldValue) => callback(newValue, oldValue)
+    ipcRenderer.on("store.onGeneralPreferenceDidChange", (event, newValue, oldValue) =>
+      callback(newValue, oldValue),
     ),
   removeOnGeneralPreferenceDidChangeListeners: (): void => {
     ipcRenderer.removeAllListeners("store.onGeneralPreferenceDidChange");
@@ -44,14 +37,10 @@ contextBridge.exposeInMainWorld("store", {
   setProxyPreference: (preference: ProxyPreferenceType) =>
     ipcRenderer.invoke("store.setProxyPreference", preference),
   onProxyPreferenceDidChange: (
-    callback: (
-      newValue: ProxyPreferenceType,
-      oldValue: ProxyPreferenceType
-    ) => void
+    callback: (newValue: ProxyPreferenceType, oldValue: ProxyPreferenceType) => void,
   ) =>
-    ipcRenderer.on(
-      "store.onProxyPreferenceDidChange",
-      (event, newValue, oldValue) => callback(newValue, oldValue)
+    ipcRenderer.on("store.onProxyPreferenceDidChange", (event, newValue, oldValue) =>
+      callback(newValue, oldValue),
     ),
   removeOnProxyPreferenceDidChangeListeners: (): void => {
     ipcRenderer.removeAllListeners("store.onProxyPreferenceDidChange");
@@ -62,14 +51,10 @@ contextBridge.exposeInMainWorld("store", {
   setUpstreamsPreference: (preference: UpstreamsPreferenceType) =>
     ipcRenderer.invoke("store.setUpstreamsPreference", preference),
   onUpstreamsPreferenceDidChange: (
-    callback: (
-      newValue: UpstreamsPreferenceType,
-      oldValue: UpstreamsPreferenceType
-    ) => void
+    callback: (newValue: UpstreamsPreferenceType, oldValue: UpstreamsPreferenceType) => void,
   ) =>
-    ipcRenderer.on(
-      "store.onUpstreamsPreferenceDidChange",
-      (event, newValue, oldValue) => callback(newValue, oldValue)
+    ipcRenderer.on("store.onUpstreamsPreferenceDidChange", (event, newValue, oldValue) =>
+      callback(newValue, oldValue),
     ),
   removeOnUpstreamsPreferenceDidChangeListeners: (): void => {
     ipcRenderer.removeAllListeners("store.onUpstreamsPreferenceDidChange");

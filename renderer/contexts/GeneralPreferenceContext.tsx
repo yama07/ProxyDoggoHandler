@@ -1,30 +1,34 @@
-import React, { Dispatch, SetStateAction } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
-export const generalPreferenceContext =
-  React.createContext<GeneralPreferenceType>(null);
+export const generalPreferenceContext = createContext<GeneralPreferenceType>(null);
 
 export const setGeneralPreferenceContext =
-  React.createContext<Dispatch<SetStateAction<GeneralPreferenceType>>>(null);
+  createContext<Dispatch<SetStateAction<GeneralPreferenceType>>>(null);
 
 type Props = {
   children: React.ReactNode;
 };
 
 export const GeneralPreferenceProvider: React.FC<Props> = ({ children }) => {
-  const [generalPreference, setGeneralPreference] =
-    React.useState<GeneralPreferenceType>({
-      isOpenAtStartup: true,
-      isLaunchProxyServerAtStartup: false,
-      trayIconStyle: "lineal",
-      menuIconStyle: "lineal",
-    });
+  const [generalPreference, setGeneralPreference] = useState<GeneralPreferenceType>({
+    isOpenAtStartup: true,
+    isLaunchProxyServerAtStartup: false,
+    trayIconStyle: "lineal",
+    menuIconStyle: "lineal",
+  });
 
-  React.useEffect(() => {
-    (async () =>
-      setGeneralPreference(await window.store.getGeneralPreference()))();
+  useEffect(() => {
+    (async () => setGeneralPreference(await window.store.getGeneralPreference()))();
 
     window.store.onGeneralPreferenceDidChange((newValue, oldValue) =>
-      setGeneralPreference(newValue)
+      setGeneralPreference(newValue),
     );
 
     return () => {
@@ -32,19 +36,17 @@ export const GeneralPreferenceProvider: React.FC<Props> = ({ children }) => {
     };
   }, []);
 
-  const setGeneralPreferenceWrapper = React.useCallback(
+  const setGeneralPreferenceWrapper = useCallback(
     (
       newPreference:
         | GeneralPreferenceType
-        | ((prevPreference: GeneralPreferenceType) => GeneralPreferenceType)
+        | ((prevPreference: GeneralPreferenceType) => GeneralPreferenceType),
     ) => {
       const _newPreference =
-        newPreference instanceof Function
-          ? newPreference(generalPreference)
-          : newPreference;
+        newPreference instanceof Function ? newPreference(generalPreference) : newPreference;
       window.store.setGeneralPreference(_newPreference);
     },
-    [generalPreference]
+    [generalPreference],
   );
 
   return (

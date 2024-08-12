@@ -30,85 +30,62 @@ export const initializeIpc = () => {
 
   ipcMain.handle("prefsWindow.closePrefsWindow", (event) => closePrefsWindow());
 
-  ipcMain.handle("prefsWindow.maximizePrefsWindow", (event) =>
-    maximizePrefsWindow()
-  );
+  ipcMain.handle("prefsWindow.maximizePrefsWindow", (event) => maximizePrefsWindow());
 
-  ipcMain.handle("prefsWindow.unmaximizePrefsWindow", (event) =>
-    unmaximizePrefsWindow()
-  );
+  ipcMain.handle("prefsWindow.unmaximizePrefsWindow", (event) => unmaximizePrefsWindow());
 
-  ipcMain.handle("prefsWindow.minimizePrefsWindow", (event) =>
-    minimizePrefsWindow()
-  );
+  ipcMain.handle("prefsWindow.minimizePrefsWindow", (event) => minimizePrefsWindow());
 
   ipcMain.handle("prefsWindow.isMaximizedPrefsWindow", (event): boolean =>
-    isMaximizedPrefsWindow()
+    isMaximizedPrefsWindow(),
   );
 
-  onPrefsWindowMaximize((window) =>
-    window.webContents.send("prefsWindow.onPrefsWindowMaximize")
-  );
+  onPrefsWindowMaximize((window) => window.webContents.send("prefsWindow.onPrefsWindowMaximize"));
 
   onPrefsWindowUnmaximize((window) =>
-    window.webContents.send("prefsWindow.onPrefsWindowUnmaximize")
+    window.webContents.send("prefsWindow.onPrefsWindowUnmaximize"),
   );
 
-  ipcMain.handle(
-    "store.getGeneralPreference",
-    (event): GeneralPreferenceType => {
-      return getGeneralPreference();
-    }
-  );
+  ipcMain.handle("store.getGeneralPreference", (event): GeneralPreferenceType => {
+    return getGeneralPreference();
+  });
 
-  ipcMain.handle(
-    "store.setGeneralPreference",
-    (event, preference: GeneralPreferenceType) => {
-      setGeneralPreference(preference);
-    }
-  );
+  ipcMain.handle("store.setGeneralPreference", (event, preference: GeneralPreferenceType) => {
+    setGeneralPreference(preference);
+  });
 
   unsubscribeFunctions.push(
     onGeneralPreferenceDidChange((newValue, oldValue) => {
       sendMessage("store.onGeneralPreferenceDidChange", newValue, oldValue);
-    })
+    }),
   );
 
   ipcMain.handle("store.getProxyPreference", (event): ProxyPreferenceType => {
     return getProxyPreference();
   });
 
-  ipcMain.handle(
-    "store.setProxyPreference",
-    (event, preference: ProxyPreferenceType) => {
-      setProxyPreference(preference);
-    }
-  );
+  ipcMain.handle("store.setProxyPreference", (event, preference: ProxyPreferenceType) => {
+    setProxyPreference(preference);
+  });
 
   unsubscribeFunctions.push(
     onProxyPreferenceDidChange((newValue, oldValue) => {
       sendMessage("store.onProxyPreferenceDidChange", newValue, oldValue);
-    })
+    }),
   );
 
-  ipcMain.handle(
-    "store.getUpstreamsPreference",
-    (event): UpstreamsPreferenceType => {
-      return getUpstreamsPreference();
-    }
-  );
+  ipcMain.handle("store.getUpstreamsPreference", (event): UpstreamsPreferenceType => {
+    return getUpstreamsPreference();
+  });
 
-  ipcMain.handle(
-    "store.setUpstreamsPreference",
-    (event, preference: UpstreamsPreferenceType) => {
-      setUpstreamsPreference(preference);
-    }
-  );
+  ipcMain.handle("store.setUpstreamsPreference", (event, preference: UpstreamsPreferenceType) => {
+    setUpstreamsPreference(preference);
+  });
 
   unsubscribeFunctions.push(
     onUpstreamsPreferenceDidChange((newValue, oldValue) => {
       sendMessage("store.onUpstreamsPreferenceDidChange", newValue, oldValue);
-    })
+    }),
   );
 };
 

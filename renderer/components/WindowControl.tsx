@@ -1,20 +1,13 @@
-import { Box, BoxProps, Button, styled } from "@mui/material";
-import React from "react";
+import { Box, type BoxProps, Button, styled } from "@mui/material";
 
 import { useWindowControl } from "~/hooks/useWindowControl";
 
-import {
-  CloseIcon,
-  MaximizeIcon,
-  MinimizeIcon,
-  RestoreIcon,
-} from "./WindowControlIcon";
+import { CloseIcon, MaximizeIcon, MinimizeIcon, RestoreIcon } from "./WindowControlIcon";
 
 const UndraggableBox = styled(Box)({ WebkitAppRegion: "no-drag" });
 
 const WindowControl: React.FC<BoxProps> = (props: BoxProps) => {
-  const { minimize, maximize, restore, close, isMaximized } =
-    useWindowControl();
+  const { minimize, maximize, restore, close, isMaximized } = useWindowControl();
 
   const { sx, ...other } = props;
 

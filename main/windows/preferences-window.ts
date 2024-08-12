@@ -70,7 +70,12 @@ export const openPrefsWindow = async () => {
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const sendMessage = (channel: string, ...args: any[]) => {};
+export const sendMessage = (channel: string, ...args: any[]) => {
+  if (!preferencesWindow || preferencesWindow.isDestroyed()) {
+    return;
+  }
+  preferencesWindow?.webContents.send(channel, ...args);
+};
 
 export const closePrefsWindow = () => preferencesWindow?.close();
 

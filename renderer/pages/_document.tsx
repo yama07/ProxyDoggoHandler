@@ -19,7 +19,6 @@ export default function Document(props: DocumentProps & DocumentHeadTagsProps) {
       <Head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content={theme.palette.primary.main} />
-        <meta name="emotion-insertion-point" content="" />
         <DocumentHeadTags {...props} />
       </Head>
       <body>

@@ -74,7 +74,7 @@ jobs:
 
     steps:
       - name: Download macos artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         id: download_mac
         with:
           name: macos-build-artifacts
@@ -85,7 +85,7 @@ jobs:
           mv "${{ steps.download_mac.outputs.download-path }}/Proxy Doggo Handler.dmg" ProxyDoggoHandler-macos.dmg
 
       - name: Download windows artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         id: download_win
         with:
           name: windows-build-artifact

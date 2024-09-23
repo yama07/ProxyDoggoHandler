@@ -20,7 +20,7 @@
     "test:renderer": "jest -c ./test/renderer/jest.config.js",
     "lint": "biome lint --write .",
     "format": "biome format --write .",
-    "check": "biome check ."
+    "check": "tsc && biome check ."
   },
   "dependencies": {
     "about-window": "^1.15.2",

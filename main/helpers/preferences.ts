@@ -14,7 +14,7 @@ const getStoreInsance = (): Store<PreferenceType> => {
         proxy: { port: 8080, verbose: false },
         upstreams: {
           selectedIndex: 0,
-          upstreams: [{ name: "Direct", icon: "001-dog", connectionSetting: null }],
+          upstreams: [{ name: "Direct", icon: "001-dog", connectionSetting: undefined }],
         },
       },
     });
@@ -31,7 +31,7 @@ export const setGeneralPreference = (preference: GeneralPreferenceType) => {
 };
 
 export const onGeneralPreferenceDidChange = (
-  callback: (newValue: GeneralPreferenceType, oldValue: GeneralPreferenceType) => void,
+  callback: (newValue?: GeneralPreferenceType, oldValue?: GeneralPreferenceType) => void,
 ): (() => void) => {
   return getStoreInsance().onDidChange("general", callback);
 };
@@ -45,7 +45,7 @@ export const setProxyPreference = (preference: ProxyPreferenceType) => {
 };
 
 export const onProxyPreferenceDidChange = (
-  callback: (newValue: ProxyPreferenceType, oldValue: ProxyPreferenceType) => void,
+  callback: (newValue?: ProxyPreferenceType, oldValue?: ProxyPreferenceType) => void,
 ): (() => void) => {
   return getStoreInsance().onDidChange("proxy", callback);
 };
@@ -59,7 +59,7 @@ export const setUpstreamsPreference = (preference: UpstreamsPreferenceType) => {
 };
 
 export const onUpstreamsPreferenceDidChange = (
-  callback: (newValue: UpstreamsPreferenceType, oldValue: UpstreamsPreferenceType) => void,
+  callback: (newValue?: UpstreamsPreferenceType, oldValue?: UpstreamsPreferenceType) => void,
 ): (() => void) => {
   return getStoreInsance().onDidChange("upstreams", callback);
 };

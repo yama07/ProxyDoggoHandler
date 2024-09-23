@@ -7,20 +7,24 @@ import {
   useState,
 } from "react";
 
-export const upstreamsPreferenceContext = createContext<UpstreamsPreferenceType>(null);
+const defaultValues: UpstreamsPreferenceType = {
+  selectedIndex: 0,
+  upstreams: [{ name: "Direct", icon: "001-dog", connectionSetting: undefined }],
+};
 
-export const setUpstreamsPreferenceContext =
-  createContext<Dispatch<SetStateAction<UpstreamsPreferenceType>>>(null);
+export const upstreamsPreferenceContext = createContext<UpstreamsPreferenceType>(defaultValues);
+
+export const setUpstreamsPreferenceContext = createContext<
+  Dispatch<SetStateAction<UpstreamsPreferenceType>>
+>(() => undefined);
 
 type Props = {
   children: React.ReactNode;
 };
 
 export const UpstreamsPreferenceProvider: React.FC<Props> = ({ children }) => {
-  const [upstreamsPreference, setUpstreamsPreference] = useState<UpstreamsPreferenceType>({
-    selectedIndex: 0,
-    upstreams: [{ name: "Direct", icon: "001-dog", connectionSetting: null }],
-  });
+  const [upstreamsPreference, setUpstreamsPreference] =
+    useState<UpstreamsPreferenceType>(defaultValues);
 
   useEffect(() => {
     (async () => setUpstreamsPreference(await window.store.getUpstreamsPreference()))();

@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 import { is } from "electron-util";
 
 import {
@@ -36,7 +36,7 @@ export const initializeIpc = () => {
 
   ipcMain.handle("prefsWindow.minimizePrefsWindow", (event) => minimizePrefsWindow());
 
-  ipcMain.handle("prefsWindow.isMaximizedPrefsWindow", (event): boolean =>
+  ipcMain.handle("prefsWindow.isMaximizedPrefsWindow", (event): boolean | undefined =>
     isMaximizedPrefsWindow(),
   );
 
@@ -95,6 +95,6 @@ export const finalizeIpc = () => {
 
   while (unsubscribeFunctions.length) {
     const unsubscribeFunc = unsubscribeFunctions.pop();
-    unsubscribeFunc();
+    unsubscribeFunc?.();
   }
 };

@@ -61,56 +61,40 @@ if (is.macos) app.dock.hide();
 
 if (!is.development) serve({ directory: "app" });
 
-(async () => {
-  await app.whenReady();
-
-  setup();
-
-  if (getGeneralPreference().isOpenAtStartup) {
-    await openPrefsWindow();
-  }
-})();
-
-app.on("window-all-closed", () => {
-  log.debug("All windows are closed.");
-});
-
-app.on("quit", () => {
-  log.info(`Shutdown with PID ${process.pid}`);
-
-  finalizeIpc();
-  unsubscribeFunctions.map((unsubscribe) => {
-    unsubscribe();
-  });
-});
-
-let unsubscribeFunctions: (() => void)[];
-
 const setup = () => {
   log.debug("Begin application setup.");
 
   // 設定変更の監視
   unsubscribeFunctions = [
     onGeneralPreferenceDidChange((newValue, oldValue) => {
+      if (newValue === undefined) {
+        return;
+      }
       if (
-        newValue.menuIconStyle !== oldValue.menuIconStyle ||
-        newValue.trayIconStyle !== oldValue.trayIconStyle
+        newValue.menuIconStyle !== oldValue?.menuIconStyle ||
+        newValue.trayIconStyle !== oldValue?.trayIconStyle
       ) {
         // アイコンスタイルが変更されたらアップデートする
         updateTray();
       }
     }),
     onProxyPreferenceDidChange((newValue, oldValue) => {
+      if (newValue === undefined) {
+        return;
+      }
       closePorxyPort();
       initializeProxyServer(newValue);
       listenProxyPort();
-      if (newValue.port !== oldValue.port) {
+      if (newValue.port !== oldValue?.port) {
         updateTray();
       }
     }),
     onUpstreamsPreferenceDidChange((newValue, oldValue) => {
+      if (newValue === undefined) {
+        return;
+      }
       const newSelectedUpstream = newValue.upstreams[newValue.selectedIndex];
-      const oldSelectedUpstream = oldValue.upstreams[oldValue.selectedIndex];
+      const oldSelectedUpstream = oldValue?.upstreams[oldValue.selectedIndex];
       if (newSelectedUpstream !== oldSelectedUpstream) {
         // Proxyサーバのアップストリームを切り替え
         updateUpstreamProxyUrl(newSelectedUpstream.connectionSetting);
@@ -164,3 +148,28 @@ const setup = () => {
 
   log.debug("Finish application setup.");
 };
+
+(async () => {
+  await app.whenReady();
+
+  setup();
+
+  if (getGeneralPreference().isOpenAtStartup) {
+    await openPrefsWindow();
+  }
+})();
+
+app.on("window-all-closed", () => {
+  log.debug("All windows are closed.");
+});
+
+app.on("quit", () => {
+  log.info(`Shutdown with PID ${process.pid}`);
+
+  finalizeIpc();
+  unsubscribeFunctions.map((unsubscribe) => {
+    unsubscribe();
+  });
+});
+
+let unsubscribeFunctions: (() => void)[];

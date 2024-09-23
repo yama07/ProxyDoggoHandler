@@ -45,18 +45,18 @@ export const openPrefsWindow = async () => {
   windowState.manage(preferencesWindow);
 
   // レンダリングの準備完了後にウィンドウを表示する
-  preferencesWindow.once("ready-to-show", () => preferencesWindow.show());
+  preferencesWindow.once("ready-to-show", () => preferencesWindow?.show());
 
   preferencesWindow.on("maximize", () => {
     log.debug("Prefs window is on maximize");
-    if (onPrefsWindowMaximizeListener !== undefined) {
-      onPrefsWindowMaximizeListener(preferencesWindow);
+    if (preferencesWindow !== undefined) {
+      onPrefsWindowMaximizeListener?.(preferencesWindow);
     }
   });
   preferencesWindow.on("unmaximize", () => {
     log.debug("Prefs window is on unmaximize");
-    if (onPrefsWindowUnmaximizeListener !== undefined) {
-      onPrefsWindowUnmaximizeListener(preferencesWindow);
+    if (preferencesWindow !== undefined) {
+      onPrefsWindowUnmaximizeListener?.(preferencesWindow);
     }
   });
 

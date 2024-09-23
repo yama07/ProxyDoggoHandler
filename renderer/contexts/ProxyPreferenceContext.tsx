@@ -7,20 +7,23 @@ import {
   useState,
 } from "react";
 
-export const proxyPreferenceContext = createContext<ProxyPreferenceType>(null);
+const defaultValues: ProxyPreferenceType = {
+  port: 8080,
+  verbose: false,
+};
 
-export const setProxyPreferenceContext =
-  createContext<Dispatch<SetStateAction<ProxyPreferenceType>>>(null);
+export const proxyPreferenceContext = createContext<ProxyPreferenceType>(defaultValues);
+
+export const setProxyPreferenceContext = createContext<
+  Dispatch<SetStateAction<ProxyPreferenceType>>
+>(() => undefined);
 
 type Props = {
   children: React.ReactNode;
 };
 
 export const ProxyPreferenceProvider: React.FC<Props> = ({ children }) => {
-  const [proxyPreference, setProxyPreference] = useState<ProxyPreferenceType>({
-    port: 8080,
-    verbose: false,
-  });
+  const [proxyPreference, setProxyPreference] = useState<ProxyPreferenceType>(defaultValues);
 
   useEffect(() => {
     (async () => setProxyPreference(await window.store.getProxyPreference()))();

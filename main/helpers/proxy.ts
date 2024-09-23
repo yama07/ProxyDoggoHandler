@@ -33,7 +33,7 @@ export const listenProxyPort = () => {
   log.debug("Attempt to listen proxy port.");
 
   server?.listen(() => {
-    log.info(`Proxy server is listening on port ${server.port}.`);
+    log.info(`Proxy server is listening on port ${server?.port}.`);
     status = "running";
     onStatusChangeCallback?.("running");
   });
@@ -60,7 +60,7 @@ export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
     }
     upstreamProxyUrl = `http://${credential}${params.host}:${params.port}`;
   } else {
-    upstreamProxyUrl = null;
+    upstreamProxyUrl = undefined;
   }
   log.debug("New upstream proxy URL:", upstreamProxyUrl);
   log.info(

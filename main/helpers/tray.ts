@@ -39,13 +39,17 @@ export const initializeTray = (param: {
   const icon = getAppTrayIcon(generalPreference.trayIconStyle);
   tray = new Tray(icon);
   tray.addListener("click", () => {
-    tray.popUpContextMenu();
+    tray?.popUpContextMenu();
   });
 
   log.info("System tray is initialized.");
 };
 
 export const updateTray = () => {
+  if (tray === undefined) {
+    log.info("System tray is not initialized.");
+    return;
+  }
   const upstreamsPreference = accessor.upstreamsPreference();
   const generalPreference = accessor.generalPreference();
 
@@ -105,7 +109,7 @@ export const updateTray = () => {
     { type: "separator" },
     {
       label: "環境設定",
-      accelerator: is.macos ? "Command+," : null,
+      accelerator: is.macos ? "Command+," : undefined,
       click: handler.clickPrefsWindowMenu,
     },
     {
@@ -118,7 +122,7 @@ export const updateTray = () => {
     proxyServerControlItem,
     {
       label: "終了",
-      accelerator: is.macos ? "Command+Q" : null,
+      accelerator: is.macos ? "Command+Q" : undefined,
       role: "quit",
     },
   ]);

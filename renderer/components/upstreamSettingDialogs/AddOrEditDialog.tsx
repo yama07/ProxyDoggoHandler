@@ -26,23 +26,26 @@ type Props = {
 const AddOrEditDialog: React.FC<Props> = (props: Props) => {
   // 設定自体は与えられているが、接続情報が設定されていない場合は、
   // ダイレクトアクセスの設定とみなす
-  const isDirectAccessSetting: boolean = props.oldUpstream && !props.oldUpstream.connectionSetting;
+  const isDirectAccessSetting: boolean =
+    props.oldUpstream !== undefined && props.oldUpstream.connectionSetting === undefined;
 
   const oldConnectionSetting = props.oldUpstream?.connectionSetting;
   const oldCredentials = oldConnectionSetting?.credentials;
 
+  const defaultValues = {
+    iconId: props.oldUpstream?.icon ?? "001-dog",
+    name: props.oldUpstream?.name ?? "",
+    host: isDirectAccessSetting ? "Direct access (no proxy)" : oldConnectionSetting?.host ?? "",
+    port: isDirectAccessSetting ? 0 : oldConnectionSetting?.port ?? 80,
+    needsAuth: oldCredentials !== undefined,
+    user: oldCredentials?.user ?? "",
+    password: oldCredentials?.password ?? "",
+  };
+
   const { trigger, handleSubmit, watch, control } = useForm({
     criteriaMode: "all",
     shouldUseNativeValidation: false,
-    defaultValues: {
-      iconId: props.oldUpstream?.icon ?? "001-dog",
-      name: props.oldUpstream?.name ?? "",
-      host: isDirectAccessSetting ? "Direct access (no proxy)" : oldConnectionSetting?.host ?? "",
-      port: isDirectAccessSetting ? 0 : oldConnectionSetting?.port ?? 80,
-      needsAuth: oldCredentials != null,
-      user: oldCredentials?.user ?? "",
-      password: oldCredentials?.password ?? "",
-    },
+    defaultValues,
   });
   const needsAuth = watch("needsAuth");
 
@@ -51,18 +54,18 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
   }, [props]);
 
   const onSubmit = useCallback(
-    (formData) => {
+    (formData: typeof defaultValues) => {
       const newUpstream: UpstreamType = {
         icon: formData.iconId,
         name: formData.name,
         connectionSetting: isDirectAccessSetting
-          ? null
+          ? undefined
           : {
               host: formData.host,
               port: formData.port,
               credentials: formData.needsAuth
                 ? { user: formData.user, password: formData.password }
-                : null,
+                : undefined,
             },
       };
       props.onConfirm(newUpstream);

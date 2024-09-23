@@ -16,8 +16,8 @@ export interface IPrefsWindow {
   unmaximizePrefsWindow: () => void;
   minimizePrefsWindow: () => void;
   isMaximizedPrefsWindow: () => Promise<boolean>;
-  onPrefsWindowMaximize: (callback: () => void) => void;
-  onPrefsWindowUnmaximize: (callback: () => void) => void;
+  onPrefsWindowMaximize: (callback?: () => void) => void;
+  onPrefsWindowUnmaximize: (callback?: () => void) => void;
 }
 
 export interface IStore {

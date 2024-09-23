@@ -61,7 +61,7 @@ const Upstreams: React.FC = () => {
     openEditDialog();
   };
   const editSetting = useCallback(
-    (index: number, newSetting) => {
+    (index: number, newSetting: UpstreamType) => {
       const newSelectedIndex = upstreamsPreference.selectedIndex;
       const newUpstreams = upstreamsPreference.upstreams.slice();
       newUpstreams[index] = newSetting;

@@ -7,22 +7,24 @@ import {
   useState,
 } from "react";
 
-export const generalPreferenceContext = createContext<GeneralPreferenceType>(null);
+const defaultValues: GeneralPreferenceType = {
+  isOpenAtStartup: true,
+  isLaunchProxyServerAtStartup: false,
+  trayIconStyle: "lineal",
+  menuIconStyle: "lineal",
+};
+export const generalPreferenceContext = createContext<GeneralPreferenceType>(defaultValues);
 
-export const setGeneralPreferenceContext =
-  createContext<Dispatch<SetStateAction<GeneralPreferenceType>>>(null);
+export const setGeneralPreferenceContext = createContext<
+  Dispatch<SetStateAction<GeneralPreferenceType>>
+>(() => undefined);
 
 type Props = {
   children: React.ReactNode;
 };
 
 export const GeneralPreferenceProvider: React.FC<Props> = ({ children }) => {
-  const [generalPreference, setGeneralPreference] = useState<GeneralPreferenceType>({
-    isOpenAtStartup: true,
-    isLaunchProxyServerAtStartup: false,
-    trayIconStyle: "lineal",
-    menuIconStyle: "lineal",
-  });
+  const [generalPreference, setGeneralPreference] = useState<GeneralPreferenceType>(defaultValues);
 
   useEffect(() => {
     (async () => setGeneralPreference(await window.store.getGeneralPreference()))();

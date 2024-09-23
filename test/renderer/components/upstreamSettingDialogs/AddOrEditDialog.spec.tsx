@@ -1,6 +1,7 @@
+import { describe, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 
-import AddOrEditDialog from "../../../../renderer/components/upstreamSettingDialogs/AddOrEditDialog";
+import AddOrEditDialog from "~/components/upstreamSettingDialogs/AddOrEditDialog";
 
 describe("AddOrEditDialogコンポーネント", () => {
   test("要素が存在している", () => {

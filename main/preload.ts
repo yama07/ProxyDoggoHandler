@@ -11,10 +11,10 @@ contextBridge.exposeInMainWorld("prefsWindow", {
   minimizePrefsWindow: () => ipcRenderer.invoke("prefsWindow.minimizePrefsWindow"),
   isMaximizedPrefsWindow: (): Promise<boolean> =>
     ipcRenderer.invoke("prefsWindow.isMaximizedPrefsWindow"),
-  onPrefsWindowMaximize: (callback: () => void) =>
-    ipcRenderer.on("prefsWindow.onPrefsWindowMaximize", () => callback()),
-  onPrefsWindowUnmaximize: (callback: () => void) =>
-    ipcRenderer.on("prefsWindow.onPrefsWindowUnmaximize", () => callback()),
+  onPrefsWindowMaximize: (callback?: () => void) =>
+    ipcRenderer.on("prefsWindow.onPrefsWindowMaximize", () => callback?.()),
+  onPrefsWindowUnmaximize: (callback?: () => void) =>
+    ipcRenderer.on("prefsWindow.onPrefsWindowUnmaximize", () => callback?.()),
 });
 
 contextBridge.exposeInMainWorld("store", {

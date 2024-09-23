@@ -1,1 +1,1 @@
-/// <reference types="../@types/preferenceType" />
+/// <reference types="../common/preferenceType" />

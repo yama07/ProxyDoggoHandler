@@ -34,7 +34,7 @@ export const UpstreamsPreferenceProvider: React.FC<Props> = ({ children }) => {
     );
 
     return () => {
-      window.store.removeOnUpstreamsPreferenceDidChangeListeners();
+      window.store.onUpstreamsPreferenceDidChange(undefined);
     };
   }, []);
 

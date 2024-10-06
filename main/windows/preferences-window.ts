@@ -3,16 +3,14 @@ import { BrowserWindow, type BrowserWindowConstructorOptions } from "electron";
 import log from "electron-log";
 import { is } from "electron-util";
 import windowStateKeeper from "electron-window-state";
+import { type IpcHandler, aggregateIpcHandlers } from "#/ipc/ipc-handler";
 
 const PREFERENCES_PAGE_PATH = "/preferences/general";
 
 let preferencesWindow: BrowserWindow | undefined;
 
-let onPrefsWindowMaximizeListener: ((window: BrowserWindow) => void) | undefined;
-let onPrefsWindowUnmaximizeListener: ((window: BrowserWindow) => void) | undefined;
-
-export const openPrefsWindow = async () => {
-  if (preferencesWindow && !preferencesWindow.isDestroyed()) {
+export const openPrefsWindow = async (ipcHandlers?: IpcHandler[]) => {
+  if (preferencesWindow !== undefined && !preferencesWindow.isDestroyed()) {
     preferencesWindow.show();
     preferencesWindow.focus();
     return;
@@ -47,18 +45,11 @@ export const openPrefsWindow = async () => {
   // レンダリングの準備完了後にウィンドウを表示する
   preferencesWindow.once("ready-to-show", () => preferencesWindow?.show());
 
-  preferencesWindow.on("maximize", () => {
-    log.debug("Prefs window is on maximize");
-    if (preferencesWindow !== undefined) {
-      onPrefsWindowMaximizeListener?.(preferencesWindow);
-    }
-  });
-  preferencesWindow.on("unmaximize", () => {
-    log.debug("Prefs window is on unmaximize");
-    if (preferencesWindow !== undefined) {
-      onPrefsWindowUnmaximizeListener?.(preferencesWindow);
-    }
-  });
+  if (ipcHandlers !== undefined) {
+    const { register, unregister } = aggregateIpcHandlers(preferencesWindow, ipcHandlers);
+    register();
+    preferencesWindow.once("closed", () => unregister());
+  }
 
   if (is.development) {
     const port = process.argv[2];
@@ -67,30 +58,4 @@ export const openPrefsWindow = async () => {
   } else {
     await preferencesWindow.loadURL(`app://.${PREFERENCES_PAGE_PATH}`);
   }
-};
-
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const sendMessage = (channel: string, ...args: any[]) => {
-  if (!preferencesWindow || preferencesWindow.isDestroyed()) {
-    return;
-  }
-  preferencesWindow?.webContents.send(channel, ...args);
-};
-
-export const closePrefsWindow = () => preferencesWindow?.close();
-
-export const maximizePrefsWindow = () => preferencesWindow?.maximize();
-
-export const unmaximizePrefsWindow = () => preferencesWindow?.unmaximize();
-
-export const minimizePrefsWindow = () => preferencesWindow?.minimize();
-
-export const isMaximizedPrefsWindow = () => preferencesWindow?.isMaximized();
-
-export const onPrefsWindowMaximize = (listener: typeof onPrefsWindowMaximizeListener) => {
-  onPrefsWindowMaximizeListener = listener;
-};
-
-export const onPrefsWindowUnmaximize = (listener: typeof onPrefsWindowUnmaximizeListener) => {
-  onPrefsWindowUnmaximizeListener = listener;
 };

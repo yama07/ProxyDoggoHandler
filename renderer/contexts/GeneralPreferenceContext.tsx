@@ -34,7 +34,7 @@ export const GeneralPreferenceProvider: React.FC<Props> = ({ children }) => {
     );
 
     return () => {
-      window.store.removeOnGeneralPreferenceDidChangeListeners();
+      window.store.onGeneralPreferenceDidChange(undefined);
     };
   }, []);
 

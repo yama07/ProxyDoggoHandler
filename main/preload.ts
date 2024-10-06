@@ -1,62 +1,85 @@
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("system", {
-  isMacos: (): Promise<boolean> => ipcRenderer.invoke("system.isMacos"),
-});
+import channels from "./ipc/channels";
 
-contextBridge.exposeInMainWorld("prefsWindow", {
-  closePrefsWindow: () => ipcRenderer.invoke("prefsWindow.closePrefsWindow"),
-  maximizePrefsWindow: () => ipcRenderer.invoke("prefsWindow.maximizePrefsWindow"),
-  unmaximizePrefsWindow: () => ipcRenderer.invoke("prefsWindow.unmaximizePrefsWindow"),
-  minimizePrefsWindow: () => ipcRenderer.invoke("prefsWindow.minimizePrefsWindow"),
-  isMaximizedPrefsWindow: (): Promise<boolean> =>
-    ipcRenderer.invoke("prefsWindow.isMaximizedPrefsWindow"),
-  onPrefsWindowMaximize: (callback?: () => void) =>
-    ipcRenderer.on("prefsWindow.onPrefsWindowMaximize", () => callback?.()),
-  onPrefsWindowUnmaximize: (callback?: () => void) =>
-    ipcRenderer.on("prefsWindow.onPrefsWindowUnmaximize", () => callback?.()),
-});
+const systemApi = {
+  isMacos: (): Promise<boolean> => ipcRenderer.invoke(channels.system.isMacos),
+};
+export type SystemApiType = typeof systemApi;
+contextBridge.exposeInMainWorld("system", systemApi);
 
-contextBridge.exposeInMainWorld("store", {
+const prefWindowApi = {
+  close: () => ipcRenderer.send(channels.prefWindow.close),
+  maximize: () => ipcRenderer.send(channels.prefWindow.maximize),
+  unmaximize: () => ipcRenderer.send(channels.prefWindow.unmaximize),
+  minimize: () => ipcRenderer.send(channels.prefWindow.minimize),
+  isMaximized: (): Promise<boolean> => ipcRenderer.invoke(channels.prefWindow.isMaximized),
+  onMaximize: (callback?: () => void) => {
+    if (callback === undefined) {
+      ipcRenderer.removeAllListeners(channels.prefWindow.onMaximize);
+    } else {
+      ipcRenderer.on(channels.prefWindow.onMaximize, callback);
+    }
+  },
+  onUnmaximize: (callback?: () => void) => {
+    if (callback === undefined) {
+      ipcRenderer.removeAllListeners(channels.prefWindow.onUnmaximize);
+    } else {
+      ipcRenderer.on(channels.prefWindow.onUnmaximize, callback);
+    }
+  },
+};
+export type PrefWindowApiType = typeof prefWindowApi;
+contextBridge.exposeInMainWorld("prefWindow", prefWindowApi);
+
+const storeApi = {
   getGeneralPreference: (): Promise<GeneralPreferenceType> =>
-    ipcRenderer.invoke("store.getGeneralPreference"),
+    ipcRenderer.invoke(channels.store.getGeneralPreference),
   setGeneralPreference: (preference: GeneralPreferenceType) =>
-    ipcRenderer.invoke("store.setGeneralPreference", preference),
+    ipcRenderer.send(channels.store.setGeneralPreference, preference),
   onGeneralPreferenceDidChange: (
-    callback: (newValue: GeneralPreferenceType, oldValuee: GeneralPreferenceType) => void,
-  ) =>
-    ipcRenderer.on("store.onGeneralPreferenceDidChange", (event, newValue, oldValue) =>
-      callback(newValue, oldValue),
-    ),
-  removeOnGeneralPreferenceDidChangeListeners: (): void => {
-    ipcRenderer.removeAllListeners("store.onGeneralPreferenceDidChange");
+    callback?: (newValue: GeneralPreferenceType, oldValue: GeneralPreferenceType) => void,
+  ) => {
+    if (callback === undefined) {
+      ipcRenderer.removeAllListeners(channels.store.onGeneralPreferenceDidChange);
+    } else {
+      ipcRenderer.on(channels.store.onGeneralPreferenceDidChange, (_, newValue, oldValue) =>
+        callback(newValue, oldValue),
+      );
+    }
   },
 
   getProxyPreference: (): Promise<ProxyPreferenceType> =>
-    ipcRenderer.invoke("store.getProxyPreference"),
+    ipcRenderer.invoke(channels.store.getProxyPreference),
   setProxyPreference: (preference: ProxyPreferenceType) =>
-    ipcRenderer.invoke("store.setProxyPreference", preference),
+    ipcRenderer.send(channels.store.setProxyPreference, preference),
   onProxyPreferenceDidChange: (
-    callback: (newValue: ProxyPreferenceType, oldValue: ProxyPreferenceType) => void,
-  ) =>
-    ipcRenderer.on("store.onProxyPreferenceDidChange", (event, newValue, oldValue) =>
-      callback(newValue, oldValue),
-    ),
-  removeOnProxyPreferenceDidChangeListeners: (): void => {
-    ipcRenderer.removeAllListeners("store.onProxyPreferenceDidChange");
+    callback?: (newValue: ProxyPreferenceType, oldValue: ProxyPreferenceType) => void,
+  ) => {
+    if (callback === undefined) {
+      ipcRenderer.removeAllListeners(channels.store.onProxyPreferenceDidChange);
+    } else {
+      ipcRenderer.on(channels.store.onProxyPreferenceDidChange, (_, newValue, oldValue) =>
+        callback(newValue, oldValue),
+      );
+    }
   },
 
   getUpstreamsPreference: (): Promise<UpstreamsPreferenceType> =>
-    ipcRenderer.invoke("store.getUpstreamsPreference"),
+    ipcRenderer.invoke(channels.store.getUpstreamsPreference),
   setUpstreamsPreference: (preference: UpstreamsPreferenceType) =>
-    ipcRenderer.invoke("store.setUpstreamsPreference", preference),
+    ipcRenderer.send(channels.store.setUpstreamsPreference, preference),
   onUpstreamsPreferenceDidChange: (
-    callback: (newValue: UpstreamsPreferenceType, oldValue: UpstreamsPreferenceType) => void,
-  ) =>
-    ipcRenderer.on("store.onUpstreamsPreferenceDidChange", (event, newValue, oldValue) =>
-      callback(newValue, oldValue),
-    ),
-  removeOnUpstreamsPreferenceDidChangeListeners: (): void => {
-    ipcRenderer.removeAllListeners("store.onUpstreamsPreferenceDidChange");
+    callback?: (newValue: UpstreamsPreferenceType, oldValue: UpstreamsPreferenceType) => void,
+  ) => {
+    if (callback === undefined) {
+      ipcRenderer.removeAllListeners(channels.store.onUpstreamsPreferenceDidChange);
+    } else {
+      ipcRenderer.on(channels.store.onUpstreamsPreferenceDidChange, (_, newValue, oldValue) =>
+        callback(newValue, oldValue),
+      );
+    }
   },
-});
+};
+export type StoreApiType = typeof storeApi;
+contextBridge.exposeInMainWorld("store", storeApi);

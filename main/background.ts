@@ -3,16 +3,7 @@ import log from "electron-log";
 import serve from "electron-serve";
 import { is } from "electron-util";
 
-import { finalizeIpc, initializeIpc } from "./helpers/ipc";
-import {
-  getGeneralPreference,
-  getProxyPreference,
-  getUpstreamsPreference,
-  onGeneralPreferenceDidChange,
-  onProxyPreferenceDidChange,
-  onUpstreamsPreferenceDidChange,
-  setUpstreamsPreference,
-} from "./helpers/preferences";
+import preferences from "./helpers/preferences";
 import {
   closePorxyPort,
   getProxyServerEndpoint,
@@ -23,6 +14,9 @@ import {
   updateUpstreamProxyUrl,
 } from "./helpers/proxy";
 import { initializeTray, updateTray } from "./helpers/tray";
+import prefsWindowIpcHandler from "./ipc/prefs-window-ipc-handler";
+import storeIpcHandler from "./ipc/store-ipc-handler";
+import systemIpcHandler from "./ipc/system-ipc-handler";
 import { openAboutWindow } from "./windows/about-window";
 import { openPrefsWindow } from "./windows/preferences-window";
 
@@ -61,12 +55,14 @@ if (is.macos) app.dock.hide();
 
 if (!is.development) serve({ directory: "app" });
 
+let unsubscribeFunctions: (() => void)[];
+
 const setup = () => {
   log.debug("Begin application setup.");
 
   // 設定変更の監視
   unsubscribeFunctions = [
-    onGeneralPreferenceDidChange((newValue, oldValue) => {
+    preferences.onDidChange("general", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
@@ -78,7 +74,7 @@ const setup = () => {
         updateTray();
       }
     }),
-    onProxyPreferenceDidChange((newValue, oldValue) => {
+    preferences.onDidChange("proxy", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
@@ -89,7 +85,7 @@ const setup = () => {
         updateTray();
       }
     }),
-    onUpstreamsPreferenceDidChange((newValue, oldValue) => {
+    preferences.onDidChange("upstreams", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
@@ -103,14 +99,11 @@ const setup = () => {
     }),
   ];
 
-  // IPCハンドリングの設定
-  initializeIpc();
-
   // システムトレイの初期化
   initializeTray({
     accessor: {
-      generalPreference: getGeneralPreference,
-      upstreamsPreference: getUpstreamsPreference,
+      generalPreference: () => preferences.get("general"),
+      upstreamsPreference: () => preferences.get("upstreams"),
       proxyServerEndpoint: getProxyServerEndpoint,
       isProxyServerRunning: isProxyServerRunning,
     },
@@ -123,23 +116,24 @@ const setup = () => {
       },
       selectUpstream: (index: number) => {
         // 設定ファイルを更新
-        const newPreference = getUpstreamsPreference();
+        const newPreference = preferences.get("upstreams");
         newPreference.selectedIndex = index;
-        setUpstreamsPreference(newPreference);
+        preferences.set("upstreams", newPreference);
       },
-      clickPrefsWindowMenu: async () => await openPrefsWindow(),
+      clickPrefsWindowMenu: async () =>
+        await openPrefsWindow([prefsWindowIpcHandler, systemIpcHandler, storeIpcHandler]),
       clickAboutWindow: openAboutWindow,
     },
   });
 
   // プロキシサーバの初期化
-  initializeProxyServer(getProxyPreference());
+  initializeProxyServer(preferences.get("proxy"));
   onProxyStatusDidChange(() => {
     log.debug("Proxy server status was changed.");
     updateTray();
   });
 
-  const generalPreference = getGeneralPreference();
+  const generalPreference = preferences.get("general");
   if (generalPreference.isLaunchProxyServerAtStartup) {
     listenProxyPort();
   }
@@ -154,8 +148,8 @@ const setup = () => {
 
   setup();
 
-  if (getGeneralPreference().isOpenAtStartup) {
-    await openPrefsWindow();
+  if (preferences.get("general").isOpenAtStartup) {
+    await openPrefsWindow([prefsWindowIpcHandler, systemIpcHandler, storeIpcHandler]);
   }
 })();
 
@@ -166,10 +160,8 @@ app.on("window-all-closed", () => {
 app.on("quit", () => {
   log.info(`Shutdown with PID ${process.pid}`);
 
-  finalizeIpc();
-  unsubscribeFunctions.map((unsubscribe) => {
-    unsubscribe();
-  });
+  while (unsubscribeFunctions.length) {
+    const unsubscribeFunc = unsubscribeFunctions.pop();
+    unsubscribeFunc?.();
+  }
 });
-
-let unsubscribeFunctions: (() => void)[];

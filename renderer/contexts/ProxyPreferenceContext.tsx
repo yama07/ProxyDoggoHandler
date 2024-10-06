@@ -31,7 +31,7 @@ export const ProxyPreferenceProvider: React.FC<Props> = ({ children }) => {
     window.store.onProxyPreferenceDidChange((newValue, oldValue) => setProxyPreference(newValue));
 
     return () => {
-      window.store.removeOnProxyPreferenceDidChangeListeners();
+      window.store.onProxyPreferenceDidChange(undefined);
     };
   }, []);
 

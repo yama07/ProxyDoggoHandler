@@ -7,12 +7,12 @@ import { type IpcHandler, aggregateIpcHandlers } from "#/ipc/ipc-handler";
 
 const PREFERENCES_PAGE_PATH = "/preferences/general";
 
-let preferencesWindow: BrowserWindow | undefined;
+let browserWindow: BrowserWindow | undefined;
 
-export const openPrefsWindow = async (ipcHandlers?: IpcHandler[]) => {
-  if (preferencesWindow !== undefined && !preferencesWindow.isDestroyed()) {
-    preferencesWindow.show();
-    preferencesWindow.focus();
+const open = async (ipcHandlers?: IpcHandler[]) => {
+  if (browserWindow !== undefined && !browserWindow.isDestroyed()) {
+    browserWindow.show();
+    browserWindow.focus();
     return;
   }
   const windowState = windowStateKeeper({
@@ -38,24 +38,28 @@ export const openPrefsWindow = async (ipcHandlers?: IpcHandler[]) => {
     },
     show: false,
   };
-  preferencesWindow = new BrowserWindow(browserOptions);
+  browserWindow = new BrowserWindow(browserOptions);
 
-  windowState.manage(preferencesWindow);
+  windowState.manage(browserWindow);
 
   // レンダリングの準備完了後にウィンドウを表示する
-  preferencesWindow.once("ready-to-show", () => preferencesWindow?.show());
+  browserWindow.once("ready-to-show", () => browserWindow?.show());
 
   if (ipcHandlers !== undefined) {
-    const { register, unregister } = aggregateIpcHandlers(preferencesWindow, ipcHandlers);
+    const { register, unregister } = aggregateIpcHandlers(browserWindow, ipcHandlers);
     register();
-    preferencesWindow.once("closed", () => unregister());
+    browserWindow.once("closed", () => unregister());
   }
 
   if (is.development) {
     const port = process.argv[2];
-    await preferencesWindow.loadURL(`http://localhost:${port}${PREFERENCES_PAGE_PATH}`);
-    preferencesWindow.webContents.openDevTools({ mode: "detach" });
+    await browserWindow.loadURL(`http://localhost:${port}${PREFERENCES_PAGE_PATH}`);
+    browserWindow.webContents.openDevTools({ mode: "detach" });
   } else {
-    await preferencesWindow.loadURL(`app://.${PREFERENCES_PAGE_PATH}`);
+    await browserWindow.loadURL(`app://.${PREFERENCES_PAGE_PATH}`);
   }
+};
+
+export const prefsWindow = {
+  open,
 };

@@ -1,9 +1,9 @@
-import type { PrefWindowApiType, StoreApiType, SystemApiType } from "#/preload";
+import type { PrefsWindowApiType, StoreApiType, SystemApiType } from "#/preload";
 
 declare global {
   interface Window {
     system: SystemApiType;
-    prefWindow: PrefWindowApiType;
+    prefsWindow: PrefsWindowApiType;
     store: StoreApiType;
   }
 }

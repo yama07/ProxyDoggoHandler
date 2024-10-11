@@ -22,7 +22,7 @@ const getStoreInsance = (): Store<PreferenceType> => {
   return storeInstance;
 };
 
-export default {
+export const prefsStore = {
   get: <T extends keyof PreferenceType>(key: T): PreferenceType[T] => getStoreInsance().get(key),
   set: <T extends keyof PreferenceType>(key: T, value: PreferenceType[T]) =>
     getStoreInsance().set(key, value),

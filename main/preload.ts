@@ -8,29 +8,29 @@ const systemApi = {
 export type SystemApiType = typeof systemApi;
 contextBridge.exposeInMainWorld("system", systemApi);
 
-const prefWindowApi = {
-  close: () => ipcRenderer.send(channels.prefWindow.close),
-  maximize: () => ipcRenderer.send(channels.prefWindow.maximize),
-  unmaximize: () => ipcRenderer.send(channels.prefWindow.unmaximize),
-  minimize: () => ipcRenderer.send(channels.prefWindow.minimize),
-  isMaximized: (): Promise<boolean> => ipcRenderer.invoke(channels.prefWindow.isMaximized),
+const prefsWindowApi = {
+  close: () => ipcRenderer.send(channels.prefsWindow.close),
+  maximize: () => ipcRenderer.send(channels.prefsWindow.maximize),
+  unmaximize: () => ipcRenderer.send(channels.prefsWindow.unmaximize),
+  minimize: () => ipcRenderer.send(channels.prefsWindow.minimize),
+  isMaximized: (): Promise<boolean> => ipcRenderer.invoke(channels.prefsWindow.isMaximized),
   onMaximize: (callback?: () => void) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.prefWindow.onMaximize);
+      ipcRenderer.removeAllListeners(channels.prefsWindow.onMaximize);
     } else {
-      ipcRenderer.on(channels.prefWindow.onMaximize, callback);
+      ipcRenderer.on(channels.prefsWindow.onMaximize, callback);
     }
   },
   onUnmaximize: (callback?: () => void) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.prefWindow.onUnmaximize);
+      ipcRenderer.removeAllListeners(channels.prefsWindow.onUnmaximize);
     } else {
-      ipcRenderer.on(channels.prefWindow.onUnmaximize, callback);
+      ipcRenderer.on(channels.prefsWindow.onUnmaximize, callback);
     }
   },
 };
-export type PrefWindowApiType = typeof prefWindowApi;
-contextBridge.exposeInMainWorld("prefWindow", prefWindowApi);
+export type prefsWindowApiType = typeof prefsWindowApi;
+contextBridge.exposeInMainWorld("prefsWindow", prefsWindowApi);
 
 const storeApi = {
   getGeneralPreference: (): Promise<GeneralPreferenceType> =>

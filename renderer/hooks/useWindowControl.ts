@@ -4,21 +4,21 @@ export const useWindowControl = () => {
   const [isMaximized, setIsMaximized] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
-    window.prefWindow.onMaximize(() => setIsMaximized(true));
-    window.prefWindow.onUnmaximize(() => setIsMaximized(false));
-    (async () => setIsMaximized(await window.prefWindow.isMaximized()))();
+    window.prefsWindow.onMaximize(() => setIsMaximized(true));
+    window.prefsWindow.onUnmaximize(() => setIsMaximized(false));
+    (async () => setIsMaximized(await window.prefsWindow.isMaximized()))();
 
     return () => {
-      window.prefWindow.onMaximize(undefined);
-      window.prefWindow.onUnmaximize(undefined);
+      window.prefsWindow.onMaximize(undefined);
+      window.prefsWindow.onUnmaximize(undefined);
     };
   }, []);
 
   return {
-    minimize: window.prefWindow.minimize,
-    maximize: window.prefWindow.maximize,
-    restore: window.prefWindow.unmaximize,
-    close: window.prefWindow.close,
+    minimize: window.prefsWindow.minimize,
+    maximize: window.prefsWindow.maximize,
+    restore: window.prefsWindow.unmaximize,
+    close: window.prefsWindow.close,
     isMaximized,
   };
 };

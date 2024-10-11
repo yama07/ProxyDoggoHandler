@@ -1,11 +1,11 @@
 import { type BrowserWindow, ipcMain } from "electron";
 
-import preferences from "#/helpers/preferences";
+import { prefsStore } from "#/helpers/prefs-store";
 
 import channels from "./channels";
 import type { IpcHandler, Register, Unregister } from "./ipc-handler";
 
-const ipcHandler: IpcHandler = (bowserWindow: BrowserWindow) => {
+export const storeIpcHandler: IpcHandler = (bowserWindow: BrowserWindow) => {
   const webContents = bowserWindow.webContents;
 
   const unsubscribeFunctions: (() => void)[] = [];
@@ -13,45 +13,45 @@ const ipcHandler: IpcHandler = (bowserWindow: BrowserWindow) => {
   const register: Register = () => {
     ipcMain.handle(
       channels.store.getGeneralPreference,
-      (): GeneralPreferenceType => preferences.get("general"),
+      (): GeneralPreferenceType => prefsStore.get("general"),
     );
 
     ipcMain.on(channels.store.setGeneralPreference, (_, preference: GeneralPreferenceType) => {
-      preferences.set("general", preference);
+      prefsStore.set("general", preference);
     });
 
     unsubscribeFunctions.push(
-      preferences.onDidChange("general", (newValue, oldValue) => {
+      prefsStore.onDidChange("general", (newValue, oldValue) => {
         webContents.send(channels.store.onGeneralPreferenceDidChange, newValue, oldValue);
       }),
     );
 
     ipcMain.handle(
       channels.store.getProxyPreference,
-      (): ProxyPreferenceType => preferences.get("proxy"),
+      (): ProxyPreferenceType => prefsStore.get("proxy"),
     );
 
     ipcMain.on(channels.store.setProxyPreference, (_, preference: ProxyPreferenceType) => {
-      preferences.set("proxy", preference);
+      prefsStore.set("proxy", preference);
     });
 
     unsubscribeFunctions.push(
-      preferences.onDidChange("proxy", (newValue, oldValue) => {
+      prefsStore.onDidChange("proxy", (newValue, oldValue) => {
         webContents.send(channels.store.onProxyPreferenceDidChange, newValue, oldValue);
       }),
     );
 
     ipcMain.handle(
       channels.store.getUpstreamsPreference,
-      (): UpstreamsPreferenceType => preferences.get("upstreams"),
+      (): UpstreamsPreferenceType => prefsStore.get("upstreams"),
     );
 
     ipcMain.on(channels.store.setUpstreamsPreference, (_, preference: UpstreamsPreferenceType) => {
-      preferences.set("upstreams", preference);
+      prefsStore.set("upstreams", preference);
     });
 
     unsubscribeFunctions.push(
-      preferences.onDidChange("upstreams", (newValue, oldValue) => {
+      prefsStore.onDidChange("upstreams", (newValue, oldValue) => {
         webContents.send(channels.store.onUpstreamsPreferenceDidChange, newValue, oldValue);
       }),
     );
@@ -73,5 +73,3 @@ const ipcHandler: IpcHandler = (bowserWindow: BrowserWindow) => {
 
   return { register, unregister };
 };
-
-export default ipcHandler;

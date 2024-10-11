@@ -1,19 +1,19 @@
 import path from "node:path";
-import { default as _openAboutWindow } from "about-window";
+import openAboutWindow from "about-window";
 import type { BrowserWindow } from "electron";
 
 import { getAppIconPath } from "../helpers/icon";
 
-let aboutWindow: BrowserWindow | undefined;
+let browserWindow: BrowserWindow | undefined;
 
-export const openAboutWindow = () => {
-  if (aboutWindow && !aboutWindow.isDestroyed()) {
-    aboutWindow.show();
-    aboutWindow.focus();
+const open = () => {
+  if (browserWindow && !browserWindow.isDestroyed()) {
+    browserWindow.show();
+    browserWindow.focus();
     return;
   }
 
-  aboutWindow = _openAboutWindow({
+  browserWindow = openAboutWindow({
     icon_path: getAppIconPath(),
     product_name: "Proxy Doggo Handler",
     copyright: "Copyright © 2022 Naoki Yamamoto",
@@ -22,4 +22,8 @@ export const openAboutWindow = () => {
     use_inner_html: true,
     package_json_dir: path.resolve(`${__dirname}/../`),
   });
+};
+
+export const aboutWindow = {
+  open,
 };

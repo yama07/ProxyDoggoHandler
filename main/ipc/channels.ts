@@ -2,14 +2,14 @@ export default {
   system: {
     isMacos: "system.isMacos",
   },
-  prefWindow: {
-    close: "prefWindow.close",
-    maximize: "prefWindow.maximize",
-    unmaximize: "prefWindow.unmaximize",
-    minimize: "prefWindow.minimize",
-    isMaximized: "prefWindow.isMaximized",
-    onMaximize: "prefWindow.onMaximize",
-    onUnmaximize: "prefWindow.onUnmaximize",
+  prefsWindow: {
+    close: "prefsWindow.close",
+    maximize: "prefsWindow.maximize",
+    unmaximize: "prefsWindow.unmaximize",
+    minimize: "prefsWindow.minimize",
+    isMaximized: "prefsWindow.isMaximized",
+    onMaximize: "prefsWindow.onMaximize",
+    onUnmaximize: "prefsWindow.onUnmaximize",
   },
   store: {
     getGeneralPreference: "store.getGeneralPreference",

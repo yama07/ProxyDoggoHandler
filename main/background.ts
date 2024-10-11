@@ -3,22 +3,14 @@ import log from "electron-log";
 import serve from "electron-serve";
 import { is } from "electron-util";
 
-import preferences from "./helpers/preferences";
-import {
-  closePorxyPort,
-  getProxyServerEndpoint,
-  initializeProxyServer,
-  isProxyServerRunning,
-  listenProxyPort,
-  onProxyStatusDidChange,
-  updateUpstreamProxyUrl,
-} from "./helpers/proxy";
-import { initializeTray, updateTray } from "./helpers/tray";
-import prefsWindowIpcHandler from "./ipc/prefs-window-ipc-handler";
-import storeIpcHandler from "./ipc/store-ipc-handler";
-import systemIpcHandler from "./ipc/system-ipc-handler";
-import { openAboutWindow } from "./windows/about-window";
-import { openPrefsWindow } from "./windows/preferences-window";
+import { prefsStore } from "./helpers/prefs-store";
+import { proxy } from "./helpers/proxy";
+import { tray } from "./helpers/tray";
+import { prefsWindowIpcHandler } from "./ipc/prefs-window-ipc-handler";
+import { storeIpcHandler } from "./ipc/store-ipc-handler";
+import { systemIpcHandler } from "./ipc/system-ipc-handler";
+import { aboutWindow } from "./windows/about-window";
+import { prefsWindow } from "./windows/prefs-window";
 
 // DevelopmentとProductionでユーザデータの格納先を分ける
 if (is.development) {
@@ -62,7 +54,7 @@ const setup = () => {
 
   // 設定変更の監視
   unsubscribeFunctions = [
-    preferences.onDidChange("general", (newValue, oldValue) => {
+    prefsStore.onDidChange("general", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
@@ -71,21 +63,21 @@ const setup = () => {
         newValue.trayIconStyle !== oldValue?.trayIconStyle
       ) {
         // アイコンスタイルが変更されたらアップデートする
-        updateTray();
+        tray.update();
       }
     }),
-    preferences.onDidChange("proxy", (newValue, oldValue) => {
+    prefsStore.onDidChange("proxy", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
-      closePorxyPort();
-      initializeProxyServer(newValue);
-      listenProxyPort();
+      proxy.close();
+      proxy.initialize(newValue);
+      proxy.listen();
       if (newValue.port !== oldValue?.port) {
-        updateTray();
+        tray.update();
       }
     }),
-    preferences.onDidChange("upstreams", (newValue, oldValue) => {
+    prefsStore.onDidChange("upstreams", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
@@ -93,52 +85,52 @@ const setup = () => {
       const oldSelectedUpstream = oldValue?.upstreams[oldValue.selectedIndex];
       if (newSelectedUpstream !== oldSelectedUpstream) {
         // Proxyサーバのアップストリームを切り替え
-        updateUpstreamProxyUrl(newSelectedUpstream.connectionSetting);
+        proxy.setUpstreamProxyUrl(newSelectedUpstream.connectionSetting);
       }
-      updateTray();
+      tray.update();
     }),
   ];
 
   // システムトレイの初期化
-  initializeTray({
+  tray.initialize({
     accessor: {
-      generalPreference: () => preferences.get("general"),
-      upstreamsPreference: () => preferences.get("upstreams"),
-      proxyServerEndpoint: getProxyServerEndpoint,
-      isProxyServerRunning: isProxyServerRunning,
+      generalPreference: () => prefsStore.get("general"),
+      upstreamsPreference: () => prefsStore.get("upstreams"),
+      proxyServerEndpoint: proxy.getEndpoint,
+      isProxyServerRunning: proxy.isRunning,
     },
     handler: {
       startProxyServer: () => {
-        listenProxyPort();
+        proxy.listen();
       },
       stopProxyServer: () => {
-        closePorxyPort();
+        proxy.close();
       },
       selectUpstream: (index: number) => {
         // 設定ファイルを更新
-        const newPreference = preferences.get("upstreams");
+        const newPreference = prefsStore.get("upstreams");
         newPreference.selectedIndex = index;
-        preferences.set("upstreams", newPreference);
+        prefsStore.set("upstreams", newPreference);
       },
       clickPrefsWindowMenu: async () =>
-        await openPrefsWindow([prefsWindowIpcHandler, systemIpcHandler, storeIpcHandler]),
-      clickAboutWindow: openAboutWindow,
+        await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, storeIpcHandler]),
+      clickAboutWindow: aboutWindow.open,
     },
   });
 
   // プロキシサーバの初期化
-  initializeProxyServer(preferences.get("proxy"));
-  onProxyStatusDidChange(() => {
+  proxy.initialize(prefsStore.get("proxy"));
+  proxy.onStatusDidChange(() => {
     log.debug("Proxy server status was changed.");
-    updateTray();
+    tray.update();
   });
 
-  const generalPreference = preferences.get("general");
+  const generalPreference = prefsStore.get("general");
   if (generalPreference.isLaunchProxyServerAtStartup) {
-    listenProxyPort();
+    proxy.listen();
   }
 
-  updateTray();
+  tray.update();
 
   log.debug("Finish application setup.");
 };
@@ -148,8 +140,8 @@ const setup = () => {
 
   setup();
 
-  if (preferences.get("general").isOpenAtStartup) {
-    await openPrefsWindow([prefsWindowIpcHandler, systemIpcHandler, storeIpcHandler]);
+  if (prefsStore.get("general").isOpenAtStartup) {
+    await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, storeIpcHandler]);
   }
 })();
 

@@ -4,7 +4,7 @@ import { is } from "electron-util";
 import channels from "./channels";
 import type { IpcHandler, Register, Unregister } from "./ipc-handler";
 
-const ipcHandler: IpcHandler = () => {
+export const systemIpcHandler: IpcHandler = () => {
   const register: Register = () => {
     ipcMain.handle(channels.system.isMacos, (): boolean => is.macos);
   };
@@ -15,5 +15,3 @@ const ipcHandler: IpcHandler = () => {
 
   return { register, unregister };
 };
-
-export default ipcHandler;

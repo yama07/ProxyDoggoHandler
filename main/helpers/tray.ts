@@ -24,11 +24,11 @@ type Handler = {
   selectUpstream: (index: number) => void;
 };
 
-let tray: Tray | undefined;
+let _tray: Tray | undefined;
 let handler: Handler;
 let accessor: Accessor;
 
-export const initializeTray = (param: {
+const initialize = (param: {
   accessor: Accessor;
   handler: Handler;
 }) => {
@@ -37,16 +37,16 @@ export const initializeTray = (param: {
 
   const generalPreference = accessor.generalPreference();
   const icon = getAppTrayIcon(generalPreference.trayIconStyle);
-  tray = new Tray(icon);
-  tray.addListener("click", () => {
-    tray?.popUpContextMenu();
+  _tray = new Tray(icon);
+  _tray.addListener("click", () => {
+    _tray?.popUpContextMenu();
   });
 
   log.info("System tray is initialized.");
 };
 
-export const updateTray = () => {
-  if (tray === undefined) {
+const update = () => {
+  if (_tray === undefined) {
     log.info("System tray is not initialized.");
     return;
   }
@@ -126,7 +126,7 @@ export const updateTray = () => {
       role: "quit",
     },
   ]);
-  tray.setContextMenu(contextMenu);
+  _tray.setContextMenu(contextMenu);
 
   const icon = accessor.isProxyServerRunning()
     ? getDogBreadsTrayIcon(
@@ -134,7 +134,12 @@ export const updateTray = () => {
         generalPreference.trayIconStyle,
       )
     : getAppTrayIcon(generalPreference.trayIconStyle);
-  tray.setImage(icon);
+  _tray.setImage(icon);
 
   log.info("System tray is updated.");
+};
+
+export const tray = {
+  initialize,
+  update,
 };

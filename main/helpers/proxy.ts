@@ -8,17 +8,13 @@ let upstreamProxyUrl: string | undefined = undefined;
 let status: ProxyServerStatus = "stopped";
 let onStatusChangeCallback: ((status: ProxyServerStatus) => void) | undefined;
 
-export const initializeProxyServer = (params: ProxyPreferenceType) => {
+const initialize = (params: ProxyPreferenceType) => {
   log.debug("Proxy init params:", params);
 
   server = new Server({
     port: params.port,
     verbose: params.verbose,
-    prepareRequestFunction: () => {
-      return {
-        upstreamProxyUrl: upstreamProxyUrl,
-      };
-    },
+    prepareRequestFunction: () => ({ upstreamProxyUrl }),
   });
 
   server.on("requestFailed", ({ request, error }) => {
@@ -29,7 +25,7 @@ export const initializeProxyServer = (params: ProxyPreferenceType) => {
   log.info("Proxy server is initialized.");
 };
 
-export const listenProxyPort = () => {
+const listen = () => {
   log.debug("Attempt to listen proxy port.");
 
   server?.listen(() => {
@@ -39,7 +35,7 @@ export const listenProxyPort = () => {
   });
 };
 
-export const closePorxyPort = async () => {
+const close = async () => {
   log.debug("Attempt to close proxy port.");
 
   await server?.close(true);
@@ -48,7 +44,7 @@ export const closePorxyPort = async () => {
   onStatusChangeCallback?.("stopped");
 };
 
-export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
+const setUpstreamProxyUrl = (params?: ConnectionSettingType) => {
   log.debug("Upstream URl update params:", params);
 
   if (params) {
@@ -70,11 +66,21 @@ export const updateUpstreamProxyUrl = (params?: ConnectionSettingType) => {
   );
 };
 
-export const getProxyServerEndpoint = (): string | undefined =>
+const getEndpoint = (): string | undefined =>
   server ? `http://localhost:${server.port}` : undefined;
 
-export const isProxyServerRunning = (): boolean => status === "running";
+const isRunning = (): boolean => status === "running";
 
-export const onProxyStatusDidChange = (callback: (status: ProxyServerStatus) => void) => {
+const onStatusDidChange = (callback: (status: ProxyServerStatus) => void) => {
   onStatusChangeCallback = callback;
+};
+
+export const proxy = {
+  initialize,
+  listen,
+  close,
+  setUpstreamProxyUrl,
+  getEndpoint,
+  isRunning,
+  onStatusDidChange,
 };

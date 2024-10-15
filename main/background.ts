@@ -6,8 +6,8 @@ import { is } from "electron-util";
 import { prefsStore } from "./helpers/prefs-store";
 import { proxy } from "./helpers/proxy";
 import { tray } from "./helpers/tray";
+import { prefsStoreIpcHandler } from "./ipc/prefs-store-ipc-handler";
 import { prefsWindowIpcHandler } from "./ipc/prefs-window-ipc-handler";
-import { storeIpcHandler } from "./ipc/store-ipc-handler";
 import { systemIpcHandler } from "./ipc/system-ipc-handler";
 import { aboutWindow } from "./windows/about-window";
 import { prefsWindow } from "./windows/prefs-window";
@@ -113,7 +113,7 @@ const setup = () => {
         prefsStore.set("upstreams", newPreference);
       },
       clickPrefsWindowMenu: async () =>
-        await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, storeIpcHandler]),
+        await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, prefsStoreIpcHandler]),
       clickAboutWindow: aboutWindow.open,
     },
   });
@@ -141,7 +141,7 @@ const setup = () => {
   setup();
 
   if (prefsStore.get("general").isOpenAtStartup) {
-    await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, storeIpcHandler]);
+    await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, prefsStoreIpcHandler]);
   }
 })();
 

@@ -11,17 +11,17 @@ export default {
     onMaximize: "prefsWindow.onMaximize",
     onUnmaximize: "prefsWindow.onUnmaximize",
   },
-  store: {
-    getGeneralPreference: "store.getGeneralPreference",
-    setGeneralPreference: "store.setGeneralPreference",
-    onGeneralPreferenceDidChange: "store.onGeneralPreferenceDidChange",
+  prefsStore: {
+    getGeneral: "prefsStore.getGeneral",
+    setGeneral: "prefsStore.setGeneral",
+    onGeneralDidChange: "prefsStore.onGeneralDidChange",
 
-    getProxyPreference: "store.getProxyPreference",
-    setProxyPreference: "store.setProxyPreference",
-    onProxyPreferenceDidChange: "store.onProxyPreferenceDidChange",
+    getProxy: "prefsStore.getProxy",
+    setProxy: "prefsStore.setProxy",
+    onProxyDidChange: "prefsStore.onProxyDidChange",
 
-    getUpstreamsPreference: "store.getUpstreamsPreference",
-    setUpstreamsPreference: "store.setUpstreamsPreference",
-    onUpstreamsPreferenceDidChange: "store.onUpstreamsPreferenceDidChange",
+    getUpstreams: "prefsStore.getUpstreams",
+    setUpstreams: "prefsStore.setUpstreams",
+    onUpstreamsDidChange: "prefsStore.onUpstreamsDidChange",
   },
 };

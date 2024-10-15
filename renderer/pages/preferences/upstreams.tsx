@@ -18,23 +18,20 @@ import { useCallback, useContext, useState } from "react";
 import DogBreadsIcon from "~/components/DogBreadsIcon";
 import AddOrEditDialog from "~/components/upstreamSettingDialogs/AddOrEditDialog";
 import DeleteDialog from "~/components/upstreamSettingDialogs/DeleteDialog";
-import {
-  setUpstreamsPreferenceContext,
-  upstreamsPreferenceContext,
-} from "~/contexts/UpstreamsPreferencesContext";
+import { setUpstreamsPrefContext, upstreamsPrefContext } from "~/contexts/UpstreamsPrefContext";
 
 const Upstreams: React.FC = () => {
-  const upstreamsPreference = useContext(upstreamsPreferenceContext);
-  const setUpstreamsPreference = useContext(setUpstreamsPreferenceContext);
+  const upstreamsPref = useContext(upstreamsPrefContext);
+  const setUpstreamsPref = useContext(setUpstreamsPrefContext);
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const updateUpstreamsPreference = useCallback(
-    (preference: UpstreamsPreferenceType) => setUpstreamsPreference(preference),
-    [setUpstreamsPreference],
+  const updateUpstreamsPref = useCallback(
+    (preference: UpstreamsPreferenceType) => setUpstreamsPref(preference),
+    [setUpstreamsPref],
   );
 
   // 追加ダイアログのハンドリング
@@ -42,15 +39,15 @@ const Upstreams: React.FC = () => {
   const closeAddDialog = () => setIsAddDialogOpen(false);
   const addSetting = useCallback(
     (newSetting: UpstreamType) => {
-      const newSelectedIndex = upstreamsPreference.selectedIndex;
-      const newUpstreams = upstreamsPreference.upstreams.concat(newSetting);
+      const newSelectedIndex = upstreamsPref.selectedIndex;
+      const newUpstreams = upstreamsPref.upstreams.concat(newSetting);
 
-      updateUpstreamsPreference({
+      updateUpstreamsPref({
         selectedIndex: newSelectedIndex,
         upstreams: newUpstreams,
       });
     },
-    [updateUpstreamsPreference, upstreamsPreference],
+    [updateUpstreamsPref, upstreamsPref],
   );
 
   // 編集ダイアログのハンドリング
@@ -62,16 +59,16 @@ const Upstreams: React.FC = () => {
   };
   const editSetting = useCallback(
     (index: number, newSetting: UpstreamType) => {
-      const newSelectedIndex = upstreamsPreference.selectedIndex;
-      const newUpstreams = upstreamsPreference.upstreams.slice();
+      const newSelectedIndex = upstreamsPref.selectedIndex;
+      const newUpstreams = upstreamsPref.upstreams.slice();
       newUpstreams[index] = newSetting;
 
-      updateUpstreamsPreference({
+      updateUpstreamsPref({
         selectedIndex: newSelectedIndex,
         upstreams: newUpstreams,
       });
     },
-    [updateUpstreamsPreference, upstreamsPreference],
+    [updateUpstreamsPref, upstreamsPref],
   );
 
   // 削除ダイアログのハンドリング
@@ -93,18 +90,18 @@ const Upstreams: React.FC = () => {
           return selectedIndex - 1;
         }
         return selectedIndex;
-      })(index, upstreamsPreference.selectedIndex);
+      })(index, upstreamsPref.selectedIndex);
       const newUpstreams = [
-        ...upstreamsPreference.upstreams.slice(0, index),
-        ...upstreamsPreference.upstreams.slice(index + 1),
+        ...upstreamsPref.upstreams.slice(0, index),
+        ...upstreamsPref.upstreams.slice(index + 1),
       ];
 
-      updateUpstreamsPreference({
+      updateUpstreamsPref({
         selectedIndex: newIndex,
         upstreams: newUpstreams,
       });
     },
-    [updateUpstreamsPreference, upstreamsPreference],
+    [updateUpstreamsPref, upstreamsPref],
   );
 
   return (
@@ -131,7 +128,7 @@ const Upstreams: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {upstreamsPreference.upstreams.map((upstream, index) => (
+          {upstreamsPref.upstreams.map((upstream, index) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <TableRow key={index}>
               <TableCell align="center">
@@ -187,7 +184,7 @@ const Upstreams: React.FC = () => {
 
       {isEditDialogOpen && (
         <AddOrEditDialog
-          oldUpstream={upstreamsPreference.upstreams[selectedIndex]}
+          oldUpstream={upstreamsPref.upstreams[selectedIndex]}
           onDismiss={() => {
             closeEditDialog();
           }}
@@ -199,7 +196,7 @@ const Upstreams: React.FC = () => {
 
       {isDeleteDialogOpen && (
         <DeleteDialog
-          upstream={upstreamsPreference.upstreams[selectedIndex]}
+          upstream={upstreamsPref.upstreams[selectedIndex]}
           onDismiss={() => {
             closeDeleteDialog();
           }}

@@ -3,29 +3,26 @@ import { useCallback, useContext } from "react";
 
 import { toDogIconStyleType } from "~/components/DogBreadsIcon";
 import TrayIconStyleToggleButtonGroup from "~/components/TrayIconStyleToggleButtonGroup";
-import {
-  generalPreferenceContext,
-  setGeneralPreferenceContext,
-} from "~/contexts/GeneralPreferenceContext";
-import { upstreamsPreferenceContext } from "~/contexts/UpstreamsPreferencesContext";
+import { generalPrefContext, setGeneralPrefContext } from "~/contexts/GeneralPrefContext";
+import { upstreamsPrefContext } from "~/contexts/UpstreamsPrefContext";
 import { useSystemProperties } from "~/hooks/useSystemProperties";
 
 const General: React.FC = () => {
   const { isMacos } = useSystemProperties();
-  const generalPreferences = useContext(generalPreferenceContext);
-  const setGeneralPreferences = useContext(setGeneralPreferenceContext);
-  const upstreamsPreferens = useContext(upstreamsPreferenceContext);
+  const generalPref = useContext(generalPrefContext);
+  const setGeneralPref = useContext(setGeneralPrefContext);
+  const upstreamsPreferens = useContext(upstreamsPrefContext);
   const selectedUpstream = upstreamsPreferens.upstreams[upstreamsPreferens.selectedIndex];
 
   const onChangeHandler = useCallback(
     (preferences: Partial<GeneralPreferenceType>) => {
-      setGeneralPreferences((prev) => {
+      setGeneralPref((prev) => {
         const newPreferences = { ...prev, ...preferences };
-        window.store.setGeneralPreference(newPreferences);
+        window.prefsStore.setGeneral(newPreferences);
         return newPreferences;
       });
     },
-    [setGeneralPreferences],
+    [setGeneralPref],
   );
 
   // macの場合はアイコンの色が自動で切り替わるため、白色スタイルのアイコンは不要
@@ -43,7 +40,7 @@ const General: React.FC = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={generalPreferences.isOpenAtStartup}
+                checked={generalPref.isOpenAtStartup}
                 onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
                   onChangeHandler({ isOpenAtStartup: checked });
                 }}
@@ -58,7 +55,7 @@ const General: React.FC = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={generalPreferences.isLaunchProxyServerAtStartup}
+                checked={generalPref.isLaunchProxyServerAtStartup}
                 onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
                   onChangeHandler({
                     isLaunchProxyServerAtStartup: checked,
@@ -77,7 +74,7 @@ const General: React.FC = () => {
             <TrayIconStyleToggleButtonGroup
               includeWhite={includeWhite}
               iconId={selectedUpstream.icon}
-              value={toDogIconStyleType(generalPreferences.trayIconStyle) ?? "lineal"}
+              value={toDogIconStyleType(generalPref.trayIconStyle) ?? "lineal"}
               onChange={(value) => {
                 onChangeHandler({ trayIconStyle: value });
               }}
@@ -91,7 +88,7 @@ const General: React.FC = () => {
             <TrayIconStyleToggleButtonGroup
               includeWhite={includeWhite}
               iconId={selectedUpstream.icon}
-              value={toDogIconStyleType(generalPreferences.menuIconStyle) ?? "lineal"}
+              value={toDogIconStyleType(generalPref.menuIconStyle) ?? "lineal"}
               onChange={(value) => {
                 onChangeHandler({ menuIconStyle: value });
               }}

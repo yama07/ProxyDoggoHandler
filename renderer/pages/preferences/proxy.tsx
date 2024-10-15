@@ -3,30 +3,27 @@ import { useCallback, useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import ProxyUsageCard from "~/components/ProxyUsageCard";
-import {
-  proxyPreferenceContext,
-  setProxyPreferenceContext,
-} from "~/contexts/ProxyPreferenceContext";
+import { proxyPrefContext, setProxyPrefContext } from "~/contexts/ProxyPrefContext";
 
 // biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 const Proxy: React.FC = () => {
-  const proxyPreferences = useContext(proxyPreferenceContext);
-  const setProxyPreferences = useContext(setProxyPreferenceContext);
+  const proxyPref = useContext(proxyPrefContext);
+  const setProxyPref = useContext(setProxyPrefContext);
 
-  const [examplePort, setExamplePort] = useState(proxyPreferences.port);
+  const [examplePort, setExamplePort] = useState(proxyPref.port);
 
   const { handleSubmit, control } = useForm<ProxyPreferenceType>({
     criteriaMode: "all",
     shouldUseNativeValidation: false,
-    defaultValues: proxyPreferences,
+    defaultValues: proxyPref,
   });
 
   const onApply = useCallback(
     (formData: ProxyPreferenceType) => {
-      setProxyPreferences(formData);
+      setProxyPref(formData);
       setExamplePort(formData.port);
     },
-    [setProxyPreferences],
+    [setProxyPref],
   );
 
   return (

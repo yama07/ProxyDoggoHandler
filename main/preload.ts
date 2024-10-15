@@ -5,7 +5,7 @@ import channels from "./ipc/channels";
 const systemApi = {
   isMacos: (): Promise<boolean> => ipcRenderer.invoke(channels.system.isMacos),
 };
-export type SystemApiType = typeof systemApi;
+export type SystemApi = typeof systemApi;
 contextBridge.exposeInMainWorld("system", systemApi);
 
 const prefsWindowApi = {
@@ -29,57 +29,56 @@ const prefsWindowApi = {
     }
   },
 };
-export type prefsWindowApiType = typeof prefsWindowApi;
+export type PrefsWindowApi = typeof prefsWindowApi;
 contextBridge.exposeInMainWorld("prefsWindow", prefsWindowApi);
 
-const storeApi = {
-  getGeneralPreference: (): Promise<GeneralPreferenceType> =>
-    ipcRenderer.invoke(channels.store.getGeneralPreference),
-  setGeneralPreference: (preference: GeneralPreferenceType) =>
-    ipcRenderer.send(channels.store.setGeneralPreference, preference),
-  onGeneralPreferenceDidChange: (
+const prefsStoreApi = {
+  getGeneral: (): Promise<GeneralPreferenceType> =>
+    ipcRenderer.invoke(channels.prefsStore.getGeneral),
+  setGeneral: (preference: GeneralPreferenceType) =>
+    ipcRenderer.send(channels.prefsStore.setGeneral, preference),
+  onGeneralDidChange: (
     callback?: (newValue: GeneralPreferenceType, oldValue: GeneralPreferenceType) => void,
   ) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.store.onGeneralPreferenceDidChange);
+      ipcRenderer.removeAllListeners(channels.prefsStore.onGeneralDidChange);
     } else {
-      ipcRenderer.on(channels.store.onGeneralPreferenceDidChange, (_, newValue, oldValue) =>
+      ipcRenderer.on(channels.prefsStore.onGeneralDidChange, (_, newValue, oldValue) =>
         callback(newValue, oldValue),
       );
     }
   },
 
-  getProxyPreference: (): Promise<ProxyPreferenceType> =>
-    ipcRenderer.invoke(channels.store.getProxyPreference),
-  setProxyPreference: (preference: ProxyPreferenceType) =>
-    ipcRenderer.send(channels.store.setProxyPreference, preference),
-  onProxyPreferenceDidChange: (
+  getProxy: (): Promise<ProxyPreferenceType> => ipcRenderer.invoke(channels.prefsStore.getProxy),
+  setProxy: (preference: ProxyPreferenceType) =>
+    ipcRenderer.send(channels.prefsStore.setProxy, preference),
+  onProxyDidChange: (
     callback?: (newValue: ProxyPreferenceType, oldValue: ProxyPreferenceType) => void,
   ) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.store.onProxyPreferenceDidChange);
+      ipcRenderer.removeAllListeners(channels.prefsStore.onProxyDidChange);
     } else {
-      ipcRenderer.on(channels.store.onProxyPreferenceDidChange, (_, newValue, oldValue) =>
+      ipcRenderer.on(channels.prefsStore.onProxyDidChange, (_, newValue, oldValue) =>
         callback(newValue, oldValue),
       );
     }
   },
 
-  getUpstreamsPreference: (): Promise<UpstreamsPreferenceType> =>
-    ipcRenderer.invoke(channels.store.getUpstreamsPreference),
-  setUpstreamsPreference: (preference: UpstreamsPreferenceType) =>
-    ipcRenderer.send(channels.store.setUpstreamsPreference, preference),
-  onUpstreamsPreferenceDidChange: (
+  getUpstreams: (): Promise<UpstreamsPreferenceType> =>
+    ipcRenderer.invoke(channels.prefsStore.getUpstreams),
+  setUpstreams: (preference: UpstreamsPreferenceType) =>
+    ipcRenderer.send(channels.prefsStore.setUpstreams, preference),
+  onUpstreamsDidChange: (
     callback?: (newValue: UpstreamsPreferenceType, oldValue: UpstreamsPreferenceType) => void,
   ) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.store.onUpstreamsPreferenceDidChange);
+      ipcRenderer.removeAllListeners(channels.prefsStore.onUpstreamsDidChange);
     } else {
-      ipcRenderer.on(channels.store.onUpstreamsPreferenceDidChange, (_, newValue, oldValue) =>
+      ipcRenderer.on(channels.prefsStore.onUpstreamsDidChange, (_, newValue, oldValue) =>
         callback(newValue, oldValue),
       );
     }
   },
 };
-export type StoreApiType = typeof storeApi;
-contextBridge.exposeInMainWorld("store", storeApi);
+export type PrefsStoreApi = typeof prefsStoreApi;
+contextBridge.exposeInMainWorld("prefsStore", prefsStoreApi);

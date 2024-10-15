@@ -16,11 +16,7 @@ const General: React.FC = () => {
 
   const onChangeHandler = useCallback(
     (preferences: Partial<GeneralPreferenceType>) => {
-      setGeneralPref((prev) => {
-        const newPreferences = { ...prev, ...preferences };
-        window.prefsStore.setGeneral(newPreferences);
-        return newPreferences;
-      });
+      setGeneralPref((prev) => ({ ...prev, ...preferences }));
     },
     [setGeneralPref],
   );

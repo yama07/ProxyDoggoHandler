@@ -27,7 +27,11 @@ const TrayIconStyleToggleButtonGroup: React.FC<Props> = ({
       exclusive
       color="primary"
       size="small"
-      onChange={(event, value) => onChange(value)}
+      onChange={(_, value) => {
+        if (value) {
+          onChange(value);
+        }
+      }}
     >
       {availableDogIconStyles.map((iconStyle) => (
         <ToggleButton key={iconStyle} value={iconStyle} sx={{ p: (theme) => theme.spacing(0) }}>

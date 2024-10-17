@@ -19,7 +19,7 @@ if (is.development) {
 
 // ロギング設定
 console.log = log.log;
-log.initialize();
+log.initialize({ spyRendererConsole: true });
 log.transports.console.level = is.development ? "silly" : "info";
 log.transports.file.level = is.development ? "silly" : "info";
 log.info(`Startup with PID ${process.pid}`);

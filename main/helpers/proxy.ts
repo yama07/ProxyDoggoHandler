@@ -1,6 +1,9 @@
 import log from "electron-log";
 import { Server, redactUrl } from "proxy-chain";
 
+import type { ConnectionSetting } from "$/preference/profilePreference";
+import type { ProxyPreference } from "$/preference/proxyPreference";
+
 type ProxyServerStatus = "stopped" | "running";
 
 let server: Server | undefined = undefined;
@@ -8,12 +11,12 @@ let upstreamProxyUrl: string | undefined = undefined;
 let status: ProxyServerStatus = "stopped";
 let onStatusChangeCallback: ((status: ProxyServerStatus) => void) | undefined;
 
-const initialize = (params: ProxyPreferenceType) => {
+const initialize = (params: ProxyPreference) => {
   log.debug("Proxy init params:", params);
 
   server = new Server({
     port: params.port,
-    verbose: params.verbose,
+    verbose: params.verboseLogging,
     prepareRequestFunction: () => ({ upstreamProxyUrl }),
   });
 
@@ -44,19 +47,24 @@ const close = async () => {
   onStatusChangeCallback?.("stopped");
 };
 
-const setUpstreamProxyUrl = (params?: ConnectionSettingType) => {
-  log.debug("Upstream URl update params:", params);
+const setUpstreamProxyUrl = (setting: ConnectionSetting) => {
+  log.debug("Upstream URl update params:", setting);
 
-  if (params) {
-    let credential = "";
-    if (params.credentials) {
-      const user = encodeURI(params.credentials.user);
-      const password = encodeURI(params.credentials.password);
-      credential = `${user}:${password}@`;
+  switch (setting.protocol) {
+    case "direct":
+      upstreamProxyUrl = undefined;
+      break;
+    case "http":
+    case "socks": {
+      let credential = "";
+      if (setting.credentials) {
+        const user = encodeURI(setting.credentials.user);
+        const password = encodeURI(setting.credentials.password);
+        credential = `${user}:${password}@`;
+      }
+      upstreamProxyUrl = `http://${credential}${setting.host}:${setting.port}`;
+      break;
     }
-    upstreamProxyUrl = `http://${credential}${params.host}:${params.port}`;
-  } else {
-    upstreamProxyUrl = undefined;
   }
   log.debug("New upstream proxy URL:", upstreamProxyUrl);
   log.info(

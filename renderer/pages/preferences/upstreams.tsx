@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import { useCallback, useContext, useState } from "react";
 
+import type { Profile, ProfilesPreference } from "$/preference/profilePreference";
+
 import DogBreadsIcon from "~/components/DogBreadsIcon";
 import AddOrEditDialog from "~/components/upstreamSettingDialogs/AddOrEditDialog";
 import DeleteDialog from "~/components/upstreamSettingDialogs/DeleteDialog";
@@ -30,7 +32,7 @@ const Upstreams: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const updateUpstreamsPref = useCallback(
-    (preference: UpstreamsPreferenceType) => setUpstreamsPref(preference),
+    (preference: ProfilesPreference) => setUpstreamsPref(preference),
     [setUpstreamsPref],
   );
 
@@ -38,13 +40,13 @@ const Upstreams: React.FC = () => {
   const openAddDialog = () => setIsAddDialogOpen(true);
   const closeAddDialog = () => setIsAddDialogOpen(false);
   const addSetting = useCallback(
-    (newSetting: UpstreamType) => {
+    (newSetting: Profile) => {
       const newSelectedIndex = upstreamsPref.selectedIndex;
-      const newUpstreams = upstreamsPref.upstreams.concat(newSetting);
+      const newUpstreams = upstreamsPref.profiles.concat(newSetting);
 
       updateUpstreamsPref({
         selectedIndex: newSelectedIndex,
-        upstreams: newUpstreams,
+        profiles: newUpstreams,
       });
     },
     [updateUpstreamsPref, upstreamsPref],
@@ -58,14 +60,14 @@ const Upstreams: React.FC = () => {
     openEditDialog();
   };
   const editSetting = useCallback(
-    (index: number, newSetting: UpstreamType) => {
+    (index: number, newSetting: Profile) => {
       const newSelectedIndex = upstreamsPref.selectedIndex;
-      const newUpstreams = upstreamsPref.upstreams.slice();
+      const newUpstreams = upstreamsPref.profiles.slice();
       newUpstreams[index] = newSetting;
 
       updateUpstreamsPref({
         selectedIndex: newSelectedIndex,
-        upstreams: newUpstreams,
+        profiles: newUpstreams,
       });
     },
     [updateUpstreamsPref, upstreamsPref],
@@ -92,13 +94,13 @@ const Upstreams: React.FC = () => {
         return selectedIndex;
       })(index, upstreamsPref.selectedIndex);
       const newUpstreams = [
-        ...upstreamsPref.upstreams.slice(0, index),
-        ...upstreamsPref.upstreams.slice(index + 1),
+        ...upstreamsPref.profiles.slice(0, index),
+        ...upstreamsPref.profiles.slice(index + 1),
       ];
 
       updateUpstreamsPref({
         selectedIndex: newIndex,
-        upstreams: newUpstreams,
+        profiles: newUpstreams,
       });
     },
     [updateUpstreamsPref, upstreamsPref],
@@ -128,7 +130,7 @@ const Upstreams: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {upstreamsPref.upstreams.map((upstream, index) => (
+          {upstreamsPref.profiles.map((upstream, index) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <TableRow key={index}>
               <TableCell align="center">
@@ -142,15 +144,27 @@ const Upstreams: React.FC = () => {
                   <BadgeOutlinedIcon
                     fontSize="small"
                     sx={{
-                      visibility: upstream.connectionSetting?.credentials ? "visible" : "hidden",
+                      visibility:
+                        upstream.connectionSetting.protocol !== "direct" &&
+                        upstream.connectionSetting.credentials !== undefined
+                          ? "visible"
+                          : "hidden",
                       mr: (theme) => theme.spacing(1),
                     }}
                   />
-                  <Typography noWrap>{upstream.connectionSetting?.host ?? ""}</Typography>
+                  <Typography noWrap>
+                    {upstream.connectionSetting.protocol === "direct"
+                      ? ""
+                      : upstream.connectionSetting.host ?? ""}
+                  </Typography>
                 </Box>
               </TableCell>
               <TableCell align="right">
-                <Typography noWrap>{upstream.connectionSetting?.port ?? ""}</Typography>
+                <Typography noWrap>
+                  {upstream.connectionSetting.protocol === "direct"
+                    ? ""
+                    : upstream.connectionSetting.port ?? ""}
+                </Typography>
               </TableCell>
               <TableCell>
                 <Tooltip title="編集">
@@ -184,11 +198,11 @@ const Upstreams: React.FC = () => {
 
       {isEditDialogOpen && (
         <AddOrEditDialog
-          oldUpstream={upstreamsPref.upstreams[selectedIndex]}
+          oldUpstream={upstreamsPref.profiles[selectedIndex]}
           onDismiss={() => {
             closeEditDialog();
           }}
-          onConfirm={(newUpstream: UpstreamType) => {
+          onConfirm={(newUpstream: Profile) => {
             editSetting(selectedIndex, newUpstream);
           }}
         />
@@ -196,7 +210,7 @@ const Upstreams: React.FC = () => {
 
       {isDeleteDialogOpen && (
         <DeleteDialog
-          upstream={upstreamsPref.upstreams[selectedIndex]}
+          upstream={upstreamsPref.profiles[selectedIndex]}
           onDismiss={() => {
             closeDeleteDialog();
           }}

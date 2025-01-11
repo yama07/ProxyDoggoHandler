@@ -15,38 +15,40 @@ import {
 import { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import DogBreadsIcon, { DogIconIds } from "../DogBreadsIcon";
+import { dogIconIds } from "$/icon/dogIcon";
+import type { Profile } from "$/preference/profilePreference";
+
+import DogBreadsIcon from "../DogBreadsIcon";
 
 type Props = {
-  oldUpstream?: UpstreamType;
+  oldUpstream?: Profile;
   onDismiss: () => void;
-  onConfirm: (newUpstream: UpstreamType) => void;
+  onConfirm: (newUpstream: Profile) => void;
 };
 
 const AddOrEditDialog: React.FC<Props> = (props: Props) => {
-  // 設定自体は与えられているが、接続情報が設定されていない場合は、
-  // ダイレクトアクセスの設定とみなす
-  const isDirectAccessSetting: boolean =
-    props.oldUpstream !== undefined && props.oldUpstream.connectionSetting === undefined;
-
-  const oldConnectionSetting = props.oldUpstream?.connectionSetting;
-  const oldCredentials = oldConnectionSetting?.credentials;
-
-  const defaultValues = {
-    iconId: props.oldUpstream?.icon ?? "001-dog",
-    name: props.oldUpstream?.name ?? "",
-    host: isDirectAccessSetting ? "Direct access (no proxy)" : oldConnectionSetting?.host ?? "",
-    port: isDirectAccessSetting ? 0 : oldConnectionSetting?.port ?? 80,
-    needsAuth: oldCredentials !== undefined,
-    user: oldCredentials?.user ?? "",
-    password: oldCredentials?.password ?? "",
-  };
+  const defaultValues: Profile & { needsAuth: boolean } =
+    props.oldUpstream === undefined
+      ? {
+          icon: "001-dog",
+          name: "",
+          connectionSetting: { protocol: "direct" },
+          needsAuth: false,
+        }
+      : {
+          ...props.oldUpstream,
+          needsAuth:
+            props.oldUpstream.connectionSetting.protocol !== "direct" &&
+            props.oldUpstream.connectionSetting.credentials !== undefined,
+        };
 
   const { trigger, handleSubmit, watch, control } = useForm({
     criteriaMode: "all",
     shouldUseNativeValidation: false,
     defaultValues,
   });
+
+  const protocol = watch("connectionSetting.protocol");
   const needsAuth = watch("needsAuth");
 
   const onClose = useCallback(() => {
@@ -55,23 +57,11 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
 
   const onSubmit = useCallback(
     (formData: typeof defaultValues) => {
-      const newUpstream: UpstreamType = {
-        icon: formData.iconId,
-        name: formData.name,
-        connectionSetting: isDirectAccessSetting
-          ? undefined
-          : {
-              host: formData.host,
-              port: formData.port,
-              credentials: formData.needsAuth
-                ? { user: formData.user, password: formData.password }
-                : undefined,
-            },
-      };
-      props.onConfirm(newUpstream);
+      const { needsAuth, ...newProfile } = formData;
+      props.onConfirm(newProfile);
       props.onDismiss();
     },
-    [isDirectAccessSetting, props],
+    [props],
   );
 
   return (
@@ -82,12 +72,12 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
             <Grid item xs={12} sm={2}>
               <Controller
                 control={control}
-                name="iconId"
+                name="icon"
                 render={({ field }) => (
                   <FormControl variant="standard" sx={{ display: "flex" }}>
                     <InputLabel id="icon-select-label">Icon</InputLabel>
                     <Select {...field} MenuProps={{ sx: { maxHeight: "90%" } }}>
-                      {DogIconIds.map((iconId) => (
+                      {dogIconIds.map((iconId) => (
                         <MenuItem value={iconId} key={iconId}>
                           <DogBreadsIcon iconId={iconId} style="lineal" />
                         </MenuItem>
@@ -109,9 +99,9 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
             <Grid item xs={12} sm={6}>
               <Controller
                 control={control}
-                name="host"
+                name="connectionSetting.host"
                 rules={
-                  isDirectAccessSetting ? {} : { required: "このフィールドを入力してください。" }
+                  protocol !== "direct" ? {} : { required: "このフィールドを入力してください。" }
                 }
                 render={({ field, fieldState: { error } }) => (
                   <TextField
@@ -123,8 +113,8 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     error={error != null}
                     helperText={error != null ? error.message : null}
                     fullWidth
-                    required={!isDirectAccessSetting}
-                    disabled={isDirectAccessSetting}
+                    required={protocol !== "direct"}
+                    disabled={protocol === "direct"}
                   />
                 )}
               />
@@ -132,9 +122,9 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
             <Grid item xs={12} sm={6}>
               <Controller
                 control={control}
-                name="port"
+                name="connectionSetting.port"
                 rules={
-                  isDirectAccessSetting
+                  protocol === "direct"
                     ? {}
                     : {
                         required: "このフィールドを入力してください。",
@@ -163,8 +153,8 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     error={error != null}
                     helperText={error != null ? error.message : null}
                     fullWidth
-                    required={!isDirectAccessSetting}
-                    disabled={isDirectAccessSetting}
+                    required={protocol !== "direct"}
+                    disabled={protocol === "direct"}
                   />
                 )}
               />
@@ -180,7 +170,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                         {...field}
                         checked={field.value}
                         color="primary"
-                        disabled={isDirectAccessSetting}
+                        disabled={protocol === "direct"}
                       />
                     }
                     label="Authentication"
@@ -193,7 +183,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 <Grid item xs={12} sm={6}>
                   <Controller
                     control={control}
-                    name="user"
+                    name="connectionSetting.credentials.user"
                     rules={{ required: "このフィールドを入力してください。" }}
                     render={({ field, fieldState: { error } }) => (
                       <TextField
@@ -213,7 +203,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 <Grid item xs={12} sm={6}>
                   <Controller
                     control={control}
-                    name="password"
+                    name="connectionSetting.credentials.password"
                     rules={{ required: "このフィールドを入力してください。" }}
                     render={({ field, fieldState: { error } }) => (
                       <TextField

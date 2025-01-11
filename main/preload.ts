@@ -1,5 +1,9 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+import type { AppearancePreference } from "$/preference/appearancePreference";
+import type { ProfilesPreference } from "$/preference/profilePreference";
+import type { ProxyPreference } from "$/preference/proxyPreference";
+
 import channels from "./ipc/channels";
 
 const systemApi = {
@@ -33,12 +37,12 @@ export type PrefsWindowApi = typeof prefsWindowApi;
 contextBridge.exposeInMainWorld("prefsWindow", prefsWindowApi);
 
 const prefsStoreApi = {
-  getGeneral: (): Promise<GeneralPreferenceType> =>
+  getAppearance: (): Promise<AppearancePreference> =>
     ipcRenderer.invoke(channels.prefsStore.getGeneral),
-  setGeneral: (preference: GeneralPreferenceType) =>
+  setGeneral: (preference: AppearancePreference) =>
     ipcRenderer.send(channels.prefsStore.setGeneral, preference),
   onGeneralDidChange: (
-    callback?: (newValue: GeneralPreferenceType, oldValue: GeneralPreferenceType) => void,
+    callback?: (newValue: AppearancePreference, oldValue: AppearancePreference) => void,
   ) => {
     if (callback === undefined) {
       ipcRenderer.removeAllListeners(channels.prefsStore.onGeneralDidChange);
@@ -49,12 +53,10 @@ const prefsStoreApi = {
     }
   },
 
-  getProxy: (): Promise<ProxyPreferenceType> => ipcRenderer.invoke(channels.prefsStore.getProxy),
-  setProxy: (preference: ProxyPreferenceType) =>
+  getProxy: (): Promise<ProxyPreference> => ipcRenderer.invoke(channels.prefsStore.getProxy),
+  setProxy: (preference: ProxyPreference) =>
     ipcRenderer.send(channels.prefsStore.setProxy, preference),
-  onProxyDidChange: (
-    callback?: (newValue: ProxyPreferenceType, oldValue: ProxyPreferenceType) => void,
-  ) => {
+  onProxyDidChange: (callback?: (newValue: ProxyPreference, oldValue: ProxyPreference) => void) => {
     if (callback === undefined) {
       ipcRenderer.removeAllListeners(channels.prefsStore.onProxyDidChange);
     } else {
@@ -64,12 +66,12 @@ const prefsStoreApi = {
     }
   },
 
-  getUpstreams: (): Promise<UpstreamsPreferenceType> =>
+  getUpstreams: (): Promise<ProfilesPreference> =>
     ipcRenderer.invoke(channels.prefsStore.getUpstreams),
-  setUpstreams: (preference: UpstreamsPreferenceType) =>
+  setUpstreams: (preference: ProfilesPreference) =>
     ipcRenderer.send(channels.prefsStore.setUpstreams, preference),
   onUpstreamsDidChange: (
-    callback?: (newValue: UpstreamsPreferenceType, oldValue: UpstreamsPreferenceType) => void,
+    callback?: (newValue: ProfilesPreference, oldValue: ProfilesPreference) => void,
   ) => {
     if (callback === undefined) {
       ipcRenderer.removeAllListeners(channels.prefsStore.onUpstreamsDidChange);

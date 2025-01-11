@@ -7,23 +7,22 @@ import {
   useState,
 } from "react";
 
-const defaultValues: UpstreamsPreferenceType = {
-  selectedIndex: 0,
-  upstreams: [{ name: "Direct", icon: "001-dog", connectionSetting: undefined }],
-};
+import { type ProfilesPreference, profilesPreference } from "$/preference/profilePreference";
 
-export const upstreamsPrefContext = createContext<UpstreamsPreferenceType>(defaultValues);
+export const upstreamsPrefContext = createContext<ProfilesPreference>(profilesPreference.defaults);
 
-export const setUpstreamsPrefContext = createContext<
-  Dispatch<SetStateAction<UpstreamsPreferenceType>>
->(() => undefined);
+export const setUpstreamsPrefContext = createContext<Dispatch<SetStateAction<ProfilesPreference>>>(
+  () => undefined,
+);
 
 type Props = {
   children: React.ReactNode;
 };
 
 export const UpstreamsPrefProvider: React.FC<Props> = ({ children }) => {
-  const [upstreamsPref, setUpstreamsPref] = useState<UpstreamsPreferenceType>(defaultValues);
+  const [upstreamsPref, setUpstreamsPref] = useState<ProfilesPreference>(
+    profilesPreference.defaults,
+  );
 
   useEffect(() => {
     (async () => setUpstreamsPref(await window.prefsStore.getUpstreams()))();
@@ -38,8 +37,8 @@ export const UpstreamsPrefProvider: React.FC<Props> = ({ children }) => {
   const setUpstreamsPrefWrapper = useCallback(
     (
       newPreference:
-        | UpstreamsPreferenceType
-        | ((prevPreference: UpstreamsPreferenceType) => UpstreamsPreferenceType),
+        | ProfilesPreference
+        | ((prevPreference: ProfilesPreference) => ProfilesPreference),
     ) => {
       const _newPreference =
         newPreference instanceof Function ? newPreference(upstreamsPref) : newPreference;

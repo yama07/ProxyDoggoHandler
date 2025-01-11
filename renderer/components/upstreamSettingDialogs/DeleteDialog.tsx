@@ -7,8 +7,10 @@ import {
   DialogTitle,
 } from "@mui/material";
 
+import type { Profile } from "$/preference/profilePreference";
+
 type Props = {
-  upstream: UpstreamType;
+  upstream: Profile;
   onDismiss: () => void;
   onConfirm: () => void;
 };

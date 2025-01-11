@@ -7,15 +7,13 @@ import {
   useState,
 } from "react";
 
-const defaultValues: GeneralPreferenceType = {
-  isOpenAtStartup: true,
-  isLaunchProxyServerAtStartup: false,
-  trayIconStyle: "lineal",
-  menuIconStyle: "lineal",
-};
-export const generalPrefContext = createContext<GeneralPreferenceType>(defaultValues);
+import { type AppearancePreference, appearancePreference } from "$/preference/appearancePreference";
 
-export const setGeneralPrefContext = createContext<Dispatch<SetStateAction<GeneralPreferenceType>>>(
+export const generalPrefContext = createContext<AppearancePreference>(
+  appearancePreference.defaults,
+);
+
+export const setGeneralPrefContext = createContext<Dispatch<SetStateAction<AppearancePreference>>>(
   () => undefined,
 );
 
@@ -24,10 +22,12 @@ type Props = {
 };
 
 export const GeneralPrefProvider: React.FC<Props> = ({ children }) => {
-  const [generalPref, setGeneralPref] = useState<GeneralPreferenceType>(defaultValues);
+  const [generalPref, setGeneralPref] = useState<AppearancePreference>(
+    appearancePreference.defaults,
+  );
 
   useEffect(() => {
-    (async () => setGeneralPref(await window.prefsStore.getGeneral()))();
+    (async () => setGeneralPref(await window.prefsStore.getAppearance()))();
 
     window.prefsStore.onGeneralDidChange((newValue, oldValue) => setGeneralPref(newValue));
 
@@ -39,8 +39,8 @@ export const GeneralPrefProvider: React.FC<Props> = ({ children }) => {
   const setGeneralPrefWrapper = useCallback(
     (
       newPreference:
-        | GeneralPreferenceType
-        | ((prevPreference: GeneralPreferenceType) => GeneralPreferenceType),
+        | AppearancePreference
+        | ((prevPreference: AppearancePreference) => AppearancePreference),
     ) => {
       const _newPreference =
         newPreference instanceof Function ? newPreference(generalPref) : newPreference;

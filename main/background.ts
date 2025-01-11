@@ -54,13 +54,13 @@ const setup = () => {
 
   // 設定変更の監視
   unsubscribeFunctions = [
-    prefsStore.onDidChange("general", (newValue, oldValue) => {
+    prefsStore.onDidChange("appearance", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
       if (
-        newValue.menuIconStyle !== oldValue?.menuIconStyle ||
-        newValue.trayIconStyle !== oldValue?.trayIconStyle
+        newValue.menuIcon.style !== oldValue?.menuIcon.style ||
+        newValue.trayIcon.style !== oldValue?.trayIcon.style
       ) {
         // アイコンスタイルが変更されたらアップデートする
         tray.update();
@@ -77,12 +77,12 @@ const setup = () => {
         tray.update();
       }
     }),
-    prefsStore.onDidChange("upstreams", (newValue, oldValue) => {
+    prefsStore.onDidChange("profiles", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
-      const newSelectedUpstream = newValue.upstreams[newValue.selectedIndex];
-      const oldSelectedUpstream = oldValue?.upstreams[oldValue.selectedIndex];
+      const newSelectedUpstream = newValue.profiles[newValue.selectedIndex];
+      const oldSelectedUpstream = oldValue?.profiles[oldValue.selectedIndex];
       if (newSelectedUpstream !== oldSelectedUpstream) {
         // Proxyサーバのアップストリームを切り替え
         proxy.setUpstreamProxyUrl(newSelectedUpstream.connectionSetting);
@@ -94,8 +94,8 @@ const setup = () => {
   // システムトレイの初期化
   tray.initialize({
     accessor: {
-      generalPreference: () => prefsStore.get("general"),
-      upstreamsPreference: () => prefsStore.get("upstreams"),
+      appearancePreference: () => prefsStore.get("appearance"),
+      profilePreference: () => prefsStore.get("profiles"),
       proxyServerEndpoint: proxy.getEndpoint,
       isProxyServerRunning: proxy.isRunning,
     },
@@ -106,11 +106,11 @@ const setup = () => {
       stopProxyServer: () => {
         proxy.close();
       },
-      selectUpstream: (index: number) => {
+      selectProfile: (index: number) => {
         // 設定ファイルを更新
-        const newPreference = prefsStore.get("upstreams");
+        const newPreference = prefsStore.get("profiles");
         newPreference.selectedIndex = index;
-        prefsStore.set("upstreams", newPreference);
+        prefsStore.set("profiles", newPreference);
       },
       clickPrefsWindowMenu: async () =>
         await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, prefsStoreIpcHandler]),
@@ -125,7 +125,7 @@ const setup = () => {
     tray.update();
   });
 
-  const generalPreference = prefsStore.get("general");
+  const generalPreference = prefsStore.get("proxy");
   if (generalPreference.isLaunchProxyServerAtStartup) {
     proxy.listen();
   }
@@ -140,7 +140,7 @@ const setup = () => {
 
   setup();
 
-  if (prefsStore.get("general").isOpenAtStartup) {
+  if (prefsStore.get("appearance").isOpenAtStartup) {
     await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, prefsStoreIpcHandler]);
   }
 })();

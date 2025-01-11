@@ -1,5 +1,8 @@
 import { type BrowserWindow, ipcMain } from "electron";
 
+import type { AppearancePreference } from "$/preference/appearancePreference";
+import type { ProfilesPreference } from "$/preference/profilePreference";
+import type { ProxyPreference } from "$/preference/proxyPreference";
 import { prefsStore } from "#/helpers/prefs-store";
 
 import channels from "./channels";
@@ -13,25 +16,22 @@ export const prefsStoreIpcHandler: IpcHandler = (bowserWindow: BrowserWindow) =>
   const register: Register = () => {
     ipcMain.handle(
       channels.prefsStore.getGeneral,
-      (): GeneralPreferenceType => prefsStore.get("general"),
+      (): AppearancePreference => prefsStore.get("appearance"),
     );
 
-    ipcMain.on(channels.prefsStore.setGeneral, (_, preference: GeneralPreferenceType) => {
-      prefsStore.set("general", preference);
+    ipcMain.on(channels.prefsStore.setGeneral, (_, preference: AppearancePreference) => {
+      prefsStore.set("appearance", preference);
     });
 
     unsubscribeFunctions.push(
-      prefsStore.onDidChange("general", (newValue, oldValue) => {
+      prefsStore.onDidChange("appearance", (newValue, oldValue) => {
         webContents.send(channels.prefsStore.onGeneralDidChange, newValue, oldValue);
       }),
     );
 
-    ipcMain.handle(
-      channels.prefsStore.getProxy,
-      (): ProxyPreferenceType => prefsStore.get("proxy"),
-    );
+    ipcMain.handle(channels.prefsStore.getProxy, (): ProxyPreference => prefsStore.get("proxy"));
 
-    ipcMain.on(channels.prefsStore.setProxy, (_, preference: ProxyPreferenceType) => {
+    ipcMain.on(channels.prefsStore.setProxy, (_, preference: ProxyPreference) => {
       prefsStore.set("proxy", preference);
     });
 
@@ -43,15 +43,15 @@ export const prefsStoreIpcHandler: IpcHandler = (bowserWindow: BrowserWindow) =>
 
     ipcMain.handle(
       channels.prefsStore.getUpstreams,
-      (): UpstreamsPreferenceType => prefsStore.get("upstreams"),
+      (): ProfilesPreference => prefsStore.get("profiles"),
     );
 
-    ipcMain.on(channels.prefsStore.setUpstreams, (_, preference: UpstreamsPreferenceType) => {
-      prefsStore.set("upstreams", preference);
+    ipcMain.on(channels.prefsStore.setUpstreams, (_, preference: ProfilesPreference) => {
+      prefsStore.set("profiles", preference);
     });
 
     unsubscribeFunctions.push(
-      prefsStore.onDidChange("upstreams", (newValue, oldValue) => {
+      prefsStore.onDidChange("profiles", (newValue, oldValue) => {
         webContents.send(channels.prefsStore.onUpstreamsDidChange, newValue, oldValue);
       }),
     );

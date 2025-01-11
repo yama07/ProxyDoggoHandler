@@ -1,34 +1,36 @@
 import Store from "electron-store";
 
-const defaults: PreferenceType = {
-  general: {
-    isOpenAtStartup: true,
-    isLaunchProxyServerAtStartup: true,
-    trayIconStyle: "lineal",
-    menuIconStyle: "lineal",
-  },
-  proxy: { port: 8080, verbose: false },
-  upstreams: {
-    selectedIndex: 0,
-    upstreams: [{ name: "Direct", icon: "001-dog", connectionSetting: undefined }],
-  },
+import { type AppearancePreference, appearancePreference } from "$/preference/appearancePreference";
+import { type ProfilesPreference, profilesPreference } from "$/preference/profilePreference";
+import { type ProxyPreference, proxyPreference } from "$/preference/proxyPreference";
+
+type Preference = {
+  appearance: AppearancePreference;
+  profiles: ProfilesPreference;
+  proxy: ProxyPreference;
 };
 
-let storeInstance: Store<PreferenceType> | undefined;
-const getStoreInsance = (): Store<PreferenceType> => {
+const defaults: Preference = {
+  appearance: appearancePreference.defaults,
+  profiles: profilesPreference.defaults,
+  proxy: proxyPreference.defaults,
+};
+
+let storeInstance: Store<Preference> | undefined;
+const getStoreInsance = (): Store<Preference> => {
   if (storeInstance === undefined) {
-    storeInstance = new Store<PreferenceType>({ defaults });
+    storeInstance = new Store<Preference>({ defaults });
   }
   return storeInstance;
 };
 
 export const prefsStore = {
-  get: <T extends keyof PreferenceType>(key: T): PreferenceType[T] => getStoreInsance().get(key),
-  set: <T extends keyof PreferenceType>(key: T, value: PreferenceType[T]) =>
+  get: <T extends keyof Preference>(key: T): Preference[T] => getStoreInsance().get(key),
+  set: <T extends keyof Preference>(key: T, value: Preference[T]) =>
     getStoreInsance().set(key, value),
-  onDidChange: <T extends keyof PreferenceType>(
+  onDidChange: <T extends keyof Preference>(
     key: T,
-    callback: (newValue?: PreferenceType[T], oldValue?: PreferenceType[T]) => void,
+    callback: (newValue?: Preference[T], oldValue?: Preference[T]) => void,
   ): (() => void) => {
     return getStoreInsance().onDidChange(key, callback);
   },

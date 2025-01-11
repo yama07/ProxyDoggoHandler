@@ -1,62 +1,42 @@
-import { Box, ToggleButton, ToggleButtonGroup, Tooltip, capitalize } from "@mui/material";
+import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 
-import DogBreadsIcon, { type DogIconStyleType, DogIconStyles } from "./DogBreadsIcon";
+import type { DogIconId } from "$/icon/dogIcon";
+import { iconStyleIds, iconStyles } from "$/icon/iconStyle";
+import type { IconStyleId } from "$/icon/iconStyle";
 
-const getIconStyleLabel = (style: string): string => capitalize(style).replace("-w", " (white)");
+import DogBreadsIcon from "./DogBreadsIcon";
 
 type Props = {
-  includeWhite: boolean;
-  iconId: string;
-  value: DogIconStyleType;
-  onChange: (value: DogIconStyleType) => void;
+  icon: DogIconId;
+  style: IconStyleId;
+  onChange: (newStyle: IconStyleId) => void;
 };
 
-const TrayIconStyleToggleButtonGroup: React.FC<Props> = ({
-  includeWhite,
-  iconId,
-  value,
-  onChange,
-}) => {
-  const availableDogIconStyles = includeWhite
-    ? DogIconStyles.slice()
-    : DogIconStyles.filter((v) => !v.endsWith("-w"));
-
+const TrayIconStyleToggleButtonGroup: React.FC<Props> = ({ icon, style, onChange }) => {
   return (
     <ToggleButtonGroup
-      value={value}
+      value={style}
       exclusive
       color="primary"
-      size="small"
-      onChange={(_, value) => {
-        if (value) {
-          onChange(value);
+      onChange={(_, newStyle: IconStyleId | undefined) => {
+        if (newStyle) {
+          onChange(newStyle);
         }
       }}
     >
-      {availableDogIconStyles.map((iconStyle) => (
-        <ToggleButton key={iconStyle} value={iconStyle} sx={{ p: (theme) => theme.spacing(0) }}>
-          <Tooltip title={getIconStyleLabel(iconStyle)}>
+      {iconStyleIds.map((iconStyleId) => (
+        <ToggleButton key={iconStyleId} value={iconStyleId} sx={{ p: (theme) => theme.spacing(0) }}>
+          <Tooltip title={iconStyles[iconStyleId].label}>
             <Box
               display="flex"
               sx={{
                 width: "100%",
                 height: "100%",
-                px: (theme) => theme.spacing(2),
-                py: (theme) => theme.spacing(0.6),
+                px: (theme) => theme.spacing(4),
+                py: (theme) => theme.spacing(1),
               }}
             >
-              <Box
-                sx={{
-                  borderRadius: "10%",
-                  background: (theme) =>
-                    iconStyle.endsWith("-w") ? theme.palette.primary.main : null,
-                  px: (theme) => theme.spacing(2),
-                  py: (theme) => theme.spacing(0.4),
-                  m: "auto",
-                }}
-              >
-                <DogBreadsIcon iconId={iconId} style={iconStyle} />
-              </Box>
+              <DogBreadsIcon iconId={icon} style={iconStyleId} />
             </Box>
           </Tooltip>
         </ToggleButton>

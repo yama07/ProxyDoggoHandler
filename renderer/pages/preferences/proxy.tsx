@@ -2,6 +2,8 @@ import { Box, Button, Checkbox, Divider, FormControlLabel, Grid, TextField } fro
 import { useCallback, useContext, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import type { ProxyPreference } from "$/preference/proxyPreference";
+
 import ProxyUsageCard from "~/components/ProxyUsageCard";
 import { proxyPrefContext, setProxyPrefContext } from "~/contexts/ProxyPrefContext";
 
@@ -12,14 +14,14 @@ const Proxy: React.FC = () => {
 
   const [examplePort, setExamplePort] = useState(proxyPref.port);
 
-  const { handleSubmit, control } = useForm<ProxyPreferenceType>({
+  const { handleSubmit, control } = useForm<ProxyPreference>({
     criteriaMode: "all",
     shouldUseNativeValidation: false,
     defaultValues: proxyPref,
   });
 
   const onApply = useCallback(
-    (formData: ProxyPreferenceType) => {
+    (formData: ProxyPreference) => {
       setProxyPref(formData);
       setExamplePort(formData.port);
     },
@@ -75,7 +77,20 @@ const Proxy: React.FC = () => {
           <Grid item xs={12}>
             <Controller
               control={control}
-              name="verbose"
+              name="isLaunchProxyServerAtStartup"
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} color="primary" />}
+                  label="アプリケーション起動時にプロキシサーバを立ち上げる"
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Controller
+              control={control}
+              name="verboseLogging"
               render={({ field }) => (
                 <FormControlLabel
                   control={<Checkbox {...field} checked={field.value} color="primary" />}

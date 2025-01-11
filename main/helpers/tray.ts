@@ -2,6 +2,9 @@ import { Menu, MenuItem, Tray } from "electron";
 import log from "electron-log";
 import { is } from "electron-util";
 
+import type { AppearancePreference } from "$/preference/appearancePreference";
+import type { ProfilesPreference } from "$/preference/profilePreference";
+
 import {
   getAppTrayIcon,
   getDogBreadsMenuIcon,
@@ -10,8 +13,8 @@ import {
 } from "./icon";
 
 type Accessor = {
-  generalPreference: () => GeneralPreferenceType;
-  upstreamsPreference: () => UpstreamsPreferenceType;
+  appearancePreference: () => AppearancePreference;
+  profilePreference: () => ProfilesPreference;
   proxyServerEndpoint: () => string | undefined;
   isProxyServerRunning: () => boolean;
 };
@@ -21,22 +24,19 @@ type Handler = {
   stopProxyServer: () => void;
   clickPrefsWindowMenu: () => void;
   clickAboutWindow: () => void;
-  selectUpstream: (index: number) => void;
+  selectProfile: (index: number) => void;
 };
 
 let _tray: Tray | undefined;
 let handler: Handler;
 let accessor: Accessor;
 
-const initialize = (param: {
-  accessor: Accessor;
-  handler: Handler;
-}) => {
+const initialize = (param: { accessor: Accessor; handler: Handler }) => {
   accessor = param.accessor;
   handler = param.handler;
 
-  const generalPreference = accessor.generalPreference();
-  const icon = getAppTrayIcon(generalPreference.trayIconStyle);
+  const generalPreference = accessor.appearancePreference();
+  const icon = getAppTrayIcon(generalPreference.trayIcon.style, generalPreference.trayIcon.color);
   _tray = new Tray(icon);
   _tray.addListener("click", () => {
     _tray?.popUpContextMenu();
@@ -50,19 +50,27 @@ const update = () => {
     log.info("System tray is not initialized.");
     return;
   }
-  const upstreamsPreference = accessor.upstreamsPreference();
-  const generalPreference = accessor.generalPreference();
+  const upstreamsPreference = accessor.profilePreference();
+  const generalPreference = accessor.appearancePreference();
 
   const statusMenuItem = new MenuItem(
     accessor.isProxyServerRunning()
       ? {
           label: `Running on ${accessor.proxyServerEndpoint()}`,
-          icon: getStatusMenuIcon("active", generalPreference.menuIconStyle),
+          icon: getStatusMenuIcon(
+            "active",
+            generalPreference.menuIcon.style,
+            generalPreference.menuIcon.color,
+          ),
           enabled: false,
         }
       : {
           label: "Not Running",
-          icon: getStatusMenuIcon("inactive", generalPreference.menuIconStyle),
+          icon: getStatusMenuIcon(
+            "inactive",
+            generalPreference.menuIcon.style,
+            generalPreference.menuIcon.color,
+          ),
           enabled: false,
         },
   );
@@ -85,21 +93,25 @@ const update = () => {
         },
   );
 
-  const proxyMenuItems = upstreamsPreference.upstreams.map(
+  const proxyMenuItems = upstreamsPreference.profiles.map(
     (proxy, index) =>
       new MenuItem({
         id: String(index),
         label: proxy.name,
         type: "radio",
         checked: upstreamsPreference.selectedIndex === index,
-        icon: getDogBreadsMenuIcon(proxy.icon, generalPreference.menuIconStyle),
+        icon: getDogBreadsMenuIcon(
+          proxy.icon,
+          generalPreference.menuIcon.style,
+          generalPreference.menuIcon.color,
+        ),
         toolTip:
-          proxy.connectionSetting == null
+          proxy.connectionSetting.protocol === "direct"
             ? "Direct Access"
             : `${proxy.connectionSetting.host}:${proxy.connectionSetting.port}`,
         click: (item, window, event) => {
           log.debug("Click tray menu:", item.id, item.label);
-          handler.selectUpstream(Number(item.id));
+          handler.selectProfile(Number(item.id));
         },
       }),
   );
@@ -130,10 +142,11 @@ const update = () => {
 
   const icon = accessor.isProxyServerRunning()
     ? getDogBreadsTrayIcon(
-        upstreamsPreference.upstreams[upstreamsPreference.selectedIndex].icon,
-        generalPreference.trayIconStyle,
+        upstreamsPreference.profiles[upstreamsPreference.selectedIndex].icon,
+        generalPreference.trayIcon.style,
+        generalPreference.trayIcon.color,
       )
-    : getAppTrayIcon(generalPreference.trayIconStyle);
+    : getAppTrayIcon(generalPreference.trayIcon.style, generalPreference.trayIcon.color);
   _tray.setImage(icon);
 
   log.info("System tray is updated.");

@@ -16,7 +16,7 @@ import { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { dogIconIds } from "$/icon/dogIcon";
-import type { Profile } from "$/preference/profilePreference";
+import { type Profile, protocolIds, protocols } from "$/preference/profilePreference";
 
 import DogBreadsIcon from "../DogBreadsIcon";
 
@@ -58,6 +58,15 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
   const onSubmit = useCallback(
     (formData: typeof defaultValues) => {
       const { needsAuth, ...newProfile } = formData;
+
+      if (
+        !needsAuth &&
+        (newProfile.connectionSetting.protocol === "http" ||
+          newProfile.connectionSetting.protocol === "socks")
+      ) {
+        newProfile.connectionSetting.credentials = undefined;
+      }
+
       props.onConfirm(newProfile);
       props.onDismiss();
     },
@@ -96,7 +105,27 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={2}>
+              <Controller
+                control={control}
+                name="connectionSetting.protocol"
+                render={({ field }) => (
+                  <FormControl variant="standard" sx={{ display: "flex" }}>
+                    <InputLabel id="protocol-select-label" sx={{ pt: (theme) => theme.spacing(1) }}>
+                      Protocol
+                    </InputLabel>
+                    <Select {...field} sx={{ pt: (theme) => theme.spacing(1) }}>
+                      {protocolIds.map((protocolId) => (
+                        <MenuItem value={protocolId} key={protocolId}>
+                          {protocols[protocolId].label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={8}>
               <Controller
                 control={control}
                 name="connectionSetting.host"
@@ -119,7 +148,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={2}>
               <Controller
                 control={control}
                 name="connectionSetting.port"
@@ -147,7 +176,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     {...field}
                     variant="standard"
                     margin="dense"
-                    label="Port number"
+                    label="Port"
                     type="number"
                     InputProps={{ inputProps: { min: 0, max: 65535 } }}
                     error={error != null}

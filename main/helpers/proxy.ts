@@ -62,7 +62,7 @@ const setUpstreamProxyUrl = (setting: ConnectionSetting) => {
         const password = encodeURI(setting.credentials.password);
         credential = `${user}:${password}@`;
       }
-      upstreamProxyUrl = `http://${credential}${setting.host}:${setting.port}`;
+      upstreamProxyUrl = `${setting.protocol}://${credential}${setting.host}:${setting.port}`;
       break;
     }
   }

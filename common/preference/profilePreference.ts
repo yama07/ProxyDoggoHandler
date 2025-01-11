@@ -12,9 +12,9 @@ export type CredentialType = z.infer<typeof credentialSchema>;
 export const protocolIds = ["direct", "http", "socks"] as const;
 export type ProtocolId = (typeof protocolIds)[number];
 export const protocolIdSchema = z.enum(protocolIds);
-export const protocol = {
+export const protocols = {
   direct: { label: "Direct" },
-  http: { label: "HTTP/HTTPS" },
+  http: { label: "HTTP" },
   socks: { label: "SOCKS5" },
 } satisfies Record<ProtocolId, { label: string }>;
 

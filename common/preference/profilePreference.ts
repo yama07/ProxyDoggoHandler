@@ -9,20 +9,32 @@ export const credentialSchema = z.object({
 
 export type CredentialType = z.infer<typeof credentialSchema>;
 
-export const protocolIds = ["direct", "http", "socks"] as const;
+export const protocolIds = [
+  "direct",
+  "http",
+  "https",
+  "socks4",
+  "socks4a",
+  "socks5",
+  "socks5h",
+] as const;
 export type ProtocolId = (typeof protocolIds)[number];
 export const protocolIdSchema = z.enum(protocolIds);
 export const protocols = {
   direct: { label: "Direct" },
   http: { label: "HTTP" },
-  socks: { label: "SOCKS5" },
+  https: { label: "HTTPS" },
+  socks4: { label: "SOCKS 4" },
+  socks4a: { label: "SOCKS 4a" },
+  socks5: { label: "SOCKS 5" },
+  socks5h: { label: "SOCKS 5h" },
 } satisfies Record<ProtocolId, { label: string }>;
 
 export const directConnectionSchema = z.object({
   protocol: z.literal("direct"),
 });
 export const proxyConnectionSchema = z.object({
-  protocol: z.enum(["http", "socks"]),
+  protocol: z.enum(["http", "https", "socks4", "socks4a", "socks5", "socks5h"]),
   host: z.string(),
   port: z
     .number({ message: "このフィールドを入力してください。" })

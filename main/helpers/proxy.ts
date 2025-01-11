@@ -55,7 +55,11 @@ const setUpstreamProxyUrl = (setting: ConnectionSetting) => {
       upstreamProxyUrl = undefined;
       break;
     case "http":
-    case "socks": {
+    case "https":
+    case "socks4":
+    case "socks4a":
+    case "socks5":
+    case "socks5h": {
       let credential = "";
       if (setting.credentials) {
         const user = encodeURI(setting.credentials.user);

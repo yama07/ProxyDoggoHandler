@@ -63,7 +63,11 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
       if (
         !needsAuth &&
         (newProfile.connectionSetting.protocol === "http" ||
-          newProfile.connectionSetting.protocol === "socks")
+          newProfile.connectionSetting.protocol === "https" ||
+          newProfile.connectionSetting.protocol === "socks4" ||
+          newProfile.connectionSetting.protocol === "socks4a" ||
+          newProfile.connectionSetting.protocol === "socks5" ||
+          newProfile.connectionSetting.protocol === "socks5h")
       ) {
         newProfile.connectionSetting.credentials = undefined;
       }
@@ -114,7 +118,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={3}>
               <Controller
                 control={control}
                 name="connectionSetting.protocol"
@@ -134,7 +138,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 control={control}
                 name="connectionSetting.host"
@@ -157,7 +161,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={3}>
               <Controller
                 control={control}
                 name="connectionSetting.port"

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Checkbox,
   Dialog,
@@ -84,11 +85,19 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 name="icon"
                 render={({ field }) => (
                   <FormControl variant="standard" sx={{ display: "flex" }}>
-                    <InputLabel id="icon-select-label">Icon</InputLabel>
-                    <Select {...field} MenuProps={{ sx: { maxHeight: "90%" } }}>
+                    <InputLabel id="icon-select-label" sx={{ pt: (theme) => theme.spacing(1) }}>
+                      Icon
+                    </InputLabel>
+                    <Select
+                      {...field}
+                      MenuProps={{ sx: { maxHeight: "90%" } }}
+                      sx={{ pt: (theme) => theme.spacing(1) }}
+                    >
                       {dogIconIds.map((iconId) => (
                         <MenuItem value={iconId} key={iconId}>
-                          <DogBreadsIcon iconId={iconId} style="lineal" />
+                          <Box sx={{ display: "flex", justifyContent: "center" }}>
+                            <DogBreadsIcon iconId={iconId} style="lineal" />
+                          </Box>
                         </MenuItem>
                       ))}
                     </Select>

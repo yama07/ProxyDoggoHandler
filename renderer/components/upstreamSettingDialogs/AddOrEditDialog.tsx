@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Button,
@@ -13,11 +14,15 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { dogIconIds } from "$/icon/dogIcon";
-import { type Profile, protocolIds, protocols } from "$/preference/profilePreference";
+import {
+  type Profile,
+  profileSchema,
+  protocolIds,
+  protocols,
+} from "$/preference/profilePreference";
 
 import DogBreadsIcon from "../DogBreadsIcon";
 
@@ -27,56 +32,103 @@ type Props = {
   onConfirm: (newUpstream: Profile) => void;
 };
 
+type FormData = {
+  icon: string;
+  name: string;
+  connectionSetting: {
+    protocol: string;
+    host: string;
+    port: string;
+    needsAuth: boolean;
+    credentials: {
+      user: string;
+      password: string;
+    };
+  };
+};
+
+const defaultFormData: FormData = {
+  icon: "001-dog",
+  name: "",
+  connectionSetting: {
+    protocol: "http",
+    host: "",
+    port: "",
+    needsAuth: false,
+    credentials: {
+      user: "",
+      password: "",
+    },
+  },
+} as const;
+
 const AddOrEditDialog: React.FC<Props> = (props: Props) => {
-  const defaultValues: Profile & { needsAuth: boolean } =
-    props.oldUpstream === undefined
-      ? {
-          icon: "001-dog",
-          name: "",
-          connectionSetting: { protocol: "direct" },
-          needsAuth: false,
-        }
-      : {
-          ...props.oldUpstream,
+  const defaultValues: FormData = props.oldUpstream
+    ? {
+        icon: props.oldUpstream.icon,
+        name: props.oldUpstream.name,
+        connectionSetting: {
+          protocol: props.oldUpstream.connectionSetting.protocol,
+          host:
+            props.oldUpstream.connectionSetting.protocol === "direct"
+              ? ""
+              : props.oldUpstream.connectionSetting.host,
+          port:
+            props.oldUpstream.connectionSetting.protocol === "direct"
+              ? ""
+              : String(props.oldUpstream.connectionSetting.port),
           needsAuth:
             props.oldUpstream.connectionSetting.protocol !== "direct" &&
-            props.oldUpstream.connectionSetting.credentials !== undefined,
-        };
-
-  const { trigger, handleSubmit, watch, control } = useForm({
+            !!props.oldUpstream.connectionSetting.credentials,
+          credentials: {
+            user:
+              props.oldUpstream.connectionSetting.protocol === "direct"
+                ? ""
+                : props.oldUpstream.connectionSetting.credentials?.user ?? "",
+            password:
+              props.oldUpstream.connectionSetting.protocol === "direct"
+                ? ""
+                : props.oldUpstream.connectionSetting.credentials?.password ?? "",
+          },
+        },
+      }
+    : defaultFormData;
+  const innerResolver = zodResolver(profileSchema);
+  const { handleSubmit, watch, control, trigger } = useForm<FormData, unknown, Profile>({
     criteriaMode: "all",
     shouldUseNativeValidation: false,
     defaultValues,
+    resolver: (value, context, options) => {
+      // フォームの形式とProfileの型が合わないため、
+      // データを変換してからzodResolverに渡す
+      const data = {
+        icon: value.icon,
+        name: value.name,
+        connectionSetting: {
+          protocol: value.connectionSetting.protocol,
+          host: value.connectionSetting.host,
+          port: value.connectionSetting.port ? Number(value.connectionSetting.port) : undefined,
+          credentials: value.connectionSetting.needsAuth
+            ? { ...value.connectionSetting.credentials }
+            : undefined,
+        },
+      };
+      // biome-ignore lint/suspicious/noExplicitAny: FormDataとProfileでフィールドを揃えているから問題ないが、もっとスマートな方法を模索中
+      return innerResolver(data, context, options as any);
+    },
   });
 
   const protocol = watch("connectionSetting.protocol");
-  const needsAuth = watch("needsAuth");
+  const needsAuth = watch("connectionSetting.needsAuth");
 
-  const onClose = useCallback(() => {
+  const onClose = () => {
     props.onDismiss();
-  }, [props]);
+  };
 
-  const onSubmit = useCallback(
-    (formData: typeof defaultValues) => {
-      const { needsAuth, ...newProfile } = formData;
-
-      if (
-        !needsAuth &&
-        (newProfile.connectionSetting.protocol === "http" ||
-          newProfile.connectionSetting.protocol === "https" ||
-          newProfile.connectionSetting.protocol === "socks4" ||
-          newProfile.connectionSetting.protocol === "socks4a" ||
-          newProfile.connectionSetting.protocol === "socks5" ||
-          newProfile.connectionSetting.protocol === "socks5h")
-      ) {
-        newProfile.connectionSetting.credentials = undefined;
-      }
-
-      props.onConfirm(newProfile);
-      props.onDismiss();
-    },
-    [props],
-  );
+  const onSubmit = (formData: Profile) => {
+    props.onConfirm(formData);
+    props.onDismiss();
+  };
 
   return (
     <Dialog open onClose={onClose}>
@@ -113,11 +165,20 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               <Controller
                 control={control}
                 name="name"
-                render={({ field }) => (
-                  <TextField {...field} variant="standard" margin="dense" label="Name" fullWidth />
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    variant="standard"
+                    margin="dense"
+                    label="Name"
+                    fullWidth
+                    error={!!error}
+                    helperText={error?.message}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={3}>
               <Controller
                 control={control}
@@ -127,7 +188,16 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     <InputLabel id="protocol-select-label" sx={{ pt: (theme) => theme.spacing(1) }}>
                       Protocol
                     </InputLabel>
-                    <Select {...field} sx={{ pt: (theme) => theme.spacing(1) }}>
+                    <Select
+                      {...field}
+                      sx={{ pt: (theme) => theme.spacing(1) }}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        if (e.target.value === "direct") {
+                          trigger();
+                        }
+                      }}
+                    >
                       {protocolIds.map((protocolId) => (
                         <MenuItem value={protocolId} key={protocolId}>
                           {protocols[protocolId].label}
@@ -142,9 +212,6 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               <Controller
                 control={control}
                 name="connectionSetting.host"
-                rules={
-                  protocol !== "direct" ? {} : { required: "このフィールドを入力してください。" }
-                }
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
@@ -152,8 +219,8 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     margin="dense"
                     label="Host"
                     placeholder="example.com"
-                    error={error != null}
-                    helperText={error != null ? error.message : null}
+                    error={!!error}
+                    helperText={error?.message}
                     fullWidth
                     required={protocol !== "direct"}
                     disabled={protocol === "direct"}
@@ -165,35 +232,14 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               <Controller
                 control={control}
                 name="connectionSetting.port"
-                rules={
-                  protocol === "direct"
-                    ? {}
-                    : {
-                        required: "このフィールドを入力してください。",
-                        pattern: {
-                          value: /^[0-9]+$/,
-                          message: "数字を入力してください。",
-                        },
-                        min: {
-                          value: 0,
-                          message: "値は0以上にする必要があります。",
-                        },
-                        max: {
-                          value: 65535,
-                          message: "値は65535以下にする必要があります。",
-                        },
-                      }
-                }
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
                     variant="standard"
                     margin="dense"
                     label="Port"
-                    type="number"
-                    InputProps={{ inputProps: { min: 0, max: 65535 } }}
-                    error={error != null}
-                    helperText={error != null ? error.message : null}
+                    error={!!error}
+                    helperText={error?.message}
                     fullWidth
                     required={protocol !== "direct"}
                     disabled={protocol === "direct"}
@@ -201,10 +247,11 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12}>
               <Controller
                 control={control}
-                name="needsAuth"
+                name="connectionSetting.needsAuth"
                 render={({ field }) => (
                   <FormControlLabel
                     control={
@@ -226,7 +273,6 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                   <Controller
                     control={control}
                     name="connectionSetting.credentials.user"
-                    rules={{ required: "このフィールドを入力してください。" }}
                     render={({ field, fieldState: { error } }) => (
                       <TextField
                         {...field}
@@ -234,10 +280,11 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                         margin="dense"
                         label="Login"
                         placeholder="alex@example.com"
-                        error={error != null}
+                        error={!!error}
                         helperText={error != null ? error.message : null}
                         fullWidth
-                        required
+                        required={protocol !== "direct"}
+                        disabled={protocol === "direct"}
                       />
                     )}
                   />
@@ -246,7 +293,6 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                   <Controller
                     control={control}
                     name="connectionSetting.credentials.password"
-                    rules={{ required: "このフィールドを入力してください。" }}
                     render={({ field, fieldState: { error } }) => (
                       <TextField
                         {...field}
@@ -255,10 +301,11 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                         label="Password"
                         type="password"
                         placeholder="P@ssw0rd"
-                        error={error != null}
+                        error={!!error}
                         helperText={error != null ? error.message : null}
                         fullWidth
-                        required
+                        required={protocol !== "direct"}
+                        disabled={protocol === "direct"}
                       />
                     )}
                   />
@@ -282,15 +329,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
           >
             Cancel
           </Button>
-          <Button
-            sx={{ textTransform: "none" }}
-            type="submit"
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              trigger();
-            }}
-          >
+          <Button sx={{ textTransform: "none" }} type="submit" variant="contained" color="primary">
             OK
           </Button>
         </DialogActions>

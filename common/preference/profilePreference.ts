@@ -3,8 +3,14 @@ import * as z from "zod";
 import { dogIconIdSchema } from "$/icon/dogIcon";
 
 export const credentialSchema = z.object({
-  user: z.string(),
-  password: z.string(),
+  user: z
+    .string()
+    .nonempty("このフィールドを入力してください。")
+    .max(128, { message: "128文字以下で入力してください。" }),
+  password: z
+    .string()
+    .nonempty("このフィールドを入力してください。")
+    .max(128, { message: "128文字以下で入力してください。" }),
 });
 
 export type CredentialType = z.infer<typeof credentialSchema>;
@@ -31,16 +37,22 @@ export const protocols = {
 } satisfies Record<ProtocolId, { label: string }>;
 
 export const directConnectionSchema = z.object({
-  protocol: z.literal("direct"),
+  protocol: z.enum(["direct"]),
 });
 export const proxyConnectionSchema = z.object({
   protocol: z.enum(["http", "https", "socks4", "socks4a", "socks5", "socks5h"]),
-  host: z.string(),
+  host: z
+    .string()
+    .nonempty("このフィールドを入力してください。")
+    .max(128, "128文字以下で入力してください。"),
   port: z
-    .number({ message: "このフィールドを入力してください。" })
+    .number({
+      required_error: "このフィールドを入力してください。",
+      invalid_type_error: "有効な値を入力してください。",
+    })
+    .int("有効な値を入力してください。")
     .min(0, "値は0以上にする必要があります。")
-    .max(65535, "値は65535以下にする必要があります。")
-    .default(8080),
+    .max(65535, "値は65535以下にする必要があります。"),
   credentials: credentialSchema.optional(),
 });
 export type ProxyConnectionSetting = z.infer<typeof proxyConnectionSchema>;
@@ -54,8 +66,8 @@ export type ConnectionSetting = z.infer<typeof connectionSettingSchema>;
 
 export const profileSchema = z.object({
   name: z.string(),
-  icon: dogIconIdSchema.default("001-dog"),
-  connectionSetting: connectionSettingSchema.default({ protocol: "direct" }),
+  icon: dogIconIdSchema,
+  connectionSetting: connectionSettingSchema,
 });
 
 export type Profile = z.infer<typeof profileSchema>;

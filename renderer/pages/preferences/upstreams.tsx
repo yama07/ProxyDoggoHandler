@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useCallback, useContext, useState } from "react";
 
-import type { Profile, ProfilesPreference } from "$/preference/profilePreference";
+import { type Profile, type ProfilesPreference, protocols } from "$/preference/profilePreference";
 
 import DogBreadsIcon from "~/components/DogBreadsIcon";
 import AddOrEditDialog from "~/components/upstreamSettingDialogs/AddOrEditDialog";
@@ -125,6 +125,7 @@ const Upstreams: React.FC = () => {
           <TableRow>
             <TableCell> {/* icon */} </TableCell>
             <TableCell align="center">Name</TableCell>
+            <TableCell align="center">Protocol</TableCell>
             <TableCell align="center">Host</TableCell>
             <TableCell align="center">Port</TableCell>
           </TableRow>
@@ -138,6 +139,11 @@ const Upstreams: React.FC = () => {
               </TableCell>
               <TableCell>
                 <Typography noWrap>{upstream.name}</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography noWrap>
+                  {protocols[upstream.connectionSetting.protocol].label}
+                </Typography>
               </TableCell>
               <TableCell>
                 <Box display="flex" alignItems="center">

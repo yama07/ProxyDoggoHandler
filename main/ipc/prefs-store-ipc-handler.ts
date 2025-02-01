@@ -15,17 +15,17 @@ export const prefsStoreIpcHandler: IpcHandler = (bowserWindow: BrowserWindow) =>
 
   const register: Register = () => {
     ipcMain.handle(
-      channels.prefsStore.getGeneral,
+      channels.prefsStore.getAppearance,
       (): AppearancePreference => prefsStore.get("appearance"),
     );
 
-    ipcMain.on(channels.prefsStore.setGeneral, (_, preference: AppearancePreference) => {
+    ipcMain.on(channels.prefsStore.setAppearance, (_, preference: AppearancePreference) => {
       prefsStore.set("appearance", preference);
     });
 
     unsubscribeFunctions.push(
       prefsStore.onDidChange("appearance", (newValue, oldValue) => {
-        webContents.send(channels.prefsStore.onGeneralDidChange, newValue, oldValue);
+        webContents.send(channels.prefsStore.onAppearanceDidChange, newValue, oldValue);
       }),
     );
 
@@ -42,28 +42,28 @@ export const prefsStoreIpcHandler: IpcHandler = (bowserWindow: BrowserWindow) =>
     );
 
     ipcMain.handle(
-      channels.prefsStore.getUpstreams,
+      channels.prefsStore.getProfiles,
       (): ProfilesPreference => prefsStore.get("profiles"),
     );
 
-    ipcMain.on(channels.prefsStore.setUpstreams, (_, preference: ProfilesPreference) => {
+    ipcMain.on(channels.prefsStore.setProfiles, (_, preference: ProfilesPreference) => {
       prefsStore.set("profiles", preference);
     });
 
     unsubscribeFunctions.push(
       prefsStore.onDidChange("profiles", (newValue, oldValue) => {
-        webContents.send(channels.prefsStore.onUpstreamsDidChange, newValue, oldValue);
+        webContents.send(channels.prefsStore.onProfilesDidChange, newValue, oldValue);
       }),
     );
   };
 
   const unregister: Unregister = () => {
-    ipcMain.removeHandler(channels.prefsStore.getGeneral);
-    ipcMain.removeAllListeners(channels.prefsStore.setGeneral);
+    ipcMain.removeHandler(channels.prefsStore.getAppearance);
+    ipcMain.removeAllListeners(channels.prefsStore.setAppearance);
     ipcMain.removeHandler(channels.prefsStore.getProxy);
     ipcMain.removeAllListeners(channels.prefsStore.setProxy);
-    ipcMain.removeHandler(channels.prefsStore.getUpstreams);
-    ipcMain.removeAllListeners(channels.prefsStore.setUpstreams);
+    ipcMain.removeHandler(channels.prefsStore.getProfiles);
+    ipcMain.removeAllListeners(channels.prefsStore.setProfiles);
 
     while (unsubscribeFunctions.length) {
       const unsubscribeFunc = unsubscribeFunctions.pop();

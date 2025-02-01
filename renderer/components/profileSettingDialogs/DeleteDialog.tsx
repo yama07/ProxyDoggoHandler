@@ -10,12 +10,12 @@ import {
 import type { Profile } from "$/preference/profilePreference";
 
 type Props = {
-  upstream: Profile;
+  profile: Profile;
   onDismiss: () => void;
   onConfirm: () => void;
 };
 
-const DeleteDialog: React.FC<Props> = ({ upstream, onDismiss, onConfirm }: Props) => {
+const DeleteDialog: React.FC<Props> = ({ profile, onDismiss, onConfirm }: Props) => {
   const handleClose = () => {
     onDismiss();
   };
@@ -30,7 +30,7 @@ const DeleteDialog: React.FC<Props> = ({ upstream, onDismiss, onConfirm }: Props
         設定を削除してよろしいですか？
       </DialogTitle>
       <DialogContent sx={{ px: (theme) => theme.spacing(4) }}>
-        <DialogContentText noWrap>{upstream.name}</DialogContentText>
+        <DialogContentText noWrap>{profile.name}</DialogContentText>
       </DialogContent>
 
       <DialogActions

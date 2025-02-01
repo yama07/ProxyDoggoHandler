@@ -6,22 +6,22 @@ import type { AppearancePreference } from "$/preference/appearancePreference";
 import { iconStyles } from "$/icon/iconStyle";
 import ColorButtonGroup from "~/components/ColorButtonGroup";
 import TrayIconStyleToggleButtonGroup from "~/components/TrayIconStyleToggleButtonGroup";
-import { generalPrefContext, setGeneralPrefContext } from "~/contexts/GeneralPrefContext";
-import { upstreamsPrefContext } from "~/contexts/UpstreamsPrefContext";
+import { appearancePrefContext, setAppearancePrefContext } from "~/contexts/AppearancePrefContext";
+import { profilesPrefContext } from "~/contexts/ProfilesPrefContext";
 import { useSystemProperties } from "~/hooks/useSystemProperties";
 
 const Appearance: React.FC = () => {
   const { isMacos } = useSystemProperties();
-  const generalPref = useContext(generalPrefContext);
-  const setGeneralPref = useContext(setGeneralPrefContext);
-  const upstreamsPreferens = useContext(upstreamsPrefContext);
-  const selectedUpstream = upstreamsPreferens.profiles[upstreamsPreferens.selectedIndex];
+  const appearancePref = useContext(appearancePrefContext);
+  const setAppearancePref = useContext(setAppearancePrefContext);
+  const profilesPreferens = useContext(profilesPrefContext);
+  const selectedProfile = profilesPreferens.profiles[profilesPreferens.selectedIndex];
 
   const onChangeHandler = useCallback(
     (preferences: Partial<AppearancePreference>) => {
-      setGeneralPref((prev) => ({ ...prev, ...preferences }));
+      setAppearancePref((prev) => ({ ...prev, ...preferences }));
     },
-    [setGeneralPref],
+    [setAppearancePref],
   );
 
   // 設定読み込みが完了するまでは、何も表示しない
@@ -36,7 +36,7 @@ const Appearance: React.FC = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={generalPref.isOpenAtStartup}
+                checked={appearancePref.isOpenAtStartup}
                 onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
                   onChangeHandler({ isOpenAtStartup: checked });
                 }}
@@ -52,21 +52,21 @@ const Appearance: React.FC = () => {
             <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
             <Stack direction="row" spacing={4}>
               <TrayIconStyleToggleButtonGroup
-                icon={selectedUpstream.icon}
-                style={generalPref.trayIcon.style}
+                icon={selectedProfile.icon}
+                style={appearancePref.trayIcon.style}
                 onChange={(newStyle) => {
                   onChangeHandler({
-                    trayIcon: { style: newStyle, color: generalPref.trayIcon.color },
+                    trayIcon: { style: newStyle, color: appearancePref.trayIcon.color },
                   });
                 }}
               />
               {!isMacos && (
                 <ColorButtonGroup
-                  disabled={iconStyles[generalPref.trayIcon.style].colorMode === "color"}
-                  color={generalPref.trayIcon.color}
+                  disabled={iconStyles[appearancePref.trayIcon.style].colorMode === "color"}
+                  color={appearancePref.trayIcon.color}
                   onChange={(newColor) => {
                     onChangeHandler({
-                      trayIcon: { style: generalPref.trayIcon.style, color: newColor },
+                      trayIcon: { style: appearancePref.trayIcon.style, color: newColor },
                     });
                   }}
                 />
@@ -80,21 +80,21 @@ const Appearance: React.FC = () => {
             <FormLabel component="legend">メニューアイコンのスタイル</FormLabel>
             <Stack direction="row" spacing={4}>
               <TrayIconStyleToggleButtonGroup
-                icon={selectedUpstream.icon}
-                style={generalPref.menuIcon.style}
+                icon={selectedProfile.icon}
+                style={appearancePref.menuIcon.style}
                 onChange={(newStyle) => {
                   onChangeHandler({
-                    menuIcon: { style: newStyle, color: generalPref.menuIcon.color },
+                    menuIcon: { style: newStyle, color: appearancePref.menuIcon.color },
                   });
                 }}
               />
               {!isMacos && (
                 <ColorButtonGroup
-                  disabled={iconStyles[generalPref.menuIcon.style].colorMode === "color"}
-                  color={generalPref.menuIcon.color}
+                  disabled={iconStyles[appearancePref.menuIcon.style].colorMode === "color"}
+                  color={appearancePref.menuIcon.color}
                   onChange={(newColor) => {
                     onChangeHandler({
-                      menuIcon: { style: generalPref.menuIcon.style, color: newColor },
+                      menuIcon: { style: appearancePref.menuIcon.style, color: newColor },
                     });
                   }}
                 />

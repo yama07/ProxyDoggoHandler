@@ -81,11 +81,11 @@ const setup = () => {
       if (newValue === undefined) {
         return;
       }
-      const newSelectedUpstream = newValue.profiles[newValue.selectedIndex];
-      const oldSelectedUpstream = oldValue?.profiles[oldValue.selectedIndex];
-      if (newSelectedUpstream !== oldSelectedUpstream) {
+      const newSelectedProfile = newValue.profiles[newValue.selectedIndex];
+      const oldSelectedProfile = oldValue?.profiles[oldValue.selectedIndex];
+      if (newSelectedProfile !== oldSelectedProfile) {
         // Proxyサーバのアップストリームを切り替え
-        proxy.setUpstreamProxyUrl(newSelectedUpstream.connectionSetting);
+        proxy.setUpstreamProxyUrl(newSelectedProfile.connectionSetting);
       }
       tray.update();
     }),
@@ -125,8 +125,8 @@ const setup = () => {
     tray.update();
   });
 
-  const generalPreference = prefsStore.get("proxy");
-  if (generalPreference.isLaunchProxyServerAtStartup) {
+  const proxyPreference = prefsStore.get("proxy");
+  if (proxyPreference.isLaunchProxyServerAtStartup) {
     proxy.listen();
   }
 

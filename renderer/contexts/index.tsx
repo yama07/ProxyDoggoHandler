@@ -1,6 +1,6 @@
-import { GeneralPrefProvider } from "./GeneralPrefContext";
+import { AppearancePrefProvider } from "./AppearancePrefContext";
+import { ProfilesPrefProvider } from "./ProfilesPrefContext";
 import { ProxyPrefProvider } from "./ProxyPrefContext";
-import { UpstreamsPrefProvider } from "./UpstreamsPrefContext";
 
 type Props = {
   children: React.ReactNode;
@@ -8,10 +8,10 @@ type Props = {
 
 export const PreferenceProvider: React.FC<Props> = ({ children }) => {
   return (
-    <GeneralPrefProvider>
+    <AppearancePrefProvider>
       <ProxyPrefProvider>
-        <UpstreamsPrefProvider>{children}</UpstreamsPrefProvider>
+        <ProfilesPrefProvider>{children}</ProfilesPrefProvider>
       </ProxyPrefProvider>
-    </GeneralPrefProvider>
+    </AppearancePrefProvider>
   );
 };

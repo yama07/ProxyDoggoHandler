@@ -61,9 +61,9 @@ const setUpstreamProxyUrl = (setting: ConnectionSetting) => {
     case "socks5":
     case "socks5h": {
       let credential = "";
-      if (setting.credentials) {
-        const user = encodeURI(setting.credentials.user);
-        const password = encodeURI(setting.credentials.password);
+      if (setting.credential) {
+        const user = encodeURI(setting.credential.user);
+        const password = encodeURI(setting.credential.password);
         credential = `${user}:${password}@`;
       }
       upstreamProxyUrl = `${setting.protocol}://${credential}${setting.host}:${setting.port}`;

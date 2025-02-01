@@ -35,8 +35,11 @@ const initialize = (param: { accessor: Accessor; handler: Handler }) => {
   accessor = param.accessor;
   handler = param.handler;
 
-  const generalPreference = accessor.appearancePreference();
-  const icon = getAppTrayIcon(generalPreference.trayIcon.style, generalPreference.trayIcon.color);
+  const appearancePreference = accessor.appearancePreference();
+  const icon = getAppTrayIcon(
+    appearancePreference.trayIcon.style,
+    appearancePreference.trayIcon.color,
+  );
   _tray = new Tray(icon);
   _tray.addListener("click", () => {
     _tray?.popUpContextMenu();
@@ -50,8 +53,8 @@ const update = () => {
     log.info("System tray is not initialized.");
     return;
   }
-  const upstreamsPreference = accessor.profilePreference();
-  const generalPreference = accessor.appearancePreference();
+  const profilesPreference = accessor.profilePreference();
+  const appearancePreference = accessor.appearancePreference();
 
   const statusMenuItem = new MenuItem(
     accessor.isProxyServerRunning()
@@ -59,8 +62,8 @@ const update = () => {
           label: `Running on ${accessor.proxyServerEndpoint()}`,
           icon: getStatusMenuIcon(
             "active",
-            generalPreference.menuIcon.style,
-            generalPreference.menuIcon.color,
+            appearancePreference.menuIcon.style,
+            appearancePreference.menuIcon.color,
           ),
           enabled: false,
         }
@@ -68,8 +71,8 @@ const update = () => {
           label: "Not Running",
           icon: getStatusMenuIcon(
             "inactive",
-            generalPreference.menuIcon.style,
-            generalPreference.menuIcon.color,
+            appearancePreference.menuIcon.style,
+            appearancePreference.menuIcon.color,
           ),
           enabled: false,
         },
@@ -93,17 +96,17 @@ const update = () => {
         },
   );
 
-  const proxyMenuItems = upstreamsPreference.profiles.map(
+  const proxyMenuItems = profilesPreference.profiles.map(
     (proxy, index) =>
       new MenuItem({
         id: String(index),
         label: proxy.name,
         type: "radio",
-        checked: upstreamsPreference.selectedIndex === index,
+        checked: profilesPreference.selectedIndex === index,
         icon: getDogBreadsMenuIcon(
           proxy.icon,
-          generalPreference.menuIcon.style,
-          generalPreference.menuIcon.color,
+          appearancePreference.menuIcon.style,
+          appearancePreference.menuIcon.color,
         ),
         toolTip:
           proxy.connectionSetting.protocol === "direct"
@@ -142,11 +145,11 @@ const update = () => {
 
   const icon = accessor.isProxyServerRunning()
     ? getDogBreadsTrayIcon(
-        upstreamsPreference.profiles[upstreamsPreference.selectedIndex].icon,
-        generalPreference.trayIcon.style,
-        generalPreference.trayIcon.color,
+        profilesPreference.profiles[profilesPreference.selectedIndex].icon,
+        appearancePreference.trayIcon.style,
+        appearancePreference.trayIcon.color,
       )
-    : getAppTrayIcon(generalPreference.trayIcon.style, generalPreference.trayIcon.color);
+    : getAppTrayIcon(appearancePreference.trayIcon.style, appearancePreference.trayIcon.color);
   _tray.setImage(icon);
 
   log.info("System tray is updated.");

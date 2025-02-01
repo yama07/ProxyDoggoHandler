@@ -18,22 +18,22 @@ import { useCallback, useContext, useState } from "react";
 import { type Profile, type ProfilesPreference, protocols } from "$/preference/profilePreference";
 
 import DogBreadsIcon from "~/components/DogBreadsIcon";
-import AddOrEditDialog from "~/components/upstreamSettingDialogs/AddOrEditDialog";
-import DeleteDialog from "~/components/upstreamSettingDialogs/DeleteDialog";
-import { setUpstreamsPrefContext, upstreamsPrefContext } from "~/contexts/UpstreamsPrefContext";
+import AddOrEditDialog from "~/components/profileSettingDialogs/AddOrEditDialog";
+import DeleteDialog from "~/components/profileSettingDialogs/DeleteDialog";
+import { profilesPrefContext, setProfilesPrefContext } from "~/contexts/ProfilesPrefContext";
 
 const Profiles: React.FC = () => {
-  const upstreamsPref = useContext(upstreamsPrefContext);
-  const setUpstreamsPref = useContext(setUpstreamsPrefContext);
+  const profilesPref = useContext(profilesPrefContext);
+  const setProfilesPref = useContext(setProfilesPrefContext);
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const updateUpstreamsPref = useCallback(
-    (preference: ProfilesPreference) => setUpstreamsPref(preference),
-    [setUpstreamsPref],
+  const updateProfilesPref = useCallback(
+    (preference: ProfilesPreference) => setProfilesPref(preference),
+    [setProfilesPref],
   );
 
   // 追加ダイアログのハンドリング
@@ -41,15 +41,15 @@ const Profiles: React.FC = () => {
   const closeAddDialog = () => setIsAddDialogOpen(false);
   const addSetting = useCallback(
     (newSetting: Profile) => {
-      const newSelectedIndex = upstreamsPref.selectedIndex;
-      const newUpstreams = upstreamsPref.profiles.concat(newSetting);
+      const newSelectedIndex = profilesPref.selectedIndex;
+      const newProfiles = profilesPref.profiles.concat(newSetting);
 
-      updateUpstreamsPref({
+      updateProfilesPref({
         selectedIndex: newSelectedIndex,
-        profiles: newUpstreams,
+        profiles: newProfiles,
       });
     },
-    [updateUpstreamsPref, upstreamsPref],
+    [updateProfilesPref, profilesPref],
   );
 
   // 編集ダイアログのハンドリング
@@ -61,16 +61,16 @@ const Profiles: React.FC = () => {
   };
   const editSetting = useCallback(
     (index: number, newSetting: Profile) => {
-      const newSelectedIndex = upstreamsPref.selectedIndex;
-      const newUpstreams = upstreamsPref.profiles.slice();
-      newUpstreams[index] = newSetting;
+      const newSelectedIndex = profilesPref.selectedIndex;
+      const newProfiles = profilesPref.profiles.slice();
+      newProfiles[index] = newSetting;
 
-      updateUpstreamsPref({
+      updateProfilesPref({
         selectedIndex: newSelectedIndex,
-        profiles: newUpstreams,
+        profiles: newProfiles,
       });
     },
-    [updateUpstreamsPref, upstreamsPref],
+    [updateProfilesPref, profilesPref],
   );
 
   // 削除ダイアログのハンドリング
@@ -92,18 +92,18 @@ const Profiles: React.FC = () => {
           return selectedIndex - 1;
         }
         return selectedIndex;
-      })(index, upstreamsPref.selectedIndex);
-      const newUpstreams = [
-        ...upstreamsPref.profiles.slice(0, index),
-        ...upstreamsPref.profiles.slice(index + 1),
+      })(index, profilesPref.selectedIndex);
+      const newProfiles = [
+        ...profilesPref.profiles.slice(0, index),
+        ...profilesPref.profiles.slice(index + 1),
       ];
 
-      updateUpstreamsPref({
+      updateProfilesPref({
         selectedIndex: newIndex,
-        profiles: newUpstreams,
+        profiles: newProfiles,
       });
     },
-    [updateUpstreamsPref, upstreamsPref],
+    [updateProfilesPref, profilesPref],
   );
 
   return (
@@ -131,18 +131,18 @@ const Profiles: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {upstreamsPref.profiles.map((upstream, index) => (
+          {profilesPref.profiles.map((profile, index) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <TableRow key={index}>
               <TableCell align="center">
-                <DogBreadsIcon iconId={upstream.icon} style="lineal" />
+                <DogBreadsIcon iconId={profile.icon} style="lineal" />
               </TableCell>
               <TableCell>
-                <Typography noWrap>{upstream.name}</Typography>
+                <Typography noWrap>{profile.name}</Typography>
               </TableCell>
               <TableCell>
                 <Typography noWrap>
-                  {protocols[upstream.connectionSetting.protocol].label}
+                  {protocols[profile.connectionSetting.protocol].label}
                 </Typography>
               </TableCell>
               <TableCell>
@@ -151,25 +151,25 @@ const Profiles: React.FC = () => {
                     fontSize="small"
                     sx={{
                       visibility:
-                        upstream.connectionSetting.protocol !== "direct" &&
-                        upstream.connectionSetting.credentials !== undefined
+                        profile.connectionSetting.protocol !== "direct" &&
+                        profile.connectionSetting.credential !== undefined
                           ? "visible"
                           : "hidden",
                       mr: (theme) => theme.spacing(1),
                     }}
                   />
                   <Typography noWrap>
-                    {upstream.connectionSetting.protocol === "direct"
+                    {profile.connectionSetting.protocol === "direct"
                       ? ""
-                      : upstream.connectionSetting.host ?? ""}
+                      : profile.connectionSetting.host ?? ""}
                   </Typography>
                 </Box>
               </TableCell>
               <TableCell align="right">
                 <Typography noWrap>
-                  {upstream.connectionSetting.protocol === "direct"
+                  {profile.connectionSetting.protocol === "direct"
                     ? ""
-                    : upstream.connectionSetting.port ?? ""}
+                    : profile.connectionSetting.port ?? ""}
                 </Typography>
               </TableCell>
               <TableCell>
@@ -204,19 +204,19 @@ const Profiles: React.FC = () => {
 
       {isEditDialogOpen && (
         <AddOrEditDialog
-          oldUpstream={upstreamsPref.profiles[selectedIndex]}
+          oldProfile={profilesPref.profiles[selectedIndex]}
           onDismiss={() => {
             closeEditDialog();
           }}
-          onConfirm={(newUpstream: Profile) => {
-            editSetting(selectedIndex, newUpstream);
+          onConfirm={(newProfile: Profile) => {
+            editSetting(selectedIndex, newProfile);
           }}
         />
       )}
 
       {isDeleteDialogOpen && (
         <DeleteDialog
-          upstream={upstreamsPref.profiles[selectedIndex]}
+          profile={profilesPref.profiles[selectedIndex]}
           onDismiss={() => {
             closeDeleteDialog();
           }}

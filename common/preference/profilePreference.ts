@@ -53,7 +53,7 @@ export const proxyConnectionSchema = z.object({
     .int("有効な値を入力してください。")
     .min(0, "値は0以上にする必要があります。")
     .max(65535, "値は65535以下にする必要があります。"),
-  credentials: credentialSchema.optional(),
+  credential: credentialSchema.optional(),
 });
 export type ProxyConnectionSetting = z.infer<typeof proxyConnectionSchema>;
 

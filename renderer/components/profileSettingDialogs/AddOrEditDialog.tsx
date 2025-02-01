@@ -27,9 +27,9 @@ import {
 import DogBreadsIcon from "../DogBreadsIcon";
 
 type Props = {
-  oldUpstream?: Profile;
+  oldProfile?: Profile;
   onDismiss: () => void;
-  onConfirm: (newUpstream: Profile) => void;
+  onConfirm: (newProfile: Profile) => void;
 };
 
 type FormData = {
@@ -40,7 +40,7 @@ type FormData = {
     host: string;
     port: string;
     needsAuth: boolean;
-    credentials: {
+    credential: {
       user: string;
       password: string;
     };
@@ -55,7 +55,7 @@ const defaultFormData: FormData = {
     host: "",
     port: "",
     needsAuth: false,
-    credentials: {
+    credential: {
       user: "",
       password: "",
     },
@@ -63,32 +63,32 @@ const defaultFormData: FormData = {
 } as const;
 
 const AddOrEditDialog: React.FC<Props> = (props: Props) => {
-  const defaultValues: FormData = props.oldUpstream
+  const defaultValues: FormData = props.oldProfile
     ? {
-        icon: props.oldUpstream.icon,
-        name: props.oldUpstream.name,
+        icon: props.oldProfile.icon,
+        name: props.oldProfile.name,
         connectionSetting: {
-          protocol: props.oldUpstream.connectionSetting.protocol,
+          protocol: props.oldProfile.connectionSetting.protocol,
           host:
-            props.oldUpstream.connectionSetting.protocol === "direct"
+            props.oldProfile.connectionSetting.protocol === "direct"
               ? ""
-              : props.oldUpstream.connectionSetting.host,
+              : props.oldProfile.connectionSetting.host,
           port:
-            props.oldUpstream.connectionSetting.protocol === "direct"
+            props.oldProfile.connectionSetting.protocol === "direct"
               ? ""
-              : String(props.oldUpstream.connectionSetting.port),
+              : String(props.oldProfile.connectionSetting.port),
           needsAuth:
-            props.oldUpstream.connectionSetting.protocol !== "direct" &&
-            !!props.oldUpstream.connectionSetting.credentials,
-          credentials: {
+            props.oldProfile.connectionSetting.protocol !== "direct" &&
+            !!props.oldProfile.connectionSetting.credential,
+          credential: {
             user:
-              props.oldUpstream.connectionSetting.protocol === "direct"
+              props.oldProfile.connectionSetting.protocol === "direct"
                 ? ""
-                : props.oldUpstream.connectionSetting.credentials?.user ?? "",
+                : props.oldProfile.connectionSetting.credential?.user ?? "",
             password:
-              props.oldUpstream.connectionSetting.protocol === "direct"
+              props.oldProfile.connectionSetting.protocol === "direct"
                 ? ""
-                : props.oldUpstream.connectionSetting.credentials?.password ?? "",
+                : props.oldProfile.connectionSetting.credential?.password ?? "",
           },
         },
       }
@@ -108,8 +108,8 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
           protocol: value.connectionSetting.protocol,
           host: value.connectionSetting.host,
           port: value.connectionSetting.port ? Number(value.connectionSetting.port) : undefined,
-          credentials: value.connectionSetting.needsAuth
-            ? { ...value.connectionSetting.credentials }
+          credential: value.connectionSetting.needsAuth
+            ? { ...value.connectionSetting.credential }
             : undefined,
         },
       };
@@ -272,7 +272,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 <Grid item xs={12} sm={6}>
                   <Controller
                     control={control}
-                    name="connectionSetting.credentials.user"
+                    name="connectionSetting.credential.user"
                     render={({ field, fieldState: { error } }) => (
                       <TextField
                         {...field}
@@ -292,7 +292,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 <Grid item xs={12} sm={6}>
                   <Controller
                     control={control}
-                    name="connectionSetting.credentials.password"
+                    name="connectionSetting.credential.password"
                     render={({ field, fieldState: { error } }) => (
                       <TextField
                         {...field}

@@ -38,16 +38,16 @@ contextBridge.exposeInMainWorld("prefsWindow", prefsWindowApi);
 
 const prefsStoreApi = {
   getAppearance: (): Promise<AppearancePreference> =>
-    ipcRenderer.invoke(channels.prefsStore.getGeneral),
-  setGeneral: (preference: AppearancePreference) =>
-    ipcRenderer.send(channels.prefsStore.setGeneral, preference),
-  onGeneralDidChange: (
+    ipcRenderer.invoke(channels.prefsStore.getAppearance),
+  setAppearance: (preference: AppearancePreference) =>
+    ipcRenderer.send(channels.prefsStore.setAppearance, preference),
+  onAppearanceDidChange: (
     callback?: (newValue: AppearancePreference, oldValue: AppearancePreference) => void,
   ) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.prefsStore.onGeneralDidChange);
+      ipcRenderer.removeAllListeners(channels.prefsStore.onAppearanceDidChange);
     } else {
-      ipcRenderer.on(channels.prefsStore.onGeneralDidChange, (_, newValue, oldValue) =>
+      ipcRenderer.on(channels.prefsStore.onAppearanceDidChange, (_, newValue, oldValue) =>
         callback(newValue, oldValue),
       );
     }
@@ -66,17 +66,17 @@ const prefsStoreApi = {
     }
   },
 
-  getUpstreams: (): Promise<ProfilesPreference> =>
-    ipcRenderer.invoke(channels.prefsStore.getUpstreams),
-  setUpstreams: (preference: ProfilesPreference) =>
-    ipcRenderer.send(channels.prefsStore.setUpstreams, preference),
-  onUpstreamsDidChange: (
+  getProfiles: (): Promise<ProfilesPreference> =>
+    ipcRenderer.invoke(channels.prefsStore.getProfiles),
+  setProfiles: (preference: ProfilesPreference) =>
+    ipcRenderer.send(channels.prefsStore.setProfiles, preference),
+  onProfilesDidChange: (
     callback?: (newValue: ProfilesPreference, oldValue: ProfilesPreference) => void,
   ) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.prefsStore.onUpstreamsDidChange);
+      ipcRenderer.removeAllListeners(channels.prefsStore.onProfilesDidChange);
     } else {
-      ipcRenderer.on(channels.prefsStore.onUpstreamsDidChange, (_, newValue, oldValue) =>
+      ipcRenderer.on(channels.prefsStore.onProfilesDidChange, (_, newValue, oldValue) =>
         callback(newValue, oldValue),
       );
     }

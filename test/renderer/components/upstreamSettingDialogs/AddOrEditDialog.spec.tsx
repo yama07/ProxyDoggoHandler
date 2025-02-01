@@ -1,11 +1,11 @@
 import { describe, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 
-import AddOrEditDialog from "~/components/upstreamSettingDialogs/AddOrEditDialog";
+import AddOrEditDialog from "~/components/profileSettingDialogs/AddOrEditDialog";
 
 describe("AddOrEditDialogコンポーネント", () => {
   test("要素が存在している", () => {
-    render(<AddOrEditDialog onConfirm={(newUpstream) => () => {}} onDismiss={() => {}} />);
+    render(<AddOrEditDialog onConfirm={(newProfile) => () => {}} onDismiss={() => {}} />);
 
     screen.getByText("Icon");
     screen.getByText("Name");

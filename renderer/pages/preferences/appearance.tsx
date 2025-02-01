@@ -10,7 +10,7 @@ import { generalPrefContext, setGeneralPrefContext } from "~/contexts/GeneralPre
 import { upstreamsPrefContext } from "~/contexts/UpstreamsPrefContext";
 import { useSystemProperties } from "~/hooks/useSystemProperties";
 
-const General: React.FC = () => {
+const Appearance: React.FC = () => {
   const { isMacos } = useSystemProperties();
   const generalPref = useContext(generalPrefContext);
   const setGeneralPref = useContext(setGeneralPrefContext);
@@ -107,4 +107,4 @@ const General: React.FC = () => {
   );
 };
 
-export default General;
+export default Appearance;

@@ -7,8 +7,7 @@ import type { ProxyPreference } from "$/preference/proxyPreference";
 import ProxyUsageCard from "~/components/ProxyUsageCard";
 import { proxyPrefContext, setProxyPrefContext } from "~/contexts/ProxyPrefContext";
 
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-const Proxy: React.FC = () => {
+const ProxyServer: React.FC = () => {
   const proxyPref = useContext(proxyPrefContext);
   const setProxyPref = useContext(setProxyPrefContext);
 
@@ -129,4 +128,4 @@ const Proxy: React.FC = () => {
   );
 };
 
-export default Proxy;
+export default ProxyServer;

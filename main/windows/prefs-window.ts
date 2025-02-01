@@ -1,11 +1,10 @@
 import path from "node:path";
 import { BrowserWindow, type BrowserWindowConstructorOptions } from "electron";
-import log from "electron-log";
 import { is } from "electron-util";
 import windowStateKeeper from "electron-window-state";
 import { type IpcHandler, aggregateIpcHandlers } from "#/ipc/ipc-handler";
 
-const PREFERENCES_PAGE_PATH = "/preferences/general";
+const PREFERENCES_PAGE_PATH = "/preferences/profiles";
 
 let browserWindow: BrowserWindow | undefined;
 

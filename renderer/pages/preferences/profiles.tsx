@@ -22,7 +22,7 @@ import AddOrEditDialog from "~/components/upstreamSettingDialogs/AddOrEditDialog
 import DeleteDialog from "~/components/upstreamSettingDialogs/DeleteDialog";
 import { setUpstreamsPrefContext, upstreamsPrefContext } from "~/contexts/UpstreamsPrefContext";
 
-const Upstreams: React.FC = () => {
+const Profiles: React.FC = () => {
   const upstreamsPref = useContext(upstreamsPrefContext);
   const setUpstreamsPref = useContext(setUpstreamsPrefContext);
 
@@ -229,4 +229,4 @@ const Upstreams: React.FC = () => {
   );
 };
 
-export default Upstreams;
+export default Profiles;

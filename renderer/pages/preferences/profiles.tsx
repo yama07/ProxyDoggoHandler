@@ -18,6 +18,7 @@ import { useCallback, useContext, useState } from "react";
 import { type Profile, type ProfilesPreference, protocols } from "$/preference/profilePreference";
 
 import DogBreadsIcon from "~/components/DogBreadsIcon";
+import ProfileTable from "~/components/ProfileTable";
 import AddOrEditDialog from "~/components/profileSettingDialogs/AddOrEditDialog";
 import DeleteDialog from "~/components/profileSettingDialogs/DeleteDialog";
 import { profilesPrefContext, setProfilesPrefContext } from "~/contexts/ProfilesPrefContext";
@@ -107,10 +108,10 @@ const Profiles: React.FC = () => {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
       <Tooltip title="追加">
         <Button
-          sx={{ textTransform: "none", float: "right" }}
+          sx={{ textTransform: "none", margin: "0 0 0 auto" }}
           variant="text"
           color="primary"
           onClick={() => {
@@ -120,85 +121,20 @@ const Profiles: React.FC = () => {
           <AddIcon />
         </Button>
       </Tooltip>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell> {/* icon */} </TableCell>
-            <TableCell align="center">Name</TableCell>
-            <TableCell align="center">Protocol</TableCell>
-            <TableCell align="center">Host</TableCell>
-            <TableCell align="center">Port</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {profilesPref.profiles.map((profile, index) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <TableRow key={index}>
-              <TableCell align="center">
-                <DogBreadsIcon iconId={profile.icon} style="lineal" />
-              </TableCell>
-              <TableCell>
-                <Typography noWrap>{profile.name}</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography noWrap>
-                  {protocols[profile.connectionSetting.protocol].label}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Box display="flex" alignItems="center">
-                  <BadgeOutlinedIcon
-                    fontSize="small"
-                    sx={{
-                      visibility:
-                        profile.connectionSetting.protocol !== "direct" &&
-                        profile.connectionSetting.credential !== undefined
-                          ? "visible"
-                          : "hidden",
-                      mr: (theme) => theme.spacing(1),
-                    }}
-                  />
-                  <Typography noWrap>
-                    {profile.connectionSetting.protocol === "direct"
-                      ? ""
-                      : profile.connectionSetting.host ?? ""}
-                  </Typography>
-                </Box>
-              </TableCell>
-              <TableCell align="right">
-                <Typography noWrap>
-                  {profile.connectionSetting.protocol === "direct"
-                    ? ""
-                    : profile.connectionSetting.port ?? ""}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Tooltip title="編集">
-                  <EditIcon
-                    color="primary"
-                    onClick={() => {
-                      handleEditButton(index);
-                    }}
-                  />
-                </Tooltip>
-              </TableCell>
 
-              {0 < index && (
-                <TableCell>
-                  <Tooltip title="削除">
-                    <DeleteIcon
-                      color="primary"
-                      onClick={() => {
-                        handleDeleteButton(index);
-                      }}
-                    />
-                  </Tooltip>
-                </TableCell>
-              )}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Box
+        sx={{
+          overflow: "auto",
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        <ProfileTable
+          profiles={profilesPref.profiles}
+          onEditButtonClick={handleEditButton}
+          onDeleteClick={handleDeleteButton}
+        />
+      </Box>
 
       {isAddDialogOpen && <AddOrEditDialog onDismiss={closeAddDialog} onConfirm={addSetting} />}
 

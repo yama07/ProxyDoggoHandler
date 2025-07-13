@@ -7,7 +7,8 @@ import type { ProxyPreference } from "$/preference/proxyPreference";
 import channels from "./ipc/channels";
 
 const systemApi = {
-  isMacos: (): Promise<boolean> => ipcRenderer.invoke(channels.system.isMacos),
+  platform: (): Promise<"windows" | "macos" | "linux"> =>
+    ipcRenderer.invoke(channels.system.platform),
 };
 export type SystemApi = typeof systemApi;
 contextBridge.exposeInMainWorld("system", systemApi);

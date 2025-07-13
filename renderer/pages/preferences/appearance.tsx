@@ -1,17 +1,17 @@
 import { Checkbox, FormControl, FormControlLabel, FormLabel, Grid, Stack } from "@mui/material";
 import { useCallback, useContext } from "react";
 
+import { iconStyles } from "$/icon/iconStyle";
 import type { AppearancePreference } from "$/preference/appearancePreference";
 
-import { iconStyles } from "$/icon/iconStyle";
 import ColorButtonGroup from "~/components/ColorButtonGroup";
 import TrayIconStyleToggleButtonGroup from "~/components/TrayIconStyleToggleButtonGroup";
 import { appearancePrefContext, setAppearancePrefContext } from "~/contexts/AppearancePrefContext";
 import { profilesPrefContext } from "~/contexts/ProfilesPrefContext";
-import { useSystemProperties } from "~/hooks/useSystemProperties";
+import { usePlatformTheme } from "~/hooks/usePlatformTheme";
 
 const Appearance: React.FC = () => {
-  const { isMacos } = useSystemProperties();
+  const platformTheme = usePlatformTheme();
   const appearancePref = useContext(appearancePrefContext);
   const setAppearancePref = useContext(setAppearancePrefContext);
   const profilesPreferens = useContext(profilesPrefContext);
@@ -25,7 +25,7 @@ const Appearance: React.FC = () => {
   );
 
   // 設定読み込みが完了するまでは、何も表示しない
-  if (isMacos === undefined) {
+  if (platformTheme === undefined) {
     return <></>;
   }
 
@@ -60,7 +60,7 @@ const Appearance: React.FC = () => {
                   });
                 }}
               />
-              {!isMacos && (
+              {platformTheme !== undefined && platformTheme !== "macos" && (
                 <ColorButtonGroup
                   disabled={iconStyles[appearancePref.trayIcon.style].colorMode === "color"}
                   color={appearancePref.trayIcon.color}
@@ -88,7 +88,7 @@ const Appearance: React.FC = () => {
                   });
                 }}
               />
-              {!isMacos && (
+              {platformTheme !== undefined && platformTheme !== "macos" && (
                 <ColorButtonGroup
                   disabled={iconStyles[appearancePref.menuIcon.style].colorMode === "color"}
                   color={appearancePref.menuIcon.color}

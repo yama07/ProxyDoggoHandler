@@ -1,6 +1,6 @@
 export default {
   system: {
-    isMacos: "system.isMacos",
+    platform: "system.platform",
   },
   prefsWindow: {
     close: "prefsWindow.close",

@@ -6,11 +6,15 @@ import type { IpcHandler, Register, Unregister } from "./ipc-handler";
 
 export const systemIpcHandler: IpcHandler = () => {
   const register: Register = () => {
-    ipcMain.handle(channels.system.isMacos, (): boolean => is.macos);
+    ipcMain.handle(channels.system.platform, (): "windows" | "macos" | "linux" => {
+      if (is.windows) return "windows";
+      if (is.macos) return "macos";
+      return "linux";
+    });
   };
 
   const unregister: Unregister = () => {
-    ipcMain.removeHandler(channels.system.isMacos);
+    ipcMain.removeHandler(channels.system.platform);
   };
 
   return { register, unregister };

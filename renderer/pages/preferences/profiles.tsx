@@ -1,23 +1,9 @@
 import AddIcon from "@mui/icons-material/Add";
-import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import {
-  Box,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Tooltip } from "@mui/material";
 import { useCallback, useContext, useState } from "react";
 
-import { type Profile, type ProfilesPreference, protocols } from "$/preference/profilePreference";
+import type { Profile, ProfilesPreference } from "$/preference/profilePreference";
 
-import DogBreadsIcon from "~/components/DogBreadsIcon";
 import ProfileTable from "~/components/ProfileTable";
 import AddOrEditDialog from "~/components/profileSettingDialogs/AddOrEditDialog";
 import DeleteDialog from "~/components/profileSettingDialogs/DeleteDialog";

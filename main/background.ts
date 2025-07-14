@@ -60,7 +60,9 @@ const setup = () => {
       }
       if (
         newValue.menuIcon.style !== oldValue?.menuIcon.style ||
-        newValue.trayIcon.style !== oldValue?.trayIcon.style
+        newValue.menuIcon.color !== oldValue?.menuIcon.color ||
+        newValue.trayIcon.style !== oldValue?.trayIcon.style ||
+        newValue.trayIcon.color !== oldValue?.trayIcon.color
       ) {
         // アイコンスタイルが変更されたらアップデートする
         tray.update();

@@ -48,9 +48,9 @@ const Appearance: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} sx={{ mb: (theme) => theme.spacing(2) }}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
-            <Stack direction="row" spacing={4}>
+          <Stack direction="row" spacing={4}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
               <TrayIconStyleToggleButtonGroup
                 icon={selectedProfile.icon}
                 style={appearancePref.trayIcon.style}
@@ -60,7 +60,15 @@ const Appearance: React.FC = () => {
                   });
                 }}
               />
-              {platformTheme !== undefined && platformTheme !== "macos" && (
+            </FormControl>
+            {platformTheme !== undefined && platformTheme !== "macos" && (
+              <FormControl component="fieldset">
+                <FormLabel
+                  component="legend"
+                  disabled={iconStyles[appearancePref.trayIcon.style].colorMode === "color"}
+                >
+                  トレイアイコンの色
+                </FormLabel>
                 <ColorButtonGroup
                   disabled={iconStyles[appearancePref.trayIcon.style].colorMode === "color"}
                   color={appearancePref.trayIcon.color}
@@ -70,15 +78,15 @@ const Appearance: React.FC = () => {
                     });
                   }}
                 />
-              )}
-            </Stack>
-          </FormControl>
+              </FormControl>
+            )}
+          </Stack>
         </Grid>
 
         <Grid item xs={12}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">メニューアイコンのスタイル</FormLabel>
-            <Stack direction="row" spacing={4}>
+          <Stack direction="row" spacing={4}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">メニューアイコンのスタイル</FormLabel>
               <TrayIconStyleToggleButtonGroup
                 icon={selectedProfile.icon}
                 style={appearancePref.menuIcon.style}
@@ -88,7 +96,15 @@ const Appearance: React.FC = () => {
                   });
                 }}
               />
-              {platformTheme !== undefined && platformTheme !== "macos" && (
+            </FormControl>
+            {platformTheme !== undefined && platformTheme !== "macos" && (
+              <FormControl component="fieldset">
+                <FormLabel
+                  component="legend"
+                  disabled={iconStyles[appearancePref.menuIcon.style].colorMode === "color"}
+                >
+                  メニューアイコンの色
+                </FormLabel>
                 <ColorButtonGroup
                   disabled={iconStyles[appearancePref.menuIcon.style].colorMode === "color"}
                   color={appearancePref.menuIcon.color}
@@ -98,9 +114,9 @@ const Appearance: React.FC = () => {
                     });
                   }}
                 />
-              )}
-            </Stack>
-          </FormControl>
+              </FormControl>
+            )}
+          </Stack>
         </Grid>
       </Grid>
     </form>

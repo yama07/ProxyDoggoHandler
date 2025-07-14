@@ -1,16 +1,17 @@
 import path from "node:path";
 import { type NativeImage, nativeImage } from "electron";
-import { is } from "electron-util";
 
 import type { DogIconId } from "$/icon/dogIcon";
 import { type IconStyleId, type MonochromeColorId, iconStyles } from "$/icon/iconStyle";
 
+import { platformUtils } from "./platform-utils";
+
 const imagesPaths: string[] = [
-  ...(is.development ? [__dirname, "..", "renderer", "public"] : [__dirname]),
+  ...(platformUtils.isDevelopment ? [__dirname, "..", "renderer", "public"] : [__dirname]),
   "images",
 ];
 
-const trayIconFileSuffix = is.windows ? ".ico" : ".png";
+const trayIconFileSuffix = platformUtils.isWindows ? ".ico" : ".png";
 
 const dogBreadsIconPaths: string[] = [...imagesPaths, "tray-icons", "dog-breads"];
 

@@ -1,8 +1,8 @@
 import { Menu, app } from "electron";
 import log from "electron-log";
 import serve from "electron-serve";
-import { is } from "electron-util";
 
+import { platformUtils } from "./helpers/platform-utils";
 import { prefsStore } from "./helpers/prefs-store";
 import { proxy } from "./helpers/proxy";
 import { tray } from "./helpers/tray";
@@ -13,15 +13,15 @@ import { aboutWindow } from "./windows/about-window";
 import { prefsWindow } from "./windows/prefs-window";
 
 // DevelopmentとProductionでユーザデータの格納先を分ける
-if (is.development) {
+if (platformUtils.isDevelopment) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
 // ロギング設定
 console.log = log.log;
 log.initialize({ spyRendererConsole: true });
-log.transports.console.level = is.development ? "silly" : "info";
-log.transports.file.level = is.development ? "silly" : "info";
+log.transports.console.level = platformUtils.isDevelopment ? "silly" : "info";
+log.transports.file.level = platformUtils.isDevelopment ? "silly" : "info";
 log.info(`Startup with PID ${process.pid}`);
 
 // アプリの多重起動防止
@@ -43,9 +43,9 @@ process.on("uncaughtException", (err) => {
 Menu.setApplicationMenu(null);
 
 // macの場合、Dockerにアイコンを表示させる必要がないため非表示にする
-if (is.macos) app.dock.hide();
+if (platformUtils.isMacos) app.dock.hide();
 
-if (!is.development) serve({ directory: "app" });
+if (platformUtils.isProduction) serve({ directory: "app" });
 
 let unsubscribeFunctions: (() => void)[];
 

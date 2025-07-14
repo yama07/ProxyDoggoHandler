@@ -1,7 +1,8 @@
 import path from "node:path";
 import { BrowserWindow, type BrowserWindowConstructorOptions } from "electron";
-import { is } from "electron-util";
 import windowStateKeeper from "electron-window-state";
+
+import { platformUtils } from "#/helpers/platform-utils";
 import { type IpcHandler, aggregateIpcHandlers } from "#/ipc/ipc-handler";
 
 const PREFERENCES_PAGE_PATH = "/preferences/profiles";
@@ -50,7 +51,7 @@ const open = async (ipcHandlers?: IpcHandler[]) => {
     browserWindow.once("closed", () => unregister());
   }
 
-  if (is.development) {
+  if (platformUtils.isDevelopment) {
     const port = process.argv[2];
     await browserWindow.loadURL(`http://localhost:${port}${PREFERENCES_PAGE_PATH}`);
     browserWindow.webContents.openDevTools({ mode: "detach" });

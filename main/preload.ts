@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+import type { Platform } from "$/platform";
 import type { AppearancePreference } from "$/preference/appearancePreference";
 import type { ProfilesPreference } from "$/preference/profilePreference";
 import type { ProxyPreference } from "$/preference/proxyPreference";
@@ -7,8 +8,7 @@ import type { ProxyPreference } from "$/preference/proxyPreference";
 import channels from "./ipc/channels";
 
 const systemApi = {
-  platform: (): Promise<"windows" | "macos" | "linux"> =>
-    ipcRenderer.invoke(channels.system.platform),
+  platform: (): Promise<Platform> => ipcRenderer.invoke(channels.system.platform),
 };
 export type SystemApi = typeof systemApi;
 contextBridge.exposeInMainWorld("system", systemApi);

@@ -1,6 +1,5 @@
 import { Menu, MenuItem, Tray } from "electron";
 import log from "electron-log";
-import { is } from "electron-util";
 
 import type { AppearancePreference } from "$/preference/appearancePreference";
 import type { ProfilesPreference } from "$/preference/profilePreference";
@@ -11,6 +10,7 @@ import {
   getDogBreadsTrayIcon,
   getStatusMenuIcon,
 } from "./icon";
+import { platformUtils } from "./platform-utils";
 
 type Accessor = {
   appearancePreference: () => AppearancePreference;
@@ -124,7 +124,7 @@ const update = () => {
     { type: "separator" },
     {
       label: "環境設定",
-      accelerator: is.macos ? "Command+," : undefined,
+      accelerator: platformUtils.isMacos ? "Command+," : undefined,
       click: handler.clickPrefsWindowMenu,
     },
     {
@@ -137,7 +137,7 @@ const update = () => {
     proxyServerControlItem,
     {
       label: "終了",
-      accelerator: is.macos ? "Command+Q" : undefined,
+      accelerator: platformUtils.isMacos ? "Command+Q" : undefined,
       role: "quit",
     },
   ]);

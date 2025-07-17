@@ -19,6 +19,10 @@ if (platformUtils.isDevelopment) {
 
 // ロギング設定
 console.log = log.log;
+console.debug = log.debug;
+console.info = log.info;
+console.warn = log.warn;
+console.error = log.error;
 log.initialize({ spyRendererConsole: true });
 log.transports.console.level = platformUtils.isDevelopment ? "silly" : "info";
 log.transports.file.level = platformUtils.isDevelopment ? "silly" : "info";
@@ -85,9 +89,8 @@ const setup = () => {
       }
       const newSelectedProfile = newValue.profiles[newValue.selectedIndex];
       const oldSelectedProfile = oldValue?.profiles[oldValue.selectedIndex];
-      if (newSelectedProfile !== oldSelectedProfile) {
-        // Proxyサーバのアップストリームを切り替え
-        proxy.setUpstreamProxyUrl(newSelectedProfile.connectionSetting);
+      if (JSON.stringify(newSelectedProfile) !== JSON.stringify(oldSelectedProfile)) {
+        proxy.setConnectionSetting(newSelectedProfile.connectionSetting);
       }
       tray.update();
     }),
@@ -121,13 +124,15 @@ const setup = () => {
   });
 
   // プロキシサーバの初期化
-  proxy.initialize(prefsStore.get("proxy"));
+  const proxyPreference = prefsStore.get("proxy");
+  proxy.initialize(proxyPreference);
   proxy.onStatusDidChange(() => {
     log.debug("Proxy server status was changed.");
     tray.update();
   });
-
-  const proxyPreference = prefsStore.get("proxy");
+  const profilesPreference = prefsStore.get("profiles");
+  const currentProfile = profilesPreference.profiles[profilesPreference.selectedIndex];
+  proxy.setConnectionSetting(currentProfile.connectionSetting);
   if (proxyPreference.isLaunchProxyServerAtStartup) {
     proxy.listen();
   }

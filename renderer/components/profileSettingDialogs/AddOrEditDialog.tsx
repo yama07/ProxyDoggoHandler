@@ -44,6 +44,7 @@ type FormData = {
       user: string;
       password: string;
     };
+    bypass: string;
   };
 };
 
@@ -59,6 +60,7 @@ const defaultFormData: FormData = {
       user: "",
       password: "",
     },
+    bypass: "localhost,127.0.0.1",
   },
 } as const;
 
@@ -90,6 +92,10 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 ? ""
                 : props.oldProfile.connectionSetting.credential?.password ?? "",
           },
+          bypass:
+            props.oldProfile.connectionSetting.protocol === "direct"
+              ? ""
+              : props.oldProfile.connectionSetting.bypass,
         },
       }
     : defaultFormData;
@@ -111,6 +117,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
           credential: value.connectionSetting.needsAuth
             ? { ...value.connectionSetting.credential }
             : undefined,
+          bypass: value.connectionSetting.bypass,
         },
       };
       // biome-ignore lint/suspicious/noExplicitAny: FormDataとProfileでフィールドを揃えているから問題ないが、もっとスマートな方法を模索中
@@ -242,6 +249,26 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     helperText={error?.message}
                     fullWidth
                     required={protocol !== "direct"}
+                    disabled={protocol === "direct"}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
+              <Controller
+                control={control}
+                name="connectionSetting.bypass"
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    variant="standard"
+                    margin="dense"
+                    label="Bypass"
+                    placeholder="localhost,127.0.0.1,*.example.com"
+                    fullWidth
+                    error={!!error}
+                    helperText={error?.message}
                     disabled={protocol === "direct"}
                   />
                 )}

@@ -4,10 +4,13 @@ import { Server, redactUrl } from "proxy-chain";
 import type { ConnectionSetting } from "$/preference/profilePreference";
 import type { ProxyPreference } from "$/preference/proxyPreference";
 
+import { buildMatcher } from "./globMatcher";
+
 type ProxyServerStatus = "stopped" | "running";
 
 let server: Server | undefined = undefined;
 let upstreamProxyUrl: string | undefined = undefined;
+let bypassMatcher: ReturnType<typeof buildMatcher> | undefined = undefined;
 let status: ProxyServerStatus = "stopped";
 let onStatusChangeCallback: ((status: ProxyServerStatus) => void) | undefined;
 
@@ -17,7 +20,18 @@ const initialize = (params: ProxyPreference) => {
   server = new Server({
     port: params.port,
     verbose: params.verboseLogging,
-    prepareRequestFunction: () => ({ upstreamProxyUrl }),
+    prepareRequestFunction: ({ request, hostname }) => {
+      console.debug("Request:", request.method, request.url);
+
+      let upstream: string | undefined = upstreamProxyUrl;
+      if (bypassMatcher?.(hostname)) {
+        console.debug("Switch to direct access to match the bypass list.");
+        upstream = undefined;
+      }
+      console.debug("upstreamProxyUrl:", upstream);
+
+      return { upstreamProxyUrl: upstream };
+    },
   });
 
   server.on("requestFailed", ({ request, error }) => {
@@ -47,12 +61,13 @@ const close = async () => {
   onStatusChangeCallback?.("stopped");
 };
 
-const setUpstreamProxyUrl = (setting: ConnectionSetting) => {
+const setConnectionSetting = (setting: ConnectionSetting) => {
   log.debug("Upstream URl update params:", setting);
 
   switch (setting.protocol) {
     case "direct":
       upstreamProxyUrl = undefined;
+      bypassMatcher = undefined;
       break;
     case "http":
     case "https":
@@ -67,10 +82,15 @@ const setUpstreamProxyUrl = (setting: ConnectionSetting) => {
         credential = `${user}:${password}@`;
       }
       upstreamProxyUrl = `${setting.protocol}://${credential}${setting.host}:${setting.port}`;
+      log.debug("New upstream proxy URL:", upstreamProxyUrl);
+
+      bypassMatcher = buildMatcher(setting.bypass);
+      log.debug("New bypass-list:", setting.bypass);
+
       break;
     }
   }
-  log.debug("New upstream proxy URL:", upstreamProxyUrl);
+
   log.info(
     `Upstream proxy URL is updated to "${
       upstreamProxyUrl ? redactUrl(upstreamProxyUrl, "****") : "None (direct access mode)"
@@ -91,7 +111,7 @@ export const proxy = {
   initialize,
   listen,
   close,
-  setUpstreamProxyUrl,
+  setConnectionSetting,
   getEndpoint,
   isRunning,
   onStatusDidChange,

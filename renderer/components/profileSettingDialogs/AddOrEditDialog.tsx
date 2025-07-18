@@ -229,7 +229,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     variant="standard"
                     margin="dense"
                     label="Host"
-                    placeholder="example.com"
+                    placeholder="proxy.example.com"
                     error={!!error}
                     helperText={error?.message}
                     fullWidth
@@ -249,6 +249,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     variant="standard"
                     margin="dense"
                     label="Port"
+                    placeholder="8080"
                     error={!!error}
                     helperText={error?.message}
                     fullWidth

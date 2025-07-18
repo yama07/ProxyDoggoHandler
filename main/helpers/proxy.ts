@@ -1,7 +1,12 @@
 import log from "electron-log";
 import { Server, redactUrl } from "proxy-chain";
 
-import type { ConnectionSetting } from "$/preference/profilePreference";
+import {
+  type ConnectionSetting,
+  isDirectConnectionSetting,
+  isHttpConnectionSetting,
+  isSocksConnectionSetting,
+} from "$/preference/profilePreference";
 import type { ProxyPreference } from "$/preference/proxyPreference";
 
 import { buildMatcher } from "./globMatcher";
@@ -64,31 +69,27 @@ const close = async () => {
 const setConnectionSetting = (setting: ConnectionSetting) => {
   log.debug("Upstream URl update params:", setting);
 
-  switch (setting.protocol) {
-    case "direct":
-      upstreamProxyUrl = undefined;
-      bypassMatcher = undefined;
-      break;
-    case "http":
-    case "https":
-    case "socks4":
-    case "socks4a":
-    case "socks5":
-    case "socks5h": {
-      let credential = "";
-      if (setting.credential) {
-        const user = encodeURI(setting.credential.user);
-        const password = encodeURI(setting.credential.password);
-        credential = `${user}:${password}@`;
-      }
-      upstreamProxyUrl = `${setting.protocol}://${credential}${setting.host}:${setting.port}`;
-      log.debug("New upstream proxy URL:", upstreamProxyUrl);
+  if (isDirectConnectionSetting(setting)) {
+    bypassMatcher = undefined;
+    upstreamProxyUrl = undefined;
+  } else {
+    bypassMatcher = buildMatcher(setting.bypass);
 
-      bypassMatcher = buildMatcher(setting.bypass);
-      log.debug("New bypass-list:", setting.bypass);
-
-      break;
+    let protocol: string = setting.protocol;
+    if (isSocksConnectionSetting(setting) && setting.remoteDns) {
+      if (setting.protocol === "socks4") protocol = "socks4a";
+      if (setting.protocol === "socks5") protocol = "socks5h";
     }
+
+    let credential = "";
+    if (setting.credential) {
+      const user = encodeURI(setting.credential.user);
+      const password = encodeURI(setting.credential.password);
+      credential = `${user}:${password}@`;
+    }
+
+    upstreamProxyUrl = `${protocol}://${credential}${setting.host}:${setting.port}`;
+    log.debug("New upstream proxy URL:", upstreamProxyUrl);
   }
 
   log.info(

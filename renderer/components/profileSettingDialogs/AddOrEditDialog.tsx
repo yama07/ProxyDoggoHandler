@@ -19,6 +19,8 @@ import { Controller, useForm } from "react-hook-form";
 import { dogIconIds } from "$/icon/dogIcon";
 import {
   type Profile,
+  isDirectConnectionSetting,
+  isSocksConnectionSetting,
   profileSchema,
   protocolIds,
   protocols,
@@ -45,6 +47,7 @@ type FormData = {
       password: string;
     };
     bypass: string;
+    remoteDns: boolean;
   };
 };
 
@@ -61,6 +64,7 @@ const defaultFormData: FormData = {
       password: "",
     },
     bypass: "localhost,127.0.0.1",
+    remoteDns: true,
   },
 } as const;
 
@@ -69,34 +73,33 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
     ? {
         icon: props.oldProfile.icon,
         name: props.oldProfile.name,
-        connectionSetting: {
-          protocol: props.oldProfile.connectionSetting.protocol,
-          host:
-            props.oldProfile.connectionSetting.protocol === "direct"
-              ? ""
-              : props.oldProfile.connectionSetting.host,
-          port:
-            props.oldProfile.connectionSetting.protocol === "direct"
-              ? ""
-              : String(props.oldProfile.connectionSetting.port),
-          needsAuth:
-            props.oldProfile.connectionSetting.protocol !== "direct" &&
-            !!props.oldProfile.connectionSetting.credential,
-          credential: {
-            user:
-              props.oldProfile.connectionSetting.protocol === "direct"
-                ? ""
-                : props.oldProfile.connectionSetting.credential?.user ?? "",
-            password:
-              props.oldProfile.connectionSetting.protocol === "direct"
-                ? ""
-                : props.oldProfile.connectionSetting.credential?.password ?? "",
-          },
-          bypass:
-            props.oldProfile.connectionSetting.protocol === "direct"
-              ? ""
-              : props.oldProfile.connectionSetting.bypass,
-        },
+        connectionSetting: isDirectConnectionSetting(props.oldProfile.connectionSetting)
+          ? {
+              protocol: props.oldProfile.connectionSetting.protocol,
+              host: "",
+              port: "",
+              needsAuth: false,
+              credential: {
+                user: "",
+                password: "",
+              },
+              bypass: "",
+              remoteDns: true,
+            }
+          : {
+              protocol: props.oldProfile.connectionSetting.protocol,
+              host: props.oldProfile.connectionSetting.host,
+              port: String(props.oldProfile.connectionSetting.port),
+              needsAuth: !!props.oldProfile.connectionSetting.credential,
+              credential: {
+                user: props.oldProfile.connectionSetting.credential?.user ?? "",
+                password: props.oldProfile.connectionSetting.credential?.password ?? "",
+              },
+              bypass: props.oldProfile.connectionSetting.bypass,
+              remoteDns: isSocksConnectionSetting(props.oldProfile.connectionSetting)
+                ? props.oldProfile.connectionSetting.remoteDns
+                : true,
+            },
       }
     : defaultFormData;
   const innerResolver = zodResolver(profileSchema);
@@ -118,6 +121,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
             ? { ...value.connectionSetting.credential }
             : undefined,
           bypass: value.connectionSetting.bypass,
+          remoteDns: value.connectionSetting.remoteDns,
         },
       };
       // biome-ignore lint/suspicious/noExplicitAny: FormDataとProfileでフィールドを揃えているから問題ないが、もっとスマートな方法を模索中
@@ -270,6 +274,26 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     error={!!error}
                     helperText={error?.message}
                     disabled={protocol === "direct"}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Controller
+                control={control}
+                name="connectionSetting.remoteDns"
+                render={({ field }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        {...field}
+                        checked={field.value}
+                        color="primary"
+                        disabled={protocol !== "socks4" && protocol !== "socks5"}
+                      />
+                    }
+                    label="DNSの名前解決をプロキシ経由で行う"
                   />
                 )}
               />

@@ -27,7 +27,7 @@ const DeleteDialog: React.FC<Props> = ({ profile, onDismiss, onConfirm }: Props)
           p: (theme) => theme.spacing(4),
         }}
       >
-        設定を削除してよろしいですか？
+        プロファイルを削除しますか？
       </DialogTitle>
       <DialogContent sx={{ px: (theme) => theme.spacing(4) }}>
         <DialogContentText noWrap>{profile.name}</DialogContentText>
@@ -51,13 +51,13 @@ const DeleteDialog: React.FC<Props> = ({ profile, onDismiss, onConfirm }: Props)
         <Button
           sx={{ textTransform: "none" }}
           variant="contained"
-          color="primary"
+          color="error"
           onClick={() => {
             onConfirm();
             onDismiss();
           }}
         >
-          OK
+          削除
         </Button>
       </DialogActions>
     </Dialog>

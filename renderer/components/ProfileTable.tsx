@@ -3,6 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -87,32 +88,33 @@ const ProfileTable: React.FC<Props> = ({ profiles, onEditButtonClick, onDeleteCl
               </TableCell>
 
               <TableCell>
-                <Tooltip title="編集">
-                  <EditIcon
-                    color="primary"
-                    onClick={() => {
-                      onEditButtonClick(index);
-                    }}
-                  />
-                </Tooltip>
+                <IconButton
+                  size="small"
+                  color="primary"
+                  onClick={() => {
+                    onEditButtonClick(index);
+                  }}
+                >
+                  <Tooltip title="編集">
+                    <EditIcon />
+                  </Tooltip>
+                </IconButton>
               </TableCell>
 
-              {0 === index ? (
-                <TableCell>
-                  <DeleteIcon color="disabled" />
-                </TableCell>
-              ) : (
-                <TableCell>
+              <TableCell>
+                <IconButton
+                  size="small"
+                  color="error"
+                  disabled={0 === index}
+                  onClick={() => {
+                    onDeleteClick(index);
+                  }}
+                >
                   <Tooltip title="削除">
-                    <DeleteIcon
-                      color="primary"
-                      onClick={() => {
-                        onDeleteClick(index);
-                      }}
-                    />
+                    <DeleteIcon />
                   </Tooltip>
-                </TableCell>
-              )}
+                </IconButton>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

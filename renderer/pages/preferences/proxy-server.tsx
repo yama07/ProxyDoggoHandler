@@ -5,14 +5,11 @@ import { Controller, useForm } from "react-hook-form";
 
 import { type ProxyPreference, proxyPreferenceSchema } from "$/preference/proxyPreference";
 
-import ProxyUsageCard from "~/components/ProxyUsageCard";
 import { proxyPrefContext, setProxyPrefContext } from "~/contexts/ProxyPrefContext";
 
 const ProxyServer: React.FC = () => {
   const proxyPref = useContext(proxyPrefContext);
   const setProxyPref = useContext(setProxyPrefContext);
-
-  const [examplePort, setExamplePort] = useState(proxyPref.port);
 
   const { handleSubmit, control } = useForm<ProxyPreference>({
     criteriaMode: "all",
@@ -24,7 +21,6 @@ const ProxyServer: React.FC = () => {
   const onApply = useCallback(
     (formData: ProxyPreference) => {
       setProxyPref(formData);
-      setExamplePort(formData.port);
     },
     [setProxyPref],
   );
@@ -102,10 +98,6 @@ const ProxyServer: React.FC = () => {
                 />
               )}
             />
-          </Grid>
-
-          <Grid item xs={12}>
-            <ProxyUsageCard port={examplePort} />
           </Grid>
         </Grid>
 

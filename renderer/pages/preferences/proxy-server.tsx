@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Checkbox, Divider, FormControlLabel, Grid, TextField } from "@mui/material";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { type ProxyPreference, proxyPreferenceSchema } from "$/preference/proxyPreference";
@@ -51,7 +51,7 @@ const ProxyServer: React.FC = () => {
                   fullWidth
                   onChange={(e) =>
                     field.onChange(
-                      !e.target.value || Number.isNaN(Number(e.target.value))
+                      !e.target.value || !Number.isSafeInteger(Number(e.target.value))
                         ? e.target.value
                         : Number(e.target.value),
                     )

@@ -50,10 +50,10 @@ const initialize = (params: ProxyPreference) => {
   log.info("Proxy server is initialized.");
 };
 
-const listen = () => {
+const listen = async () => {
   log.debug("Attempt to listen proxy port.");
 
-  server?.listen(() => {
+  await server?.listen(() => {
     log.info(`Proxy server is listening on port ${server?.port}.`);
     status = "running";
     onStatusChangeCallback?.("running");
@@ -63,10 +63,12 @@ const listen = () => {
 const close = async () => {
   log.debug("Attempt to close proxy port.");
 
-  await server?.close(true);
-  log.info("Proxy server was closed.");
-  status = "stopped";
-  onStatusChangeCallback?.("stopped");
+  await server?.close(true, () => {
+    server = undefined;
+    log.info("Proxy server was closed.");
+    status = "stopped";
+    onStatusChangeCallback?.("stopped");
+  });
 };
 
 const setConnectionSetting = (setting: ConnectionSetting) => {

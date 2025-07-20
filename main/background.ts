@@ -53,7 +53,7 @@ if (platformUtils.isProduction) serve({ directory: "app" });
 
 let unsubscribeFunctions: (() => void)[];
 
-const setup = () => {
+const setup = async () => {
   log.debug("Begin application setup.");
 
   // 設定変更の監視
@@ -72,13 +72,13 @@ const setup = () => {
         tray.update();
       }
     }),
-    prefsStore.onDidChange("proxy", (newValue, oldValue) => {
+    prefsStore.onDidChange("proxy", async (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
-      proxy.close();
+      await proxy.close();
       proxy.initialize(newValue);
-      proxy.listen();
+      await proxy.listen();
       if (newValue.port !== oldValue?.port) {
         tray.update();
       }
@@ -105,11 +105,12 @@ const setup = () => {
       isProxyServerRunning: proxy.isRunning,
     },
     handler: {
-      startProxyServer: () => {
-        proxy.listen();
+      startProxyServer: async () => {
+        proxy.initialize(prefsStore.get("proxy"));
+        await proxy.listen();
       },
-      stopProxyServer: () => {
-        proxy.close();
+      stopProxyServer: async () => {
+        await proxy.close();
       },
       selectProfile: (index: number) => {
         // 設定ファイルを更新
@@ -134,7 +135,7 @@ const setup = () => {
   const currentProfile = profilesPreference.profiles[profilesPreference.selectedIndex];
   proxy.setConnectionSetting(currentProfile.connectionSetting);
   if (proxyPreference.isLaunchProxyServerAtStartup) {
-    proxy.listen();
+    await proxy.listen();
   }
 
   tray.update();
@@ -145,7 +146,7 @@ const setup = () => {
 (async () => {
   await app.whenReady();
 
-  setup();
+  await setup();
 
   if (prefsStore.get("appearance").isOpenAtStartup) {
     await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, prefsStoreIpcHandler]);

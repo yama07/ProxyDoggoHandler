@@ -35,7 +35,10 @@ const initialize = (params: ProxyPreference) => {
       }
       console.debug("upstreamProxyUrl:", upstream);
 
-      return { upstreamProxyUrl: upstream };
+      return {
+        upstreamProxyUrl: upstream,
+        ignoreUpstreamProxyCertificate: params.ignoreUpstreamProxyCertificate,
+      };
     },
   });
 

@@ -85,7 +85,20 @@ const ProxyServer: React.FC = () => {
               render={({ field }) => (
                 <FormControlLabel
                   control={<Checkbox {...field} checked={field.value} color="primary" />}
-                  label="冗長ロギングを有効化する"
+                  label="プロキシサーバの冗長ロギングを有効化する"
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Controller
+              control={control}
+              name="ignoreUpstreamProxyCertificate"
+              render={({ field }) => (
+                <FormControlLabel
+                  control={<Checkbox {...field} checked={field.value} color="primary" />}
+                  label="上流プロキシの証明書エラーを無視する"
                 />
               )}
             />

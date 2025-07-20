@@ -11,6 +11,7 @@ export const proxyPreferenceSchema = z.object({
     .max(65535, "値は65535以下にする必要があります。"),
   verboseLogging: z.boolean(),
   isLaunchProxyServerAtStartup: z.boolean(),
+  ignoreUpstreamProxyCertificate: z.boolean(),
 });
 
 export type ProxyPreference = z.infer<typeof proxyPreferenceSchema>;
@@ -19,6 +20,7 @@ const defaults: ProxyPreference = {
   isLaunchProxyServerAtStartup: true,
   verboseLogging: false,
   port: 8080,
+  ignoreUpstreamProxyCertificate: false,
 };
 
 export const proxyPreference = {

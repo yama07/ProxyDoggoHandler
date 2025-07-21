@@ -1,4 +1,4 @@
-import { Menu, app } from "electron";
+import { Menu, app, dialog } from "electron";
 import log from "electron-log";
 import serve from "electron-serve";
 
@@ -52,6 +52,20 @@ if (platformUtils.isMacos) app.dock.hide();
 if (platformUtils.isProduction) serve({ directory: "app" });
 
 let unsubscribeFunctions: (() => void)[];
+
+const prefFileCheck = () => {
+  log.debug("Begin preference file check.");
+
+  if (!prefsStore.isValid()) {
+    console.info("Preference file is invalid.");
+    dialog.showErrorBox(
+      "設定ファイルの読み込みエラー",
+      `設定を初期化します。古い設定ファイルは ${app.getPath("userData")} 内にアーカイブします。`,
+    );
+    prefsStore.archive();
+    console.info("Old preference file is archived.");
+  }
+};
 
 const setup = async () => {
   log.debug("Begin application setup.");
@@ -145,6 +159,8 @@ const setup = async () => {
 
 (async () => {
   await app.whenReady();
+
+  prefFileCheck();
 
   await setup();
 

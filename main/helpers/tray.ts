@@ -111,7 +111,7 @@ const update = () => {
         toolTip:
           proxy.connectionSetting.protocol === "direct"
             ? "Direct Access"
-            : `${proxy.connectionSetting.host}:${proxy.connectionSetting.port}`,
+            : `${proxy.connectionSetting.protocol}://${proxy.connectionSetting.host}:${proxy.connectionSetting.port}`,
         click: (item, window, event) => {
           log.debug("Click tray menu:", item.id, item.label);
           handler.selectProfile(Number(item.id));

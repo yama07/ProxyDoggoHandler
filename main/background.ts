@@ -47,7 +47,7 @@ process.on("uncaughtException", (err) => {
 Menu.setApplicationMenu(null);
 
 // macの場合、Dockerにアイコンを表示させる必要がないため非表示にする
-if (platformUtils.isMacos) app.dock.hide();
+if (platformUtils.isMacos) app.dock?.hide();
 
 if (platformUtils.isProduction) serve({ directory: "app" });
 

@@ -50,7 +50,7 @@ const AppDrawer: React.FC = () => {
     >
       <Box sx={{ overflow: "auto" }}>
         <List>
-          {contents.map((content, index) => (
+          {contents.map((content) => (
             <ListItemButton
               key={content.key}
               onClick={() => onClickHandler(content.href)}

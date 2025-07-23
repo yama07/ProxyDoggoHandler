@@ -42,7 +42,7 @@ const ProfileTable: React.FC<Props> = ({ profiles, onEditButtonClick, onDeleteCl
 
         <TableBody>
           {profiles.map((profile, index) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            // biome-ignore lint/suspicious/noArrayIndexKey: profiles are disposable, so index is fine.
             <TableRow key={index}>
               <TableCell align="center">
                 <DogBreadsIcon iconId={profile.icon} style="lineal" />
@@ -74,7 +74,7 @@ const ProfileTable: React.FC<Props> = ({ profiles, onEditButtonClick, onDeleteCl
                   <Typography noWrap>
                     {profile.connectionSetting.protocol === "direct"
                       ? ""
-                      : profile.connectionSetting.host ?? ""}
+                      : (profile.connectionSetting.host ?? "")}
                   </Typography>
                 </Box>
               </TableCell>
@@ -83,7 +83,7 @@ const ProfileTable: React.FC<Props> = ({ profiles, onEditButtonClick, onDeleteCl
                 <Typography noWrap>
                   {profile.connectionSetting.protocol === "direct"
                     ? ""
-                    : profile.connectionSetting.port ?? ""}
+                    : (profile.connectionSetting.port ?? "")}
                 </Typography>
               </TableCell>
 

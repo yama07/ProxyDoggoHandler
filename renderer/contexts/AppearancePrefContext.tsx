@@ -1,7 +1,7 @@
 import {
+  createContext,
   type Dispatch,
   type SetStateAction,
-  createContext,
   useCallback,
   useEffect,
   useState,
@@ -29,7 +29,7 @@ export const AppearancePrefProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     (async () => setAppearancePref(await window.prefsStore.getAppearance()))();
 
-    window.prefsStore.onAppearanceDidChange((newValue, oldValue) => setAppearancePref(newValue));
+    window.prefsStore.onAppearanceDidChange((newValue, _oldValue) => setAppearancePref(newValue));
 
     return () => {
       window.prefsStore.onAppearanceDidChange(undefined);

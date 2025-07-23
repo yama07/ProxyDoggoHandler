@@ -1,7 +1,7 @@
 import {
+  createContext,
   type Dispatch,
   type SetStateAction,
-  createContext,
   useCallback,
   useEffect,
   useState,
@@ -25,7 +25,7 @@ export const ProxyPrefProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     (async () => setProxyPref(await window.prefsStore.getProxy()))();
 
-    window.prefsStore.onProxyDidChange((newValue, oldValue) => setProxyPref(newValue));
+    window.prefsStore.onProxyDidChange((newValue, _oldValue) => setProxyPref(newValue));
 
     return () => {
       window.prefsStore.onProxyDidChange(undefined);

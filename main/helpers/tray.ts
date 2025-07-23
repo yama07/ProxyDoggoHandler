@@ -82,14 +82,14 @@ const update = () => {
     accessor.isProxyServerRunning()
       ? {
           label: "プロキシサーバを停止",
-          click: (item, window, event) => {
+          click: (item, _window, _event) => {
             log.debug("Click tray menu:", item.label);
             handler.stopProxyServer();
           },
         }
       : {
           label: "プロキシサーバを起動",
-          click: (item, window, event) => {
+          click: (item, _window, _event) => {
             log.debug("Click tray menu:", item.label);
             handler.startProxyServer();
           },
@@ -112,7 +112,7 @@ const update = () => {
           proxy.connectionSetting.protocol === "direct"
             ? "Direct Access"
             : `${proxy.connectionSetting.protocol}://${proxy.connectionSetting.host}:${proxy.connectionSetting.port}`,
-        click: (item, window, event) => {
+        click: (item, _window, _event) => {
           log.debug("Click tray menu:", item.id, item.label);
           handler.selectProfile(Number(item.id));
         },

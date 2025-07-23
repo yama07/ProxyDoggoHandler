@@ -26,7 +26,7 @@ const Appearance: React.FC = () => {
 
   // 設定読み込みが完了するまでは、何も表示しない
   if (platformTheme === undefined) {
-    return <></>;
+    return;
   }
 
   return (

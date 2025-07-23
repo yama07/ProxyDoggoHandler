@@ -1,4 +1,4 @@
-import { Menu, app, dialog } from "electron";
+import { app, dialog, Menu } from "electron";
 import log from "electron-log";
 import serve from "electron-serve";
 

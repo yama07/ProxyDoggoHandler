@@ -18,9 +18,9 @@ import { Controller, useForm } from "react-hook-form";
 
 import { dogIconIds } from "$/icon/dogIcon";
 import {
-  type Profile,
   isDirectConnectionSetting,
   isSocksConnectionSetting,
+  type Profile,
   profileSchema,
   protocolIds,
   protocols,

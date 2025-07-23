@@ -2,7 +2,7 @@ import path from "node:path";
 import { type NativeImage, nativeImage } from "electron";
 
 import type { DogIconId } from "$/icon/dogIcon";
-import { type IconStyleId, type MonochromeColorId, iconStyles } from "$/icon/iconStyle";
+import { type IconStyleId, iconStyles, type MonochromeColorId } from "$/icon/iconStyle";
 
 import { platformUtils } from "./platform-utils";
 

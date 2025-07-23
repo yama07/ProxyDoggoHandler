@@ -1,9 +1,8 @@
 import { type BrowserWindow, ipcMain } from "electron";
-
+import { prefsStore } from "#/helpers/prefs-store";
 import type { AppearancePreference } from "$/preference/appearancePreference";
 import type { ProfilesPreference } from "$/preference/profilePreference";
 import type { ProxyPreference } from "$/preference/proxyPreference";
-import { prefsStore } from "#/helpers/prefs-store";
 
 import channels from "./channels";
 import type { IpcHandler, Register, Unregister } from "./ipc-handler";

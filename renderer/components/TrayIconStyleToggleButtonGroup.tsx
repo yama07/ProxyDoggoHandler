@@ -1,8 +1,8 @@
 import { Box, ToggleButton, ToggleButtonGroup, Tooltip } from "@mui/material";
 
 import type { DogIconId } from "$/icon/dogIcon";
-import { iconStyleIds, iconStyles } from "$/icon/iconStyle";
 import type { IconStyleId } from "$/icon/iconStyle";
+import { iconStyleIds, iconStyles } from "$/icon/iconStyle";
 
 import DogBreadsIcon from "./DogBreadsIcon";
 

@@ -1,7 +1,7 @@
 import {
+  createContext,
   type Dispatch,
   type SetStateAction,
-  createContext,
   useCallback,
   useEffect,
   useState,
@@ -25,7 +25,7 @@ export const ProfilesPrefProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     (async () => setProfilesPref(await window.prefsStore.getProfiles()))();
 
-    window.prefsStore.onProfilesDidChange((newValue, oldValue) => setProfilesPref(newValue));
+    window.prefsStore.onProfilesDidChange((newValue, _oldValue) => setProfilesPref(newValue));
 
     return () => {
       window.prefsStore.onProfilesDidChange(undefined);

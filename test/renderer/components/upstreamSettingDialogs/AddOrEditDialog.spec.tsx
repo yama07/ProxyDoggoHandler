@@ -5,7 +5,7 @@ import AddOrEditDialog from "~/components/profileSettingDialogs/AddOrEditDialog"
 
 describe("AddOrEditDialogコンポーネント", () => {
   test("要素が存在している", () => {
-    render(<AddOrEditDialog onConfirm={(newProfile) => () => {}} onDismiss={() => {}} />);
+    render(<AddOrEditDialog onConfirm={(_newProfile) => () => {}} onDismiss={() => {}} />);
 
     screen.getByText("Icon");
     screen.getByText("Name");

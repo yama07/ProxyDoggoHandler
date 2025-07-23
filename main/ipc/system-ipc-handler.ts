@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 
-import type { Platform } from "$/platform";
 import { platformUtils } from "#/helpers/platform-utils";
+import type { Platform } from "$/platform";
 
 import channels from "./channels";
 import type { IpcHandler, Register, Unregister } from "./ipc-handler";

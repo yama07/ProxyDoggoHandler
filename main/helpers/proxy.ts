@@ -1,10 +1,9 @@
 import log from "electron-log";
-import { Server, redactUrl } from "proxy-chain";
+import { redactUrl, Server } from "proxy-chain";
 
 import {
   type ConnectionSetting,
   isDirectConnectionSetting,
-  isHttpConnectionSetting,
   isSocksConnectionSetting,
 } from "$/preference/profilePreference";
 import type { ProxyPreference } from "$/preference/proxyPreference";
@@ -13,9 +12,9 @@ import { buildMatcher } from "./globMatcher";
 
 type ProxyServerStatus = "stopped" | "running";
 
-let server: Server | undefined = undefined;
-let upstreamProxyUrl: string | undefined = undefined;
-let bypassMatcher: ReturnType<typeof buildMatcher> | undefined = undefined;
+let server: Server | undefined;
+let upstreamProxyUrl: string | undefined;
+let bypassMatcher: ReturnType<typeof buildMatcher> | undefined;
 let status: ProxyServerStatus = "stopped";
 let onStatusChangeCallback: ((status: ProxyServerStatus) => void) | undefined;
 

@@ -35,7 +35,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "2.1.2",
     "@electron/notarize": "^3.0.1",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",

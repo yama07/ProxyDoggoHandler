@@ -54,7 +54,7 @@ const ProfileFormDialog: React.FC<Props> = (props: Props) => {
     <Dialog open onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <DialogContent sx={{ p: (theme) => theme.spacing(4) }}>
-          <Grid container spacing={2}>
+          <Grid container rowSpacing={0} columnSpacing={2}>
             <Grid size={{ xs: 12, sm: 2 }}>
               <Controller
                 control={control}

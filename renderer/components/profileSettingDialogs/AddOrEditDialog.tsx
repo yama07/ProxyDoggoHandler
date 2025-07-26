@@ -15,6 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
+import * as z from "zod";
 
 import { dogIconIds } from "$/icon/dogIcon";
 import {
@@ -34,22 +35,49 @@ type Props = {
   onConfirm: (newProfile: Profile) => void;
 };
 
-type FormData = {
-  icon: string;
-  name: string;
-  connectionSetting: {
-    protocol: string;
-    host: string;
-    port: string;
-    needsAuth: boolean;
-    credential: {
-      user: string;
-      password: string;
-    };
-    bypass: string;
-    remoteDns: boolean;
-  };
-};
+const formDataSchema = z
+  .object({
+    icon: z.string(),
+    name: z.string(),
+    connectionSetting: z.object({
+      protocol: z.string(),
+      host: z.string(),
+      port: z.string(),
+      needsAuth: z.boolean(),
+      credential: z.object({
+        user: z.string(),
+        password: z.string(),
+      }),
+      bypass: z.string(),
+      remoteDns: z.boolean(),
+    }),
+  })
+  .transform((value) =>
+    value.connectionSetting.protocol === "direct"
+      ? {
+          icon: value.icon,
+          name: value.name,
+          connectionSetting: {
+            protocol: value.connectionSetting.protocol,
+          },
+        }
+      : {
+          icon: value.icon,
+          name: value.name,
+          connectionSetting: {
+            protocol: value.connectionSetting.protocol,
+            host: value.connectionSetting.host,
+            port: value.connectionSetting.port ? Number(value.connectionSetting.port) : undefined,
+            ...(value.connectionSetting.needsAuth
+              ? { credential: value.connectionSetting.credential }
+              : {}),
+            bypass: value.connectionSetting.bypass,
+            remoteDns: value.connectionSetting.remoteDns,
+          },
+        },
+  )
+  .pipe(profileSchema);
+type FormData = z.input<typeof formDataSchema>;
 
 const defaultFormData: FormData = {
   icon: "001-dog",
@@ -102,31 +130,12 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
             },
       }
     : defaultFormData;
-  const innerResolver = zodResolver(profileSchema);
+
   const { handleSubmit, watch, control, trigger } = useForm<FormData, unknown, Profile>({
     criteriaMode: "all",
     shouldUseNativeValidation: false,
     defaultValues,
-    resolver: (value, context, options) => {
-      // フォームの形式とProfileの型が合わないため、
-      // データを変換してからzodResolverに渡す
-      const data = {
-        icon: value.icon,
-        name: value.name,
-        connectionSetting: {
-          protocol: value.connectionSetting.protocol,
-          host: value.connectionSetting.host,
-          port: value.connectionSetting.port ? Number(value.connectionSetting.port) : undefined,
-          credential: value.connectionSetting.needsAuth
-            ? { ...value.connectionSetting.credential }
-            : undefined,
-          bypass: value.connectionSetting.bypass,
-          remoteDns: value.connectionSetting.remoteDns,
-        },
-      };
-      // biome-ignore lint/suspicious/noExplicitAny: FormDataとProfileでフィールドを揃えているから問題ないが、もっとスマートな方法を模索中
-      return innerResolver(data, context, options as any);
-    },
+    resolver: zodResolver(formDataSchema),
   });
 
   const protocol = watch("connectionSetting.protocol");

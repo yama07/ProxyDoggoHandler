@@ -6,11 +6,11 @@ export const credentialSchema = z.object({
   user: z
     .string()
     .nonempty("このフィールドを入力してください。")
-    .max(128, { message: "128文字以下で入力してください。" }),
+    .max(128, { error: "128文字以下で入力してください。" }),
   password: z
     .string()
     .nonempty("このフィールドを入力してください。")
-    .max(128, { message: "128文字以下で入力してください。" }),
+    .max(128, { error: "128文字以下で入力してください。" }),
 });
 
 export type CredentialType = z.infer<typeof credentialSchema>;
@@ -27,20 +27,22 @@ export const protocols = {
 } satisfies Record<ProtocolId, { label: string }>;
 
 export const directConnectionSchema = z.object({
-  protocol: z.enum(["direct"]),
+  protocol: protocolIdSchema.extract(["direct"]),
 });
 export type DirectConnectionSetting = z.infer<typeof directConnectionSchema>;
 
 export const httpConnectionSchema = z.object({
-  protocol: z.enum(["http", "https"]),
+  protocol: protocolIdSchema.extract(["http", "https"]),
   host: z
     .string()
     .nonempty("このフィールドを入力してください。")
     .max(128, "128文字以下で入力してください。"),
   port: z
     .number({
-      required_error: "このフィールドを入力してください。",
-      invalid_type_error: "有効な値を入力してください。",
+      error: (issue) =>
+        issue.input === undefined
+          ? "このフィールドを入力してください。"
+          : "有効な値を入力してください。",
     })
     .int("有効な値を入力してください。")
     .min(0, "値は0以上にする必要があります。")
@@ -51,15 +53,17 @@ export const httpConnectionSchema = z.object({
 export type HttpConnectionSetting = z.infer<typeof httpConnectionSchema>;
 
 export const socksConnectionSchema = z.object({
-  protocol: z.enum(["socks4", "socks5"]),
+  protocol: protocolIdSchema.extract(["socks4", "socks5"]),
   host: z
     .string()
     .nonempty("このフィールドを入力してください。")
     .max(128, "128文字以下で入力してください。"),
   port: z
     .number({
-      required_error: "このフィールドを入力してください。",
-      invalid_type_error: "有効な値を入力してください。",
+      error: (issue) =>
+        issue.input === undefined
+          ? "このフィールドを入力してください。"
+          : "有効な値を入力してください。",
     })
     .int("有効な値を入力してください。")
     .min(0, "値は0以上にする必要があります。")

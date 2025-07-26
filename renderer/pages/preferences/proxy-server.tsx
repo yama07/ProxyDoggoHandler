@@ -35,7 +35,7 @@ const ProxyServer: React.FC = () => {
     >
       <form noValidate autoComplete="off" onSubmit={handleSubmit(onApply)}>
         <Grid container spacing={1}>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Controller
               control={control}
               name="port"
@@ -61,7 +61,7 @@ const ProxyServer: React.FC = () => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Controller
               control={control}
               name="isLaunchProxyServerAtStartup"
@@ -74,7 +74,7 @@ const ProxyServer: React.FC = () => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Controller
               control={control}
               name="verboseLogging"
@@ -87,7 +87,7 @@ const ProxyServer: React.FC = () => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Controller
               control={control}
               name="ignoreUpstreamProxyCertificate"

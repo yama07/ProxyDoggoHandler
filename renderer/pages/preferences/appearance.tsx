@@ -32,7 +32,7 @@ const Appearance: React.FC = () => {
   return (
     <form noValidate autoComplete="off">
       <Grid container spacing={1}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <FormControlLabel
             control={
               <Checkbox
@@ -47,7 +47,7 @@ const Appearance: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sx={{ mb: (theme) => theme.spacing(2) }}>
+        <Grid size={12} sx={{ mb: (theme) => theme.spacing(2) }}>
           <Stack direction="row" spacing={4}>
             <FormControl component="fieldset">
               <FormLabel component="legend">トレイアイコンのスタイル</FormLabel>
@@ -83,7 +83,7 @@ const Appearance: React.FC = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Stack direction="row" spacing={4}>
             <FormControl component="fieldset">
               <FormLabel component="legend">メニューアイコンのスタイル</FormLabel>

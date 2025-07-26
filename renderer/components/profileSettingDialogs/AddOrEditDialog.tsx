@@ -155,7 +155,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <DialogContent sx={{ p: (theme) => theme.spacing(4) }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={2}>
+            <Grid size={{ xs: 12, sm: 2 }}>
               <Controller
                 control={control}
                 name="icon"
@@ -181,7 +181,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={10}>
+            <Grid size={{ xs: 12, sm: 10 }}>
               <Controller
                 control={control}
                 name="name"
@@ -199,7 +199,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <Controller
                 control={control}
                 name="connectionSetting.protocol"
@@ -228,7 +228,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Controller
                 control={control}
                 name="connectionSetting.host"
@@ -248,7 +248,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid size={{ xs: 12, sm: 3 }}>
               <Controller
                 control={control}
                 name="connectionSetting.port"
@@ -269,7 +269,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            <Grid size={{ xs: 12, sm: 12 }}>
               <Controller
                 control={control}
                 name="connectionSetting.bypass"
@@ -289,7 +289,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Controller
                 control={control}
                 name="connectionSetting.remoteDns"
@@ -309,7 +309,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Controller
                 control={control}
                 name="connectionSetting.needsAuth"
@@ -330,7 +330,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
             </Grid>
             {needsAuth && (
               <>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Controller
                     control={control}
                     name="connectionSetting.credential.user"
@@ -350,7 +350,7 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Controller
                     control={control}
                     name="connectionSetting.credential.password"

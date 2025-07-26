@@ -15,7 +15,7 @@ type Props = {
   onConfirm: () => void;
 };
 
-const DeleteDialog: React.FC<Props> = ({ profile, onDismiss, onConfirm }: Props) => {
+const ProfileDeleteDialog: React.FC<Props> = ({ profile, onDismiss, onConfirm }: Props) => {
   const handleClose = () => {
     onDismiss();
   };
@@ -64,4 +64,4 @@ const DeleteDialog: React.FC<Props> = ({ profile, onDismiss, onConfirm }: Props)
   );
 };
 
-export default DeleteDialog;
+export default ProfileDeleteDialog;

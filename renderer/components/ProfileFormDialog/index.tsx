@@ -15,19 +15,12 @@ import {
   TextField,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import * as z from "zod";
 
 import { dogIconIds } from "$/icon/dogIcon";
-import {
-  isDirectConnectionSetting,
-  isSocksConnectionSetting,
-  type Profile,
-  profileSchema,
-  protocolIds,
-  protocols,
-} from "$/preference/profilePreference";
+import { type Profile, protocolIds, protocols } from "$/preference/profilePreference";
 
 import DogBreadsIcon from "../DogBreadsIcon";
+import { type FormValues, formValuesSchema, profileToFormValues } from "./formValues";
 
 type Props = {
   oldProfile?: Profile;
@@ -35,107 +28,14 @@ type Props = {
   onConfirm: (newProfile: Profile) => void;
 };
 
-const formDataSchema = z
-  .object({
-    icon: z.string(),
-    name: z.string(),
-    connectionSetting: z.object({
-      protocol: z.string(),
-      host: z.string(),
-      port: z.string(),
-      needsAuth: z.boolean(),
-      credential: z.object({
-        user: z.string(),
-        password: z.string(),
-      }),
-      bypass: z.string(),
-      remoteDns: z.boolean(),
-    }),
-  })
-  .transform((value) =>
-    value.connectionSetting.protocol === "direct"
-      ? {
-          icon: value.icon,
-          name: value.name,
-          connectionSetting: {
-            protocol: value.connectionSetting.protocol,
-          },
-        }
-      : {
-          icon: value.icon,
-          name: value.name,
-          connectionSetting: {
-            protocol: value.connectionSetting.protocol,
-            host: value.connectionSetting.host,
-            port: value.connectionSetting.port ? Number(value.connectionSetting.port) : undefined,
-            ...(value.connectionSetting.needsAuth
-              ? { credential: value.connectionSetting.credential }
-              : {}),
-            bypass: value.connectionSetting.bypass,
-            remoteDns: value.connectionSetting.remoteDns,
-          },
-        },
-  )
-  .pipe(profileSchema);
-type FormData = z.input<typeof formDataSchema>;
+const ProfileFormDialog: React.FC<Props> = (props: Props) => {
+  const defaultValues: FormValues = profileToFormValues(props.oldProfile);
 
-const defaultFormData: FormData = {
-  icon: "001-dog",
-  name: "",
-  connectionSetting: {
-    protocol: "http",
-    host: "",
-    port: "",
-    needsAuth: false,
-    credential: {
-      user: "",
-      password: "",
-    },
-    bypass: "localhost,127.0.0.1",
-    remoteDns: true,
-  },
-} as const;
-
-const AddOrEditDialog: React.FC<Props> = (props: Props) => {
-  const defaultValues: FormData = props.oldProfile
-    ? {
-        icon: props.oldProfile.icon,
-        name: props.oldProfile.name,
-        connectionSetting: isDirectConnectionSetting(props.oldProfile.connectionSetting)
-          ? {
-              protocol: props.oldProfile.connectionSetting.protocol,
-              host: "",
-              port: "",
-              needsAuth: false,
-              credential: {
-                user: "",
-                password: "",
-              },
-              bypass: "",
-              remoteDns: true,
-            }
-          : {
-              protocol: props.oldProfile.connectionSetting.protocol,
-              host: props.oldProfile.connectionSetting.host,
-              port: String(props.oldProfile.connectionSetting.port),
-              needsAuth: !!props.oldProfile.connectionSetting.credential,
-              credential: {
-                user: props.oldProfile.connectionSetting.credential?.user ?? "",
-                password: props.oldProfile.connectionSetting.credential?.password ?? "",
-              },
-              bypass: props.oldProfile.connectionSetting.bypass,
-              remoteDns: isSocksConnectionSetting(props.oldProfile.connectionSetting)
-                ? props.oldProfile.connectionSetting.remoteDns
-                : true,
-            },
-      }
-    : defaultFormData;
-
-  const { handleSubmit, watch, control, trigger } = useForm<FormData, unknown, Profile>({
+  const { handleSubmit, watch, control, trigger } = useForm<FormValues, unknown, Profile>({
     criteriaMode: "all",
     shouldUseNativeValidation: false,
     defaultValues,
-    resolver: zodResolver(formDataSchema),
+    resolver: zodResolver(formValuesSchema),
   });
 
   const protocol = watch("connectionSetting.protocol");
@@ -399,4 +299,4 @@ const AddOrEditDialog: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default AddOrEditDialog;
+export default ProfileFormDialog;

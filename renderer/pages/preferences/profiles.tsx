@@ -3,10 +3,9 @@ import { Box, Button, Tooltip } from "@mui/material";
 import { useCallback, useContext, useState } from "react";
 
 import type { Profile, ProfilesPreference } from "$/preference/profilePreference";
-
+import ProfileDeleteDialog from "~/components/ProfileDeleteDialog";
+import ProfileFormDialog from "~/components/ProfileFormDialog";
 import ProfileTable from "~/components/ProfileTable";
-import AddOrEditDialog from "~/components/profileSettingDialogs/AddOrEditDialog";
-import DeleteDialog from "~/components/profileSettingDialogs/DeleteDialog";
 import { profilesPrefContext, setProfilesPrefContext } from "~/contexts/ProfilesPrefContext";
 
 const Profiles: React.FC = () => {
@@ -122,10 +121,10 @@ const Profiles: React.FC = () => {
         />
       </Box>
 
-      {isAddDialogOpen && <AddOrEditDialog onDismiss={closeAddDialog} onConfirm={addSetting} />}
+      {isAddDialogOpen && <ProfileFormDialog onDismiss={closeAddDialog} onConfirm={addSetting} />}
 
       {isEditDialogOpen && (
-        <AddOrEditDialog
+        <ProfileFormDialog
           oldProfile={profilesPref.profiles[selectedIndex]}
           onDismiss={() => {
             closeEditDialog();
@@ -137,7 +136,7 @@ const Profiles: React.FC = () => {
       )}
 
       {isDeleteDialogOpen && (
-        <DeleteDialog
+        <ProfileDeleteDialog
           profile={profilesPref.profiles[selectedIndex]}
           onDismiss={() => {
             closeDeleteDialog();

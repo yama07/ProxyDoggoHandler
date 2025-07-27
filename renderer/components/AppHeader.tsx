@@ -1,4 +1,4 @@
-import { AppBar, type AppBarProps, Box, Toolbar, Typography, styled } from "@mui/material";
+import { AppBar, type AppBarProps, Box, styled, Toolbar, Typography } from "@mui/material";
 
 const DraggableAppBar = styled(AppBar)({ WebkitAppRegion: "drag" });
 

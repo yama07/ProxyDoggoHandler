@@ -1,6 +1,6 @@
 export default {
   system: {
-    isMacos: "system.isMacos",
+    platform: "system.platform",
   },
   prefsWindow: {
     close: "prefsWindow.close",
@@ -12,16 +12,16 @@ export default {
     onUnmaximize: "prefsWindow.onUnmaximize",
   },
   prefsStore: {
-    getGeneral: "prefsStore.getGeneral",
-    setGeneral: "prefsStore.setGeneral",
-    onGeneralDidChange: "prefsStore.onGeneralDidChange",
+    getAppearance: "prefsStore.getAppearance",
+    setAppearance: "prefsStore.setAppearance",
+    onAppearanceDidChange: "prefsStore.onAppearanceDidChange",
 
     getProxy: "prefsStore.getProxy",
     setProxy: "prefsStore.setProxy",
     onProxyDidChange: "prefsStore.onProxyDidChange",
 
-    getUpstreams: "prefsStore.getUpstreams",
-    setUpstreams: "prefsStore.setUpstreams",
-    onUpstreamsDidChange: "prefsStore.onUpstreamsDidChange",
+    getProfiles: "prefsStore.getProfiles",
+    setProfiles: "prefsStore.setProfiles",
+    onProfilesDidChange: "prefsStore.onProfilesDidChange",
   },
 };

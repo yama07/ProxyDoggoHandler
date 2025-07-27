@@ -7,13 +7,15 @@ import {
   DialogTitle,
 } from "@mui/material";
 
+import type { Profile } from "$/preference/profilePreference";
+
 type Props = {
-  upstream: UpstreamType;
+  profile: Profile;
   onDismiss: () => void;
   onConfirm: () => void;
 };
 
-const DeleteDialog: React.FC<Props> = ({ upstream, onDismiss, onConfirm }: Props) => {
+const ProfileDeleteDialog: React.FC<Props> = ({ profile, onDismiss, onConfirm }: Props) => {
   const handleClose = () => {
     onDismiss();
   };
@@ -25,10 +27,10 @@ const DeleteDialog: React.FC<Props> = ({ upstream, onDismiss, onConfirm }: Props
           p: (theme) => theme.spacing(4),
         }}
       >
-        設定を削除してよろしいですか？
+        プロファイルを削除しますか？
       </DialogTitle>
       <DialogContent sx={{ px: (theme) => theme.spacing(4) }}>
-        <DialogContentText noWrap>{upstream.name}</DialogContentText>
+        <DialogContentText noWrap>{profile.name}</DialogContentText>
       </DialogContent>
 
       <DialogActions
@@ -49,17 +51,17 @@ const DeleteDialog: React.FC<Props> = ({ upstream, onDismiss, onConfirm }: Props
         <Button
           sx={{ textTransform: "none" }}
           variant="contained"
-          color="primary"
+          color="error"
           onClick={() => {
             onConfirm();
             onDismiss();
           }}
         >
-          OK
+          削除
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default DeleteDialog;
+export default ProfileDeleteDialog;

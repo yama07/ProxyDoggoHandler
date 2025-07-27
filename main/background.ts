@@ -1,8 +1,8 @@
-import { Menu, app } from "electron";
+import { app, dialog, Menu } from "electron";
 import log from "electron-log";
 import serve from "electron-serve";
-import { is } from "electron-util";
 
+import { platformUtils } from "./helpers/platform-utils";
 import { prefsStore } from "./helpers/prefs-store";
 import { proxy } from "./helpers/proxy";
 import { tray } from "./helpers/tray";
@@ -13,15 +13,19 @@ import { aboutWindow } from "./windows/about-window";
 import { prefsWindow } from "./windows/prefs-window";
 
 // DevelopmentとProductionでユーザデータの格納先を分ける
-if (is.development) {
+if (platformUtils.isDevelopment) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
 // ロギング設定
 console.log = log.log;
+console.debug = log.debug;
+console.info = log.info;
+console.warn = log.warn;
+console.error = log.error;
 log.initialize({ spyRendererConsole: true });
-log.transports.console.level = is.development ? "silly" : "info";
-log.transports.file.level = is.development ? "silly" : "info";
+log.transports.console.level = platformUtils.isDevelopment ? "silly" : "info";
+log.transports.file.level = platformUtils.isDevelopment ? "silly" : "info";
 log.info(`Startup with PID ${process.pid}`);
 
 // アプリの多重起動防止
@@ -43,49 +47,64 @@ process.on("uncaughtException", (err) => {
 Menu.setApplicationMenu(null);
 
 // macの場合、Dockerにアイコンを表示させる必要がないため非表示にする
-if (is.macos) app.dock.hide();
+if (platformUtils.isMacos) app.dock?.hide();
 
-if (!is.development) serve({ directory: "app" });
+if (platformUtils.isProduction) serve({ directory: "app" });
 
 let unsubscribeFunctions: (() => void)[];
 
-const setup = () => {
+const prefFileCheck = () => {
+  log.debug("Begin preference file check.");
+
+  if (!prefsStore.isValid()) {
+    console.info("Preference file is invalid.");
+    dialog.showErrorBox(
+      "設定ファイルの読み込みエラー",
+      `設定を初期化します。古い設定ファイルは ${app.getPath("userData")} 内にアーカイブします。`,
+    );
+    prefsStore.archive();
+    console.info("Old preference file is archived.");
+  }
+};
+
+const setup = async () => {
   log.debug("Begin application setup.");
 
   // 設定変更の監視
   unsubscribeFunctions = [
-    prefsStore.onDidChange("general", (newValue, oldValue) => {
+    prefsStore.onDidChange("appearance", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
       if (
-        newValue.menuIconStyle !== oldValue?.menuIconStyle ||
-        newValue.trayIconStyle !== oldValue?.trayIconStyle
+        newValue.menuIcon.style !== oldValue?.menuIcon.style ||
+        newValue.menuIcon.color !== oldValue?.menuIcon.color ||
+        newValue.trayIcon.style !== oldValue?.trayIcon.style ||
+        newValue.trayIcon.color !== oldValue?.trayIcon.color
       ) {
         // アイコンスタイルが変更されたらアップデートする
         tray.update();
       }
     }),
-    prefsStore.onDidChange("proxy", (newValue, oldValue) => {
+    prefsStore.onDidChange("proxy", async (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
-      proxy.close();
+      await proxy.close();
       proxy.initialize(newValue);
-      proxy.listen();
+      await proxy.listen();
       if (newValue.port !== oldValue?.port) {
         tray.update();
       }
     }),
-    prefsStore.onDidChange("upstreams", (newValue, oldValue) => {
+    prefsStore.onDidChange("profiles", (newValue, oldValue) => {
       if (newValue === undefined) {
         return;
       }
-      const newSelectedUpstream = newValue.upstreams[newValue.selectedIndex];
-      const oldSelectedUpstream = oldValue?.upstreams[oldValue.selectedIndex];
-      if (newSelectedUpstream !== oldSelectedUpstream) {
-        // Proxyサーバのアップストリームを切り替え
-        proxy.setUpstreamProxyUrl(newSelectedUpstream.connectionSetting);
+      const newSelectedProfile = newValue.profiles[newValue.selectedIndex];
+      const oldSelectedProfile = oldValue?.profiles[oldValue.selectedIndex];
+      if (JSON.stringify(newSelectedProfile) !== JSON.stringify(oldSelectedProfile)) {
+        proxy.setConnectionSetting(newSelectedProfile.connectionSetting);
       }
       tray.update();
     }),
@@ -94,23 +113,24 @@ const setup = () => {
   // システムトレイの初期化
   tray.initialize({
     accessor: {
-      generalPreference: () => prefsStore.get("general"),
-      upstreamsPreference: () => prefsStore.get("upstreams"),
+      appearancePreference: () => prefsStore.get("appearance"),
+      profilePreference: () => prefsStore.get("profiles"),
       proxyServerEndpoint: proxy.getEndpoint,
       isProxyServerRunning: proxy.isRunning,
     },
     handler: {
-      startProxyServer: () => {
-        proxy.listen();
+      startProxyServer: async () => {
+        proxy.initialize(prefsStore.get("proxy"));
+        await proxy.listen();
       },
-      stopProxyServer: () => {
-        proxy.close();
+      stopProxyServer: async () => {
+        await proxy.close();
       },
-      selectUpstream: (index: number) => {
+      selectProfile: (index: number) => {
         // 設定ファイルを更新
-        const newPreference = prefsStore.get("upstreams");
+        const newPreference = prefsStore.get("profiles");
         newPreference.selectedIndex = index;
-        prefsStore.set("upstreams", newPreference);
+        prefsStore.set("profiles", newPreference);
       },
       clickPrefsWindowMenu: async () =>
         await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, prefsStoreIpcHandler]),
@@ -119,15 +139,17 @@ const setup = () => {
   });
 
   // プロキシサーバの初期化
-  proxy.initialize(prefsStore.get("proxy"));
+  const proxyPreference = prefsStore.get("proxy");
+  proxy.initialize(proxyPreference);
   proxy.onStatusDidChange(() => {
     log.debug("Proxy server status was changed.");
     tray.update();
   });
-
-  const generalPreference = prefsStore.get("general");
-  if (generalPreference.isLaunchProxyServerAtStartup) {
-    proxy.listen();
+  const profilesPreference = prefsStore.get("profiles");
+  const currentProfile = profilesPreference.profiles[profilesPreference.selectedIndex];
+  proxy.setConnectionSetting(currentProfile.connectionSetting);
+  if (proxyPreference.isLaunchProxyServerAtStartup) {
+    await proxy.listen();
   }
 
   tray.update();
@@ -138,9 +160,11 @@ const setup = () => {
 (async () => {
   await app.whenReady();
 
-  setup();
+  prefFileCheck();
 
-  if (prefsStore.get("general").isOpenAtStartup) {
+  await setup();
+
+  if (prefsStore.get("appearance").isOpenAtStartup) {
     await prefsWindow.open([prefsWindowIpcHandler, systemIpcHandler, prefsStoreIpcHandler]);
   }
 })();

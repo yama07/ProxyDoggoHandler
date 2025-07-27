@@ -6,6 +6,9 @@ module.exports = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    externalDir: true,
+  },
   webpack: (config) => {
     return config;
   },

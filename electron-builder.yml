@@ -11,7 +11,7 @@ files:
       - app
 publish: null
 artifactName: ${productName}.${ext}
-afterSign: "./scripts/notarize.js"
+afterSign: "./scripts/notarize.mjs"
 mac:
   target: dmg
   hardenedRuntime: true

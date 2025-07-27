@@ -5,22 +5,22 @@ import { useCallback } from "react";
 
 const contents = [
   {
-    key: "general",
-    text: "General",
-    href: "/preferences/general",
-    icon: <Tune />,
+    key: "profiles",
+    text: "Profiles",
+    href: "/preferences/profiles",
+    icon: <Pets />,
   },
   {
-    key: "proxy",
+    key: "proxy-server",
     text: "Proxy",
-    href: "/preferences/proxy",
+    href: "/preferences/proxy-server",
     icon: <Traffic />,
   },
   {
-    key: "upstreams",
-    text: "Upstreams",
-    href: "/preferences/upstreams",
-    icon: <Pets />,
+    key: "appearance",
+    text: "Appearance",
+    href: "/preferences/appearance",
+    icon: <Tune />,
   },
 ] as const;
 
@@ -50,7 +50,7 @@ const AppDrawer: React.FC = () => {
     >
       <Box sx={{ overflow: "auto" }}>
         <List>
-          {contents.map((content, index) => (
+          {contents.map((content) => (
             <ListItemButton
               key={content.key}
               onClick={() => onClickHandler(content.href)}

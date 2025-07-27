@@ -1,9 +1,14 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+import type { Platform } from "$/platform";
+import type { AppearancePreference } from "$/preference/appearancePreference";
+import type { ProfilesPreference } from "$/preference/profilePreference";
+import type { ProxyPreference } from "$/preference/proxyPreference";
+
 import channels from "./ipc/channels";
 
 const systemApi = {
-  isMacos: (): Promise<boolean> => ipcRenderer.invoke(channels.system.isMacos),
+  platform: (): Promise<Platform> => ipcRenderer.invoke(channels.system.platform),
 };
 export type SystemApi = typeof systemApi;
 contextBridge.exposeInMainWorld("system", systemApi);
@@ -33,28 +38,26 @@ export type PrefsWindowApi = typeof prefsWindowApi;
 contextBridge.exposeInMainWorld("prefsWindow", prefsWindowApi);
 
 const prefsStoreApi = {
-  getGeneral: (): Promise<GeneralPreferenceType> =>
-    ipcRenderer.invoke(channels.prefsStore.getGeneral),
-  setGeneral: (preference: GeneralPreferenceType) =>
-    ipcRenderer.send(channels.prefsStore.setGeneral, preference),
-  onGeneralDidChange: (
-    callback?: (newValue: GeneralPreferenceType, oldValue: GeneralPreferenceType) => void,
+  getAppearance: (): Promise<AppearancePreference> =>
+    ipcRenderer.invoke(channels.prefsStore.getAppearance),
+  setAppearance: (preference: AppearancePreference) =>
+    ipcRenderer.send(channels.prefsStore.setAppearance, preference),
+  onAppearanceDidChange: (
+    callback?: (newValue: AppearancePreference, oldValue: AppearancePreference) => void,
   ) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.prefsStore.onGeneralDidChange);
+      ipcRenderer.removeAllListeners(channels.prefsStore.onAppearanceDidChange);
     } else {
-      ipcRenderer.on(channels.prefsStore.onGeneralDidChange, (_, newValue, oldValue) =>
+      ipcRenderer.on(channels.prefsStore.onAppearanceDidChange, (_, newValue, oldValue) =>
         callback(newValue, oldValue),
       );
     }
   },
 
-  getProxy: (): Promise<ProxyPreferenceType> => ipcRenderer.invoke(channels.prefsStore.getProxy),
-  setProxy: (preference: ProxyPreferenceType) =>
+  getProxy: (): Promise<ProxyPreference> => ipcRenderer.invoke(channels.prefsStore.getProxy),
+  setProxy: (preference: ProxyPreference) =>
     ipcRenderer.send(channels.prefsStore.setProxy, preference),
-  onProxyDidChange: (
-    callback?: (newValue: ProxyPreferenceType, oldValue: ProxyPreferenceType) => void,
-  ) => {
+  onProxyDidChange: (callback?: (newValue: ProxyPreference, oldValue: ProxyPreference) => void) => {
     if (callback === undefined) {
       ipcRenderer.removeAllListeners(channels.prefsStore.onProxyDidChange);
     } else {
@@ -64,17 +67,17 @@ const prefsStoreApi = {
     }
   },
 
-  getUpstreams: (): Promise<UpstreamsPreferenceType> =>
-    ipcRenderer.invoke(channels.prefsStore.getUpstreams),
-  setUpstreams: (preference: UpstreamsPreferenceType) =>
-    ipcRenderer.send(channels.prefsStore.setUpstreams, preference),
-  onUpstreamsDidChange: (
-    callback?: (newValue: UpstreamsPreferenceType, oldValue: UpstreamsPreferenceType) => void,
+  getProfiles: (): Promise<ProfilesPreference> =>
+    ipcRenderer.invoke(channels.prefsStore.getProfiles),
+  setProfiles: (preference: ProfilesPreference) =>
+    ipcRenderer.send(channels.prefsStore.setProfiles, preference),
+  onProfilesDidChange: (
+    callback?: (newValue: ProfilesPreference, oldValue: ProfilesPreference) => void,
   ) => {
     if (callback === undefined) {
-      ipcRenderer.removeAllListeners(channels.prefsStore.onUpstreamsDidChange);
+      ipcRenderer.removeAllListeners(channels.prefsStore.onProfilesDidChange);
     } else {
-      ipcRenderer.on(channels.prefsStore.onUpstreamsDidChange, (_, newValue, oldValue) =>
+      ipcRenderer.on(channels.prefsStore.onProfilesDidChange, (_, newValue, oldValue) =>
         callback(newValue, oldValue),
       );
     }

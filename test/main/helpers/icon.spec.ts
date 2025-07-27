@@ -21,8 +21,15 @@ describe("getDogBreadsTrayIcon", () => {
       development: true,
       windows: true,
     };
-
-    const icon = getDogBreadsTrayIcon("001-dog", "lineal");
+    // TODO: Fix
+    // jest.config.jsに以下を追加してみた
+    //   globals: {
+    //   "ts-jest": {
+    //     tsconfig: "./tsconfig.json",
+    //   },
+    // },
+    // けど、Cannot find module '$/icon/iconStyle' from '../../main/helpers/icon.ts'エラーが出た
+    const icon = getDogBreadsTrayIcon("001-dog", "lineal", "black");
 
     expect(icon).not.toBeNull();
     expect((nativeImage.createFromPath as jest.Mock).mock.calls[0][0]).toMatch(

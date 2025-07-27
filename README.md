@@ -10,7 +10,7 @@
 
 <h4 align="center">Proxy integration and switching tool. For Mac, Windows.</h4>
 
-<p align="center">🐶</p>
+<p align="center">🐶🐾</p>
 
 <p align="center">
   <a href="https://github.com/yama07/ProxyDoggoHandler"><img src="https://img.shields.io/github/actions/workflow/status/yama07/ProxyDoggoHandler/build.yml" alt="GitHub Workflow Status"></a>
@@ -29,9 +29,15 @@
 </p>
 
 各ツールのプロキシ設定に中継サーバを指定しておくことで、環境に応じたプロキシ設定の書き換えが不要になります。
-中継サーバのアクセス先として、"認証なしプロキシ"、"認証プロキシ"、"直接アクセス"を登録することができ、タスクトレイのメニューから切り替えることができます。
+上流プロキシサーバのプロファイルを複数登録することができ、タスクトレイのメニューから切り替えることができます。
 
-また、認証プロキシに対する認証処理は中継サーバが代行するため、認証プロキシ非対応のアプリケーションを利用できるようになります。
+上流プロキシサーバとして、以下のプロトコルをサポートしています。
+- HTTP（認証あり／なし）
+- HTTPS（認証あり／なし）
+- SOCKS v4（認証あり／なし）
+- SOCKS v5（認証あり／なし）
+
+また、上流プロキシに対する認証は中継サーバが代行するため、認証プロキシ非対応のアプリケーションを利用できるようになります。
 
 <p align="center">
   <img src="img/about-app.png" alt="about" align="center">
@@ -76,10 +82,10 @@ ProxyDoggoHandler-win-portable.exe ファイルを削除してください。
 ## Screenshot
 
 <p align="center" display="flex">
-  <img src="img/screenshot-mac-general-preference.png" alt="screenshot-mac-general-preferenc" width="340">
-  <img src="img/screenshot-mac-proxy-preference.png" alt="screenshot-mac-proxy-preference" width="340">
-  <img src="img/screenshot-mac-upstreams-preference.png" alt="screenshot-mac-upstreams-preference" width="340">
-  <img src="img/screenshot-mac-upstreams-preference-add.png" alt="screenshot-mac-upstreams-preference-addshot" width="340">
+  <img src="img/screenshot-mac-profile.png" alt="screenshot-mac-profile" width="340">
+  <img src="img/screenshot-mac-profile-form.png" alt="screenshot-mac-profile-form" width="340">
+  <img src="img/screenshot-mac-proxy.png" alt="screenshot-mac-proxy" width="340">
+  <img src="img/screenshot-mac-appearance.png" alt="screenshot-mac-appearance" width="340">
 </p>
 
 ## Development

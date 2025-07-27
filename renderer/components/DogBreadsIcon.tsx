@@ -1,27 +1,14 @@
 import { Icon } from "@mui/material";
 
-export const DogIconStyles = [
-  "lineal",
-  "lineal-w",
-  "fill",
-  "fill-w",
-  "linealColor",
-  "flatColor",
-] as const;
-export type DogIconStyleType = (typeof DogIconStyles)[number];
+import type { DogIconId } from "$/icon/dogIcon";
+import type { IconStyleId } from "$/icon/iconStyle";
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const toDogIconStyleType = (value: any): DogIconStyleType | undefined =>
-  DogIconStyles.find((style) => style === value);
-
-export const DogIconIds = [...Array(50)].map((_, index) => `${`000${index + 1}`.slice(-3)}-dog`);
-
-const getIconPath = (iconId: string, style: DogIconStyleType): string =>
+const getIconPath = (iconId: DogIconId, style: IconStyleId): string =>
   `/images/tray-icons/dog-breads/${style}/${iconId}@3x.png`;
 
 type Props = {
-  iconId: string;
-  style: DogIconStyleType;
+  iconId: DogIconId;
+  style: IconStyleId;
 };
 
 const DogBreadsIcon: React.FC<Props> = ({ iconId, style }) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 type SystemProperties = {
-  isMacos?: Awaited<ReturnType<typeof window.system.isMacos>>;
+  platform?: Awaited<ReturnType<typeof window.system.platform>>;
 };
 
 let cache: SystemProperties | undefined;
@@ -9,14 +9,16 @@ let cache: SystemProperties | undefined;
 export const useSystemProperties = (): SystemProperties => {
   const [systemProperties, setSystemProperties] = useState<SystemProperties>(
     cache ?? {
-      isMacos: undefined,
+      platform: undefined,
     },
   );
 
   useEffect(() => {
     if (!cache) {
       (async () => {
-        cache = { isMacos: await window.system.isMacos() };
+        cache = {
+          platform: await window.system.platform(),
+        };
         setSystemProperties(cache);
       })();
     }

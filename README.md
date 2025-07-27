@@ -49,9 +49,6 @@
 
 [Releases ページ](https://github.com/yama07/ProxyDoggoHandler/releases)から`ProxyDoggoHandler-macos.dmg`をダウンロードし、アプリケーションフォルダなどにインストールしてください。
 
-Intel(x64)マシン用にビルドしたアプリケーションファイルのため、実行には Rosetta 2 のインストールが必要です。
-Apple Silicon(arm64)マシン用のアプリケーションファイルが必要な場合は、Apple Silicon Mac 上でソースコードからビルドしてください。
-
 ### Windows
 
 [Releases ページ](https://github.com/yama07/ProxyDoggoHandler/releases)から`ProxyDoggoHandler-win-portable.exe`ファイルをダウンロードし、適切なフォルダに格納してください。

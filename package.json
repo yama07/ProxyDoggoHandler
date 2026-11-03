@@ -40,7 +40,7 @@
     "minimatch": "10.2.5",
     "proxy-chain": "2.7.1",
     "react-hook-form": "7.72.1",
-    "zod": "4.3.6"
+    "zod": "4.6.6"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.11",

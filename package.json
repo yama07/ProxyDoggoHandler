@@ -37,7 +37,7 @@
     "electron-serve": "^1.3.0",
     "electron-store": "^8.2.0",
     "electron-window-state": "^5.0.3",
-    "minimatch": "10.2.5",
+    "minimatch": "11.0.1",
     "proxy-chain": "2.7.1",
     "react-hook-form": "7.72.1",
     "zod": "4.6.6"

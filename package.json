@@ -61,7 +61,7 @@
     "electron-builder": "26.15.3",
     "jest": "30.3.0",
     "jest-environment-jsdom": "30.3.0",
-    "next": "16.4.2",
+    "next": "16.4.6",
     "nextron": "10.3.0",
     "react": "19.2.5",
     "react-dom": "19.2.5",
